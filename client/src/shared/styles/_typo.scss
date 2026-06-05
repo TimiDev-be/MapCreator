@@ -1,0 +1,28 @@
+@use "./mixins";
+@use "./v";
+
+.t {
+    &-app-name {
+        @include mixins.typography(
+            clamp(2rem, 1.8848rem + 0.6143vw, 2.625rem),
+            v.$f-roboto-condensed,
+            500
+        );
+    }
+    &-nav-link {
+        @include mixins.typography(
+            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+            v.$f-roboto-condensed,
+            400
+        );
+        text-transform: uppercase;
+    }
+    &-utils {
+        @include mixins.typography(
+            clamp(0.875rem, 0.875rem + 0vw, 0.875rem),
+            v.$f-roboto-condensed,
+            400
+        );
+        text-transform: uppercase;
+    }
+}

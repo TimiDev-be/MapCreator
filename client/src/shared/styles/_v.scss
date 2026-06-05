@@ -1,0 +1,58 @@
+/** <VARIABLES> **/
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+//colors from figma generated palette
+$blue-light: #e6f0f8;
+$blue-light-hover: #dae8f5;
+$blue-light-active: #b2cfea;
+$blue-normal: #0864ba;
+$blue-normal-hover: #075aa7;
+$blue-normal-active: #065095;
+$blue-dark: #064b8c;
+$blue-dark-hover: #053c70;
+$blue-dark-active: #042d54;
+$blue-darker: #032341;
+
+$orange-light: #fff3e6;
+$orange-light-hover: #ffedd9;
+$orange-light-active: #ffdab0;
+$orange-normal: #ff8800;
+$orange-normal-hover: #e67a00;
+$orange-normal-active: #cc6d00;
+$orange-dark: #bf6600;
+$orange-dark-hover: #995200;
+$orange-dark-active: #733d00;
+$orange-darker: #593000;
+
+$green-light: #e9f8e6;
+$green-light-hover: #def5da;
+$green-light-active: #bbeab2;
+$green-normal: #25ba08;
+$green-normal-hover: #21a707;
+$green-normal-active: #1e9506;
+$green-dark: #1c8c06;
+$green-dark-hover: #167005;
+$green-dark-active: #115404;
+$green-darker: #0d4103;
+
+$f-inter: "Inter", sans-serif;
+$f-roboto-condensed: "Roboto Condensed", sans-serif;
+$f-montserrat: "Montserrat", sans-serif;
+$f-oswald: "Oswald", sans-serif;
+
+// NEUTRAL / TEXT
+$green-ink:          #262C24; // rgb(38,44,36)
+$green-ink-muted:    #4A524A;
+
+// ACCENT (water / geo)
+$blue-accent:        #389AC9; // rgb(56,154,201)
+$blue-accent-hover:  #2F8BB7;
+$blue-accent-active: #267DA6;
+
+// BACKGROUND helpers
+$bg-soft:            #EEF3F1;
+$bg-green-tint:      #E4EFE8;
+
+// Soft black
+$black: #2E2C2A;
+

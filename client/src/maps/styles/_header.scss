@@ -1,0 +1,29 @@
+@use "../../shared/styles/v";
+
+.maps-header {
+    padding: 1rem 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    nav {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .nav-link {
+        padding: 0.5rem 1rem;
+
+        transition: all 0.2s ease-in-out;
+
+        background-color: v.$blue-normal;
+        color: white;
+        text-decoration: none;
+
+        &:hover {
+            background-color: v.$blue-dark;
+        }
+    }
+}
