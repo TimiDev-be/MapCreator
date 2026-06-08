@@ -18,7 +18,8 @@
         text-transform: uppercase;
     }
 
-    &-form-title {
+    &-form-title,
+    &-maps-list-empty {
         @include mixins.typography(
             clamp(1.5rem, 1.4286rem + 0.3571vw, 1.875rem),
             v.$f-inter,
@@ -46,6 +47,35 @@
     &-form-error {
         @include mixins.typography(
             clamp(0.75rem, 0.7039rem + 0.2457vw, 1rem),
+            v.$f-inter,
+            400
+        );
+    }
+    &-map-element-list-big {
+        @include mixins.typography(
+            clamp(1.25rem, 1.1924rem + 0.3071vw, 1.5625rem),
+            v.$f-inter,
+            500
+        );
+    }
+    &-map-element-list-medium {
+        @include mixins.typography(
+            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+            v.$f-inter,
+            400
+        );
+    }
+    &-map-element-list-small {
+        @include mixins.typography(
+            clamp(0.875rem, 0.852rem + 0.1229vw, 1rem),
+            v.$f-inter,
+            400
+        );
+    }
+    &-custom-select-content,
+    &-quick-menu-content {
+        @include mixins.typography(
+            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
             v.$f-inter,
             400
         );

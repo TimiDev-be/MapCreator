@@ -9,4 +9,6 @@ export interface Map {
   features: Feature[];
   description: string;
   attractionPoint?: AttractionPoint;
+  createdAt: string;
+  updatedAt: string;
 }

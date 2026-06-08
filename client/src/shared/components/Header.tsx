@@ -11,16 +11,18 @@ export default function Header() {
           MapCreator
         </Link>
         <nav>
-          {pathname.includes("/data-files") && (
+          {(pathname.includes("/data-files") ||
+            pathname.includes("/new-map")) && (
             <Link to={"/"} className="nav-link t-nav-link">
               back
             </Link>
           )}
-          {!pathname.includes("/data-files") && (
-            <Link to={"/data-files"} className="nav-link t-nav-link">
-              data files
-            </Link>
-          )}
+          {!pathname.includes("/data-files") &&
+            !pathname.includes("/new-map") && (
+              <Link to={"/data-files"} className="nav-link t-nav-link">
+                data files
+              </Link>
+            )}
         </nav>
       </header>
     </>

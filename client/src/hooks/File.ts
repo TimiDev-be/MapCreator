@@ -17,7 +17,12 @@ export const useFile = () => {
   };
 
   const downloadFile = () => {
-    const data = JSON.stringify(currentSource);
+    const data = JSON.stringify({
+      id: currentSource.id,
+      maps: currentSource.maps
+        .map(({ checked, ...rest }) => ({ ...rest }))
+        .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
+    });
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");

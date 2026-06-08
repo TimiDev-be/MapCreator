@@ -25,9 +25,19 @@ export default function SourceProvider() {
       if (DataStringFormated.id && DataStringFormated.maps)
         Source = {
           id: "source-of-user-data",
-          maps: DataStringFormated.maps,
+          maps: DataStringFormated.maps.map((map) => ({
+            ...map,
+            checked: false,
+          })),
         };
-    } else localStorage.setItem(Source.id, JSON.stringify(Source));
+    } else
+      localStorage.setItem(
+        Source.id,
+        JSON.stringify({
+          id: Source.id,
+          maps: Source.maps.map(({ checked, ...rest }) => ({ ...rest })),
+        }),
+      );
 
     setCurrentSource(Source);
   };
@@ -36,6 +46,18 @@ export default function SourceProvider() {
     const handleLoad = async () => loadSourceDataToState();
     handleLoad();
   }, []);
+
+  useEffect(() => {
+    if (currentSource) {
+      localStorage.setItem(
+        currentSource.id,
+        JSON.stringify({
+          id: currentSource.id,
+          maps: currentSource.maps.map(({ checked, ...rest }) => ({ ...rest })),
+        }),
+      );
+    }
+  }, [currentSource]);
 
   return (
     <>

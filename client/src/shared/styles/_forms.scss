@@ -1,3 +1,5 @@
+@use "./v";
+
 form {
     .group {
         width: 100%;
@@ -20,5 +22,14 @@ form {
         max-width: max-content;
 
         color: red;
+    }
+    .form-field {
+        padding: 0.5rem 1rem;
+        width: 100%;
+
+        background-color: white;
+        border: 1px solid v.$blue-dark;
+        border-radius: 5px;
+        box-shadow: 5px 5px 0 0 v.$blue-normal;
     }
 }
