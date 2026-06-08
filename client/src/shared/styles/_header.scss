@@ -26,4 +26,13 @@
             background-color: v.$blue-dark;
         }
     }
+
+    .app-name {
+        text-decoration: none;
+        color: v.$black;
+
+        &:hover {
+            color: v.$blue-normal;
+        }
+    }
 }

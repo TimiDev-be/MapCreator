@@ -17,6 +17,40 @@
         );
         text-transform: uppercase;
     }
+
+    &-form-title {
+        @include mixins.typography(
+            clamp(1.5rem, 1.4286rem + 0.3571vw, 1.875rem),
+            v.$f-inter,
+            500
+        );
+    }
+
+    &-form-subtitle {
+        @include mixins.typography(
+            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+            v.$f-inter,
+            400
+        );
+    }
+
+    &-form-field {
+        @include mixins.typography(
+            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+            v.$f-inter,
+            400
+        );
+    }
+
+    &-form-about,
+    &-form-error {
+        @include mixins.typography(
+            clamp(0.75rem, 0.7039rem + 0.2457vw, 1rem),
+            v.$f-inter,
+            400
+        );
+    }
+
     &-utils {
         @include mixins.typography(
             clamp(0.875rem, 0.875rem + 0vw, 0.875rem),

@@ -1,6 +1,6 @@
 import "../styles/_mapsPage.scss";
 import Line from "../../shared/components/Line";
-import Header from "./Header";
+import Header from "../../shared/components/Header";
 import MapsList from "./MapsList";
 
 export default function MapsPage() {

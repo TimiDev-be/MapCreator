@@ -9,5 +9,4 @@ export interface Map {
   features: Feature[];
   description: string;
   attractionPoint?: AttractionPoint;
-  visible: boolean;
 }

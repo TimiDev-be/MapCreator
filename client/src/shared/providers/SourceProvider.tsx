@@ -25,9 +25,10 @@ export default function SourceProvider() {
       if (DataStringFormated.id && DataStringFormated.maps)
         Source = {
           id: "source-of-user-data",
-          maps: [],
+          maps: DataStringFormated.maps,
         };
     } else localStorage.setItem(Source.id, JSON.stringify(Source));
+
     setCurrentSource(Source);
   };
 
