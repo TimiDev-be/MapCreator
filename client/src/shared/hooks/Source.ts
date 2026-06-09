@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { SOURCE_CONTEXT } from "../shared/providers/SourceContext";
+import { SOURCE_CONTEXT } from "../contexts/SourceContext";
 
 export const useSource = () => {
   const Context = useContext(SOURCE_CONTEXT);

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useSource } from "./Source";
-import type { StateMap } from "../shared/types/StateMap";
-import type { SortOrder } from "../shared/types/SortOrder";
+import type { StateMap } from "../types/StateMap";
+import type { SortOrder } from "../types/SortOrder";
 
 export const useMaps = () => {
   const { currentSource, setCurrentSource } = useSource();
