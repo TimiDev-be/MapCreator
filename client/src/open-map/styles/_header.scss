@@ -1,0 +1,16 @@
+@use "../../shared/styles/v";
+
+.open-map-header {
+    grid-area: 1 / 1 / 2 / -1;
+    padding: 1rem;
+
+    display: flex;
+    flex-wrap: wrap-reverse;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    .name-of-map {
+        color: v.$black;
+    }
+}

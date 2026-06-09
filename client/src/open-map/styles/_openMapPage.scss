@@ -1,0 +1,8 @@
+.page.open-map {
+    width: 100%;
+    min-height: 100svh;
+
+    display: grid;
+    grid-template-columns: max-content repeat(3, 1fr);
+    grid-template-rows: max-content repeat(2, 1fr) max-content;
+}
