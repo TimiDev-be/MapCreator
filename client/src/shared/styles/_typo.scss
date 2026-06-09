@@ -58,14 +58,18 @@
             500
         );
     }
-    &-map-element-list-medium {
+    &-map-element-list-medium,
+    &-name-of-map,
+    &-result-big,
+    &-panel-name {
         @include mixins.typography(
             clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
             v.$f-inter,
             400
         );
     }
-    &-map-element-list-small {
+    &-map-element-list-small,
+    &-result-small {
         @include mixins.typography(
             clamp(0.875rem, 0.852rem + 0.1229vw, 1rem),
             v.$f-inter,
@@ -76,6 +80,28 @@
     &-quick-menu-content {
         @include mixins.typography(
             clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+            v.$f-inter,
+            400
+        );
+    }
+
+    &-panel-big {
+        @include mixins.typography(
+            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+            v.$f-inter,
+            400
+        );
+    }
+    &-panel-medium {
+        @include mixins.typography(
+            clamp(0.875rem, 0.852rem + 0.1229vw, 1rem),
+            v.$f-inter,
+            400
+        );
+    }
+    &-panel-small {
+        @include mixins.typography(
+            clamp(0.75rem, 0.7039rem + 0.2457vw, 1rem),
             v.$f-inter,
             400
         );

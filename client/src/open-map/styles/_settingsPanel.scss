@@ -1,0 +1,143 @@
+@use "../../shared/styles/v";
+
+.nav.panel.settings {
+    min-width: 300px;
+
+    .group {
+        &.name {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+        &.anchor-print-position {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            .wrapper {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .anchor-print-position-button {
+                padding: 0.2rem;
+                width: max-content;
+
+                display: flex;
+
+                background-color: white;
+                outline: none;
+                border: 1px solid v.$blue-dark;
+                border-radius: 4px;
+                cursor: pointer;
+                color: white;
+
+                svg path {
+                    fill: v.$black;
+                }
+                &.active {
+                    background-color: v.$blue-dark;
+                    svg path {
+                        fill: white;
+                    }
+                }
+                &:hover {
+                    background-color: v.$blue-normal;
+                    svg path {
+                        fill: white;
+                    }
+                }
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+            }
+            .about.attraction-point {
+                color: v.$blue-dark;
+                max-width: 250px;
+            }
+        }
+        &.area-for-print {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            &.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+                pointer-events: none;
+            }
+
+            .wrapper {
+                display: flex;
+                align-items: center;
+            }
+
+            .group.width,
+            .group.height {
+                padding: 0.2rem;
+                display: flex;
+                align-items: center;
+
+                background-color: v.$blue-light-hover;
+            }
+
+            .field-bridge {
+                width: 6px;
+                height: 6px;
+
+                background-color: v.$blue-light-hover;
+            }
+
+            input[type="number"] {
+                max-width: 80px;
+                border: none;
+
+                &::-webkit-inner-spin-button,
+                &::-webkit-outer-spin-button {
+                    -webkit-appearance: none;
+                    margin: 0;
+                }
+            }
+        }
+    }
+    .show-print-area-button,
+    .jump-to-anchor-button {
+        padding: 0.2rem;
+        width: max-content;
+
+        background-color: white;
+        outline: none;
+        border: 1px solid v.$blue-light-active;
+        border-radius: 4px;
+        cursor: pointer;
+
+        &.active {
+            background-color: v.$blue-normal;
+            color: white;
+        }
+        &:hover {
+            background-color: v.$blue-light-hover;
+            color: v.$black;
+        }
+    }
+    .delete-map-button {
+        padding: 0.4rem;
+        width: max-content;
+
+        background-color: v.$blue-dark;
+        outline: none;
+        border: 1px solid v.$blue-dark;
+        border-radius: 4px;
+        cursor: pointer;
+        color: white;
+
+        &:hover {
+            background-color: v.$blue-normal;
+        }
+    }
+}
