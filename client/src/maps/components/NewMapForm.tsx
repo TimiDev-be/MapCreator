@@ -1,7 +1,7 @@
 import "../styles/_newMapForm.scss";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { useMap } from "../../hooks/Map";
+import { useMap } from "../../shared/hooks/Map";
 import Line from "../../shared/components/Line";
 
 const ValidationSchema = yup.object({

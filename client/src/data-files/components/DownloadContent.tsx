@@ -1,5 +1,5 @@
 import "../styles/_downloadContent.scss";
-import { useFile } from "../../hooks/File";
+import { useFile } from "../../shared/hooks/File";
 import Line from "../../shared/components/Line";
 
 export default function DownloadContent() {

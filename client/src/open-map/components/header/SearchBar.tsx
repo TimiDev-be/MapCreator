@@ -3,16 +3,21 @@ import { useState } from "react";
 import SearchLogo from "../../../assets/material-symbols_search.svg?react";
 import type { Feature } from "maplibre-gl";
 import SearchResultElement from "./SearchResultElement";
+import { useMapContainer } from "../../../shared/hooks/MapContainer";
 
 export default function SearchBar() {
+  const { map } = useMapContainer();
   const [searchValue, setSearchValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [results, setResults] = useState<Feature[]>([]);
 
   const handleSearch = async () => {
-    setLoading(true);
+    if (searchValue.trim() == "") return setResults([]);
     try {
+      setLoading(true);
+      setShowResults(false);
+
       const RequestUrl = `https://nominatim.openstreetmap.org/search?q=${searchValue}&format=geojson&polygon_geojson=1&addressdetails=1`;
       const Response = await fetch(RequestUrl, {
         method: "GET",
@@ -25,11 +30,24 @@ export default function SearchBar() {
         const data = await Response.json();
         if (data.features) {
           setResults(data.features);
+          setShowResults(true);
         }
       }
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleJump = (feature: Feature) => {
+    if (!map) return;
+    map.current.fitBounds(feature.bbox as [number, number, number, number], {
+      padding: 50,
+      duration: 1000,
+      essential: true,
+    });
+
+    setShowResults(false);
+    setSearchValue(feature.properties.display_name);
   };
 
   return (
@@ -48,7 +66,7 @@ export default function SearchBar() {
             type="text"
             name="search"
             id="search-input"
-            placeholder="yours place..."
+            placeholder="place to find..."
             className="search-field t-form-field"
             onChange={(e) => setSearchValue(e.target.value)}
           />
@@ -62,15 +80,16 @@ export default function SearchBar() {
             {showResults ? "Hide results" : `Show results (${results.length})`}
           </button>
         )}
+        {searchValue.trim().length > 0 && !loading && results.length == 0 && (
+          <p className="result-info t-result-small">No results found</p>
+        )}
         <ul className="result-list">
-          {searchValue.trim().length > 0 && !loading && results.length == 0 && (
-            <li className="t-result-small">No results found</li>
-          )}
           {showResults &&
             results.map((feature) => (
               <SearchResultElement
                 key={crypto.randomUUID()}
                 feature={feature}
+                onJump={handleJump}
               />
             ))}
         </ul>

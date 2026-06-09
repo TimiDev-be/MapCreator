@@ -1,16 +1,18 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import type { UserSource } from "../types/UserSource";
-import type { Map } from "../types/Map";
 import type { Group } from "../types/Group";
-import { SOURCE_CONTEXT } from "./SourceContext";
+import { SOURCE_CONTEXT } from "../contexts/SourceContext";
+import type { Map } from "../classes/Map";
 
 export default function SourceProvider() {
   const [currentSource, setCurrentSource] = useState<UserSource | undefined>(
     undefined,
   );
-  const CurrentMap = useRef<Map | null>(null);
-  const CurrentGroup = useRef<Group | null>(null);
+  const [currentMap, setCurrentMap] = useState<Map | undefined>(undefined);
+  const [currentGroup, setCurrentGroup] = useState<Group | undefined>(
+    undefined,
+  );
 
   //load data
   const loadSourceDataToState = async () => {
@@ -65,8 +67,10 @@ export default function SourceProvider() {
         value={{
           currentSource,
           setCurrentSource,
-          currentMap: CurrentMap,
-          currentGroup: CurrentGroup,
+          currentMap,
+          setCurrentMap,
+          currentGroup,
+          setCurrentGroup,
         }}
       >
         <Outlet />

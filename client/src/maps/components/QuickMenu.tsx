@@ -5,7 +5,7 @@ import CustomSelect from "../../shared/components/CustomSelect.tsx";
 import type { CustomSelectOption } from "../../shared/types/CustomSelectOption.ts";
 import { SORT_ORDER } from "../../shared/types/SortOrder.ts";
 import TrashLogo from "../../assets/tabler_trash-filled.svg?react";
-import { useMaps } from "../../hooks/Maps";
+import { useMaps } from "../../shared/hooks/Maps.ts";
 
 const SELECT_OPTIONS: CustomSelectOption[] = [
   { id: crypto.randomUUID(), value: SORT_ORDER.DF },

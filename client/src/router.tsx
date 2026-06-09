@@ -3,6 +3,7 @@ import MapsPage from "./maps/components/MapsPage";
 import SourceProvider from "./shared/providers/SourceProvider";
 import DataFilesPage from "./data-files/components/DataFilesPage";
 import NewMapPage from "./maps/components/NewMapPage";
+import OpenMapPage from "./open-map/components/OpenMapPage";
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,7 @@ export const router = createBrowserRouter([
       { index: true, Component: MapsPage },
       { path: "data-files", Component: DataFilesPage },
       { path: "new-map", Component: NewMapPage },
+      { path: "open-map/:name/:id", Component: OpenMapPage },
     ],
   },
 ]);

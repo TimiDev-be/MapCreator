@@ -10,7 +10,11 @@
     align-items: center;
     gap: 1rem;
 
+    border-bottom: 1px solid v.$blue-light;
+
     .name-of-map {
+        width: 100%;
+        max-width: 250px;
         color: v.$black;
     }
 }

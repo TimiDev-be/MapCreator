@@ -1,10 +1,17 @@
 import "../styles/_mapsList.scss";
 import MapsListElement from "./MapsListElement";
 import QuickMenu from "./QuickMenu";
-import { useMaps } from "../../hooks/Maps";
+import { useMaps } from "../../shared/hooks/Maps";
+import { useMap } from "../../shared/hooks/Map";
+import { useEffect } from "react";
 
 export default function MapsList() {
   const { maps } = useMaps();
+  const { closeMap } = useMap();
+
+  useEffect(() => {
+    closeMap();
+  }, [closeMap]);
 
   return (
     <>

@@ -2,7 +2,7 @@ import "../styles/_importForm.scss";
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useFile } from "../../hooks/File";
+import { useFile } from "../../shared/hooks/File";
 import Line from "../../shared/components/Line";
 
 const ValidationSchema = Yup.object().shape({

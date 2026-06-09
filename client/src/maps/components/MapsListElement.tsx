@@ -1,7 +1,7 @@
 import "../styles/_mapsListElement.scss";
 import { useRef, useState, useEffect } from "react";
 import type { StateMap } from "../../shared/types/StateMap";
-import { useMap } from "../../hooks/Map";
+import { useMap } from "../../shared/hooks/Map";
 import { TimeAgo } from "../../shared/utils/TimeAgo";
 import { Link } from "react-router-dom";
 import DotsLogo from "../../assets/bi_three-dots-vertical.svg?react";
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function MapsListElement({ map }: Props) {
-  const { toggleCheckMap, deleteMap } = useMap();
+  const { toggleCheckMap, deleteMap, openMap } = useMap();
   const [settingsActive, setSettingsActive] = useState<boolean>(false);
   const CheckBoxRef = useRef<HTMLInputElement>(null);
   const { id, name, checked, updatedAt, createdAt } = map;
@@ -67,8 +67,9 @@ export default function MapsListElement({ map }: Props) {
               </button>
             </div>
             <Link
-              to={"/app/maps/map/"}
+              to={`open-map/${name}/${id}`}
               className="open-map-link t-map-element-list-medium"
+              onClick={(e) => e.stopPropagation()}
             >
               open
             </Link>

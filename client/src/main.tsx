@@ -1,4 +1,5 @@
 import "./shared/styles/_style.scss";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
