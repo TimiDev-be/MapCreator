@@ -1,4 +1,4 @@
-import type { Feature } from "maplibre-gl";
+import type { Feature } from "geojson";
 import type { Group } from "./Group";
 import type { AttractionPoint } from "./AttractionPoint";
 import type { AreaForPrint } from "./AreaForPrint";

@@ -7,7 +7,7 @@ import { useSource } from "../../shared/hooks/Source";
 export default function MapContainer() {
   const { currentSource } = useSource();
   const { currentMap } = useMap();
-  const { setMapRef } = useMapContainer();
+  const { setMapRef, areaForPrintFeature } = useMapContainer();
   const { attractionPoint } = currentMap ?? {};
 
   const visibilityFilter: any = [
@@ -46,7 +46,7 @@ export default function MapContainer() {
               type="geojson"
               data={{
                 type: "FeatureCollection",
-                features: [],
+                features: areaForPrintFeature ? [areaForPrintFeature] : [],
               }}
             />
             <RLayer
@@ -153,10 +153,29 @@ export default function MapContainer() {
               id="draw-preview-line"
               type="line"
               source="draw-preview"
-              filter={["==", ["geometry-type"], "LineString"]}
+              filter={[
+                "all",
+                ["==", ["geometry-type"], "LineString"],
+                ["==", ["get", "role"], "draw-preview-line"],
+              ]}
               paint={{
                 "line-color": "#ff0000",
                 "line-width": 2.5,
+                "line-dasharray": [2, 1],
+              }}
+            />
+            <RLayer
+              id="draw-preview-area-for-print-line"
+              type="line"
+              source="draw-preview"
+              filter={[
+                "all",
+                ["==", ["geometry-type"], "LineString"],
+                ["==", ["get", "role"], "area-for-print"],
+              ]}
+              paint={{
+                "line-color": "#000000",
+                "line-width": 1.5,
                 "line-dasharray": [2, 1],
               }}
             />

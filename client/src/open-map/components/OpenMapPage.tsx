@@ -7,10 +7,14 @@ import type { Map } from "maplibre-gl";
 import MapContainer from "./MapContainer";
 import { useParams } from "react-router-dom";
 import { useMap } from "../../shared/hooks/Map";
+import type { Feature } from "geojson";
 
 export default function OpenMapPage() {
   const { id } = useParams();
   const { currentMap, openMap } = useMap();
+  const [areaForPrintFeature, setAreaForPrintFeature] = useState<
+    Feature | undefined
+  >(undefined);
   const [isReady, setIsReady] = useState(false);
   const MapRef = useRef<Map | null>(null);
 
@@ -25,7 +29,14 @@ export default function OpenMapPage() {
   return (
     <>
       <MAP_CONTAINER_CONTEXT.Provider
-        value={{ map: MapRef, isReady, setIsReady, setMapRef }}
+        value={{
+          map: MapRef,
+          isReady,
+          setIsReady,
+          setMapRef,
+          areaForPrintFeature,
+          setAreaForPrintFeature,
+        }}
       >
         {currentMap && (
           <div className="open-map page">

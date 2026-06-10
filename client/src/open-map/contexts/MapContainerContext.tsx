@@ -1,4 +1,5 @@
 import type { Map } from "maplibre-gl";
+import type { Feature } from "geojson";
 import { createContext, type RefObject } from "react";
 
 type Context = {
@@ -6,6 +7,10 @@ type Context = {
   isReady: boolean;
   setIsReady: React.Dispatch<React.SetStateAction<boolean>>;
   setMapRef: (m: Map | null) => void;
+  areaForPrintFeature: Feature;
+  setAreaForPrintFeature: React.Dispatch<
+    React.SetStateAction<Feature | undefined>
+  >;
 };
 
 export const MAP_CONTAINER_CONTEXT = createContext<Context | undefined>(

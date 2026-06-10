@@ -2,7 +2,7 @@ import type { StateMap } from "../types/StateMap";
 import type { Group } from "../types/Group";
 import type { AttractionPoint } from "../types/AttractionPoint";
 import type { AreaForPrint } from "../types/AreaForPrint";
-import type { Feature } from "maplibre-gl";
+import type { Feature } from "geojson";
 
 export class Map implements StateMap {
   public id: string;

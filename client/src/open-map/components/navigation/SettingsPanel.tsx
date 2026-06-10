@@ -6,10 +6,14 @@ import { useMapContainer } from "../../../shared/hooks/MapContainer";
 import { useMapSettings } from "../../../shared/hooks/MapSettings";
 
 export default function SettingsPanel() {
-  const { map } = useMapContainer();
+  const { map, areaForPrintFeature } = useMapContainer();
   const { currentMap, deleteMap } = useMap();
-  const { handleNameChange, toggleAttractionPoint, handleAreaForPrintChange } =
-    useMapSettings();
+  const {
+    handleNameChange,
+    toggleAttractionPoint,
+    handleAreaForPrintChange,
+    toggleAreaForPrint,
+  } = useMapSettings();
   const { name, attractionPoint, areaForPrint } = currentMap;
 
   return (
@@ -126,7 +130,8 @@ export default function SettingsPanel() {
           </div>
           <button
             type="button"
-            className="show-print-area-button t-panel-small"
+            className={`show-print-area-button t-panel-small ${areaForPrintFeature ? "active" : ""}`}
+            onClick={toggleAreaForPrint}
           >
             Show print area
           </button>
