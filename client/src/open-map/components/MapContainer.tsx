@@ -172,6 +172,7 @@ export default function MapContainer() {
                 "all",
                 ["==", ["geometry-type"], "LineString"],
                 ["==", ["get", "role"], "area-for-print"],
+                ...visibilityFilter.slice(1),
               ]}
               paint={{
                 "line-color": "#000000",

@@ -15,6 +15,7 @@ export const useMapSettings = () => {
 
   const toggleAttractionPoint = () => {
     if (!map) return;
+    setAreaForPrintFeature(undefined);
 
     const newAttractionPoint = currentMap.attractionPoint
       ? undefined
@@ -34,31 +35,36 @@ export const useMapSettings = () => {
 
   const toggleAreaForPrint = () => {
     if (!map) return;
-
     const { areaForPrint, attractionPoint } = currentMap;
-    const center: number[] = attractionPoint.coords;
-    const centerPx = map.current.project([center[0], center[1]]);
-    const halfWidth = MmToPx(areaForPrint.width) / 2;
-    const halfHeight = MmToPx(areaForPrint.height) / 2;
-
-    const topLeft = map.current.unproject([
-      centerPx.x - halfWidth,
-      centerPx.y - halfHeight,
-    ]);
-    const topRight = map.current.unproject([
-      centerPx.x + halfWidth,
-      centerPx.y - halfHeight,
-    ]);
-    const bottomRight = map.current.unproject([
-      centerPx.x + halfWidth,
-      centerPx.y + halfHeight,
-    ]);
-    const bottomLeft = map.current.unproject([
-      centerPx.x - halfWidth,
-      centerPx.y + halfHeight,
-    ]);
 
     if (!areaForPrintFeature && areaForPrint) {
+      map.current.jumpTo({
+        center: [attractionPoint.coords[0], attractionPoint.coords[1]],
+        zoom: attractionPoint.zoom,
+      });
+
+      const center = attractionPoint.coords;
+      const centerPx = map.current.project([center[0], center[1]]);
+      const halfWidth = MmToPx(areaForPrint.width) / 2;
+      const halfHeight = MmToPx(areaForPrint.height) / 2;
+
+      const topLeft = map.current.unproject([
+        centerPx.x - halfWidth,
+        centerPx.y - halfHeight,
+      ]);
+      const topRight = map.current.unproject([
+        centerPx.x + halfWidth,
+        centerPx.y - halfHeight,
+      ]);
+      const bottomRight = map.current.unproject([
+        centerPx.x + halfWidth,
+        centerPx.y + halfHeight,
+      ]);
+      const bottomLeft = map.current.unproject([
+        centerPx.x - halfWidth,
+        centerPx.y + halfHeight,
+      ]);
+
       setAreaForPrintFeature({
         type: "Feature",
         geometry: {
@@ -73,6 +79,9 @@ export const useMapSettings = () => {
         },
         properties: {
           role: "area-for-print",
+          visible: true,
+          minZoom: attractionPoint.zoom - 3,
+          maxZoom: attractionPoint.zoom + 3,
         },
       });
     } else {
