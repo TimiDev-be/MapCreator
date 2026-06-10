@@ -1,0 +1,45 @@
+@use "../../shared/styles/v";
+
+.nav.panel.groups {
+    min-width: 325px;
+
+    .group {
+        &.new-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+    }
+    .create-new-group-button {
+        padding: 0.2rem;
+
+        display: flex;
+
+        background-color: transparent;
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        cursor: pointer;
+
+        svg path {
+            fill: v.$black;
+        }
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+    .groups-features-list {
+        padding: 0.5rem 0 0 0;
+        height: 100%;
+
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        gap: 0.5rem;
+
+        list-style-type: none;
+    }
+}

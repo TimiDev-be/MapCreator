@@ -1,0 +1,109 @@
+@use "../../shared/styles/v";
+
+.map-group-element {
+    max-width: 250px;
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        .delete-group-button {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    .delete-group-button {
+        padding: 0.2rem;
+
+        transition: all 0.2s ease-in-out;
+        position: absolute;
+        top: -0.2rem;
+        right: -0.2rem;
+        opacity: 0;
+        visibility: hidden;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: v.$blue-light-active;
+        border: none;
+        outline: none;
+        border-radius: 50%;
+        cursor: pointer;
+
+        svg path {
+            fill: v.$black;
+        }
+
+        &:hover {
+            background-color: v.$black;
+
+            svg path {
+                fill: white;
+            }
+        }
+    }
+
+    .group-wrapper {
+        padding: 0 0 0 0.5rem;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+
+        background-color: v.$blue-light;
+        border-radius: 5px;
+        cursor: pointer;
+        overflow: hidden;
+
+        svg path {
+            fill: v.$black;
+        }
+
+        &.active {
+            background-color: v.$blue-normal;
+            color: white;
+
+            svg path {
+                fill: white;
+            }
+
+            .name-field {
+                color: white;
+            }
+        }
+    }
+
+    .features {
+        max-height: 0;
+
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        overflow: hidden;
+
+        &.active {
+            padding: 0.5rem 0 1rem 0;
+            max-height: max-content;
+        }
+    }
+}
+
+.name-field {
+    padding: 0.5rem;
+    width: 100%;
+
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    &:focus {
+        background-color: v.$blue-light-active;
+        color: v.$black !important;
+    }
+}
