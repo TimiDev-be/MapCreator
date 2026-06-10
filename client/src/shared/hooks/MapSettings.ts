@@ -2,6 +2,7 @@ import { useMap } from "./Map";
 import { useMapContainer } from "./MapContainer";
 import type { AreaForPrint } from "../types/AreaForPrint";
 import { MmToPx } from "../utils/MmToPx";
+import { useEffect } from "react";
 
 export const useMapSettings = () => {
   const { updateMap, currentMap } = useMap();
@@ -33,34 +34,34 @@ export const useMapSettings = () => {
     updateMap({ ...currentMap, areaForPrint });
   };
 
-  const toggleAreaForPrint = () => {
-    if (!map) return;
+  const calculatePrintArea = () => {
+    if (!map?.current || !currentMap.areaForPrint) return;
     const { areaForPrint, attractionPoint } = currentMap;
 
-    if (!areaForPrintFeature && areaForPrint) {
-      map.current.jumpTo({
-        center: [attractionPoint.coords[0], attractionPoint.coords[1]],
-        zoom: attractionPoint.zoom,
-      });
+    map.current.jumpTo({
+      center: [attractionPoint.coords[0], attractionPoint.coords[1]],
+      zoom: attractionPoint.zoom,
+    });
 
+    map.current.once("idle", () => {
       const center = attractionPoint.coords;
-      const centerPx = map.current.project([center[0], center[1]]);
+      const centerPx = map.current!.project([center[0], center[1]]);
       const halfWidth = MmToPx(areaForPrint.width) / 2;
       const halfHeight = MmToPx(areaForPrint.height) / 2;
 
-      const topLeft = map.current.unproject([
+      const topLeft = map.current!.unproject([
         centerPx.x - halfWidth,
         centerPx.y - halfHeight,
       ]);
-      const topRight = map.current.unproject([
+      const topRight = map.current!.unproject([
         centerPx.x + halfWidth,
         centerPx.y - halfHeight,
       ]);
-      const bottomRight = map.current.unproject([
+      const bottomRight = map.current!.unproject([
         centerPx.x + halfWidth,
         centerPx.y + halfHeight,
       ]);
-      const bottomLeft = map.current.unproject([
+      const bottomLeft = map.current!.unproject([
         centerPx.x - halfWidth,
         centerPx.y + halfHeight,
       ]);
@@ -84,10 +85,21 @@ export const useMapSettings = () => {
           maxZoom: attractionPoint.zoom + 3,
         },
       });
+    });
+  };
+
+  const toggleAreaForPrint = () => {
+    if (!areaForPrintFeature && currentMap.areaForPrint) {
+      calculatePrintArea();
     } else {
       setAreaForPrintFeature(undefined);
     }
   };
+
+  useEffect(() => {
+    if (!currentMap.areaForPrint || !areaForPrintFeature) return;
+    calculatePrintArea();
+  }, [currentMap.areaForPrint?.width, currentMap.areaForPrint?.height]);
 
   return {
     handleNameChange,

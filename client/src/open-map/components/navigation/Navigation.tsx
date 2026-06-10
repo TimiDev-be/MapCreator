@@ -1,7 +1,7 @@
 import "../../styles/_navigation.scss";
 import { useState } from "react";
 import SettingsPanel from "./SettingsPanel";
-import GroupsPanel from "./GroupsPanel";
+import GroupsPanel from "./groups-panel/GroupsPanel";
 import DescriptionPanel from "./DescriptionPanel";
 import ExportPanel from "./ExportPanel";
 import SettingsLogo from "../../../assets/lucide_settings-2.svg?react";
