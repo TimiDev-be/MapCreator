@@ -1,7 +1,8 @@
 import "../../../styles/_feature.scss";
-import { useState, useRef, useEffect } from "react";
-import type { Feature, GeoJsonGeometryTypes } from "geojson";
+import { useState, useRef } from "react";
+import type { Feature } from "geojson";
 import { useFeature } from "../../../../shared/hooks/Feature";
+import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import LineLogo from "../../../../assets/uil_line-alt.svg?react";
 import PolygonLogo from "../../../../assets/bx_shape-polygon.svg?react";
@@ -11,19 +12,16 @@ type Props = {
   feature: Feature;
 };
 
-const FeatureTypeArray: {
-  type: GeoJsonGeometryTypes;
-  icon: React.ReactNode;
-}[] = [
-  { type: "Point", icon: <MarkerLogo width={16} height={16} /> },
-  { type: "LineString", icon: <LineLogo width={16} height={16} /> },
-  { type: "Polygon", icon: <PolygonLogo width={16} height={16} /> },
-];
+const IconMap: Record<string, React.ReactNode> = {
+  Point: <MarkerLogo width={16} height={16} />,
+  LineString: <LineLogo width={16} height={16} />,
+  Polygon: <PolygonLogo width={16} height={16} />,
+};
 
 export default function FeatureComponent({ feature }: Props) {
+  const { toggleFeaturePanel } = useMapContainer();
   const { updateFeature, deleteFeature } = useFeature();
   const [editName, setEditName] = useState<boolean>(false);
-  const [typeIcon, setTypeIcon] = useState<React.ReactNode | null>(null);
   const NameInputRef = useRef<HTMLInputElement | null>(null);
   const { name } = feature.properties;
 
@@ -45,20 +43,6 @@ export default function FeatureComponent({ feature }: Props) {
     }
   };
 
-  useEffect(() => {
-    const handleTypeIcon = () => {
-      const typeIcon = FeatureTypeArray.find(
-        (item) => item.type === feature.geometry.type,
-      )?.icon;
-      if (typeIcon) {
-        setTypeIcon(typeIcon);
-      } else {
-        setTypeIcon(null);
-      }
-    };
-    handleTypeIcon();
-  }, [feature.geometry.type]);
-
   return (
     <>
       <li
@@ -67,6 +51,7 @@ export default function FeatureComponent({ feature }: Props) {
         onDragStart={(e) =>
           e.dataTransfer.setData("featureId", feature.id.toString())
         }
+        onClick={() => toggleFeaturePanel(feature)}
       >
         <button
           type="button"
@@ -76,7 +61,9 @@ export default function FeatureComponent({ feature }: Props) {
           <CloseLogo width={16} height={16} />
         </button>
         <div className="feature-wrapper">
-          {typeIcon && <div className="type-icon">{typeIcon}</div>}
+          {IconMap[feature.geometry.type] && (
+            <div className="type-icon">{IconMap[feature.geometry.type]}</div>
+          )}
           <input
             type="text"
             name="name"

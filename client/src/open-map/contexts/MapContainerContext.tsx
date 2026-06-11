@@ -11,6 +11,8 @@ type Context = {
   setAreaForPrintFeature: React.Dispatch<
     React.SetStateAction<Feature | undefined>
   >;
+  feature: Feature | null;
+  toggleFeaturePanel: (newFeature: Feature | null) => void;
 };
 
 export const MAP_CONTAINER_CONTEXT = createContext<Context | undefined>(

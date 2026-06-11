@@ -1,0 +1,70 @@
+@use "../../shared/styles/v";
+
+.feature-panel {
+    grid-area: 3 / 2 / 5 / -1;
+    padding: 1.5rem;
+    align-self: flex-end;
+    max-height: 200px;
+
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+
+    background-color: white;
+
+    .close-feature-panel-button {
+        padding: 0.5rem 1rem;
+
+        position: absolute;
+        top: calc(0% - 1.5rem);
+        left: 0%;
+        transform: translate(-50%, 0);
+
+        background: v.$blue-normal;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 4px 4px 0 0 v.$blue-light;
+        outline: none;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+            background-color: white;
+            color: v.$black;
+        }
+    }
+
+    .feature-name {
+        width: 100%;
+    }
+
+    .group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    }
+
+    .color-input {
+        width: 20px;
+        height: 20px;
+
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        &::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+    }
+}

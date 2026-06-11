@@ -8,6 +8,15 @@ import MapContainer from "./MapContainer";
 import { useParams } from "react-router-dom";
 import { useMap } from "../../shared/hooks/Map";
 import type { Feature } from "geojson";
+import MarkerPanel from "./navigation/feature-panels/MarkerPanel";
+import LineStringPanel from "./navigation/feature-panels/LineStringPanel";
+import PolygonPanel from "./navigation/feature-panels/PolygonPanel";
+
+const FeaturePanels: Record<string, React.ReactNode> = {
+  Point: <MarkerPanel />,
+  LineString: <LineStringPanel />,
+  Polygon: <PolygonPanel />,
+};
 
 export default function OpenMapPage() {
   const { id } = useParams();
@@ -15,17 +24,32 @@ export default function OpenMapPage() {
   const [areaForPrintFeature, setAreaForPrintFeature] = useState<
     Feature | undefined
   >(undefined);
+  const [feature, setFeature] = useState<Feature | null>(null);
   const [isReady, setIsReady] = useState(false);
   const MapRef = useRef<Map | null>(null);
+  const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
 
   const setMapRef = (m: Map | null) => {
     MapRef.current = m;
     setIsReady(!!m);
   };
 
+  const toggleFeaturePanel = (newFeature: Feature | null) => {
+    setFeature((prev) => {
+      return prev === newFeature ? null : newFeature;
+    });
+  };
+
   useEffect(() => {
     openMap(id);
+    const handleFeatureChange = () => {
+      setFeature((prev) => {
+        return currentMap?.features.find((f) => f.id === prev?.id) ?? prev;
+      });
+    };
+    handleFeatureChange();
   }, [id, currentMap, openMap]);
+
   return (
     <>
       <MAP_CONTAINER_CONTEXT.Provider
@@ -36,13 +60,16 @@ export default function OpenMapPage() {
           setMapRef,
           areaForPrintFeature,
           setAreaForPrintFeature,
+          feature,
+          toggleFeaturePanel,
         }}
       >
         {currentMap && (
-          <div className="open-map page">
+          <div className="open-map page" ref={OpenMapPageRef}>
             <Header />
             <Navigation />
             <MapContainer />
+            {feature && FeaturePanels[feature.geometry.type]}
           </div>
         )}
       </MAP_CONTAINER_CONTEXT.Provider>
