@@ -25,7 +25,10 @@ export default function MapContainer() {
           <RMap
             style={{ width: "100%", height: "100%" }}
             mapStyle={import.meta.env.VITE_MAP_STYLE}
-            onMounted={(m) => setMapRef(m)}
+            onMounted={(m) => {
+              setMapRef(m);
+              setMapZoom(attractionPoint?.zoom ?? 1);
+            }}
             initialCenter={[
               attractionPoint?.coords[0] ?? 0,
               attractionPoint?.coords[1] ?? 0,

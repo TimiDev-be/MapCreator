@@ -26,7 +26,9 @@ export default function OpenMapPage() {
   >(undefined);
   const [feature, setFeature] = useState<Feature | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const [mapZoom, setMapZoom] = useState(currentMap.attractionPoint.zoom ?? 1);
+  const [mapZoom, setMapZoom] = useState(
+    (currentMap && currentMap.attractionPoint?.zoom) ?? 1,
+  );
   const MapRef = useRef<Map | null>(null);
   const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
 
