@@ -13,6 +13,8 @@ type Context = {
   >;
   feature: Feature | null;
   toggleFeaturePanel: (newFeature: Feature | null) => void;
+  mapZoom: number;
+  setMapZoom: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export const MAP_CONTAINER_CONTEXT = createContext<Context | undefined>(
