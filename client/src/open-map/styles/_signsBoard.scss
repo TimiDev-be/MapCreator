@@ -1,0 +1,61 @@
+@use "../../shared/styles/_v";
+
+.signs-board {
+    width: 112px;
+    height: 112px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 0.5rem;
+
+    background-color: v.$blue-light;
+
+    span {
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: v.$blue-light-hover;
+        cursor: pointer;
+
+        &.active {
+            background-color: v.$blue-normal;
+            svg path {
+                fill: white;
+            }
+        }
+
+        &.left {
+            grid-area: 2 / 1 / 3 / 2;
+            svg {
+                transform: rotate(180deg);
+            }
+        }
+        &.right {
+            grid-area: 2 / 3 / 3 / 4;
+        }
+        &.top {
+            grid-area: 1 / 2 / 2 / 3;
+            svg {
+                transform: rotate(270deg);
+            }
+        }
+        &.bottom {
+            grid-area: 3 / 2 / 4 / 3;
+            svg {
+                transform: rotate(90deg);
+            }
+        }
+
+        &:hover {
+            background-color: v.$blue-light-active;
+            svg path {
+                fill: v.$blue-darker;
+            }
+        }
+    }
+}

@@ -1,0 +1,43 @@
+@use "../../shared/styles/_v";
+
+.icons-list {
+    max-width: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+
+    .icon-button {
+        padding: 0.3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: v.$blue-light;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        &.active {
+            background-color: v.$blue-light-active;
+        }
+
+        &:hover {
+            background-color: v.$blue-dark;
+            .icon {
+                path {
+                    fill: white;
+                }
+                &.point,
+                &.football-pitch,
+                &.shop,
+                &.city,
+                &.dog {
+                    path {
+                        fill: none !important;
+                        stroke: white;
+                    }
+                }
+            }
+        }
+    }
+}
