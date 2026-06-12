@@ -1,7 +1,7 @@
 import { useFeature } from "./Feature";
 import { useMapContainer } from "./MapContainer";
 
-export const useLineFeature = () => {
+export const usePolygonFeature = () => {
   const { feature } = useMapContainer();
   const { updateFeature } = useFeature();
 
@@ -9,6 +9,13 @@ export const useLineFeature = () => {
     updateFeature({
       ...feature,
       properties: { ...feature.properties, color: e.target.value },
+    });
+  };
+
+  const handleBorderColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateFeature({
+      ...feature,
+      properties: { ...feature.properties, borderColor: e.target.value },
     });
   };
 
@@ -22,30 +29,9 @@ export const useLineFeature = () => {
     });
   };
 
-  const toggleLineDash = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateFeature({
-      ...feature,
-      properties: {
-        ...feature.properties,
-        lineDash: e.target.checked ? [3, 4] : undefined,
-      },
-    });
-  };
-
-  const handleLineDashChange = (value: number[]) => {
-    updateFeature({
-      ...feature,
-      properties: {
-        ...feature.properties,
-        lineDash: value,
-      },
-    });
-  };
-
   return {
     handleColorChange,
     handleWidthChange,
-    handleLineDashChange,
-    toggleLineDash,
+    handleBorderColorChange,
   };
 };
