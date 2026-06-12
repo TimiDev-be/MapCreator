@@ -26,6 +26,7 @@ export default function OpenMapPage() {
   >(undefined);
   const [feature, setFeature] = useState<Feature | null>(null);
   const [isReady, setIsReady] = useState(false);
+  const [mapZoom, setMapZoom] = useState(currentMap.attractionPoint.zoom ?? 1);
   const MapRef = useRef<Map | null>(null);
   const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
 
@@ -62,6 +63,8 @@ export default function OpenMapPage() {
           setAreaForPrintFeature,
           feature,
           toggleFeaturePanel,
+          mapZoom,
+          setMapZoom,
         }}
       >
         {currentMap && (

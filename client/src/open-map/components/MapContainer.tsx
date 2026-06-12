@@ -3,11 +3,12 @@ import { RLayer, RMap, RSource } from "maplibre-react-components";
 import { useMapContainer } from "../../shared/hooks/MapContainer";
 import { useMap } from "../../shared/hooks/Map";
 import { useSource } from "../../shared/hooks/Source";
+import MarkerComponent from "./marker/Marker";
 
 export default function MapContainer() {
   const { currentSource } = useSource();
   const { currentMap } = useMap();
-  const { setMapRef, areaForPrintFeature } = useMapContainer();
+  const { setMapRef, areaForPrintFeature, setMapZoom } = useMapContainer();
   const { attractionPoint } = currentMap ?? {};
 
   const visibilityFilter: any = [
@@ -32,7 +33,13 @@ export default function MapContainer() {
             initialZoom={attractionPoint?.zoom ?? 1}
             initialPitch={attractionPoint?.pitch ?? 0}
             initialBearing={attractionPoint?.bearing ?? 0}
+            onZoom={(e) => setMapZoom(e.target.getZoom())}
           >
+            {currentMap.features
+              .filter((f) => f.properties.markerId !== undefined)
+              .map((f) => {
+                return <MarkerComponent key={f.id} feature={f} />;
+              })}
             <RSource
               id={currentSource.id}
               type="geojson"
@@ -47,27 +54,6 @@ export default function MapContainer() {
               data={{
                 type: "FeatureCollection",
                 features: areaForPrintFeature ? [areaForPrintFeature] : [],
-              }}
-            />
-            <RLayer
-              id={`${currentSource.id}-text`}
-              type="symbol"
-              source={currentSource.id}
-              filter={[
-                "all",
-                ["any", ["==", ["get", "role"], "custom-text"]],
-                ...visibilityFilter.slice(1),
-              ]}
-              paint={{
-                "text-color": ["get", "color"],
-                "text-opacity": 1,
-              }}
-              layout={{
-                "text-field": ["get", "label"],
-                "text-size": ["get", "fontSize"],
-                "text-offset": [0, 0],
-                "text-anchor": "center",
-                "text-rotate": ["get", "rotate"],
               }}
             />
             <RLayer
@@ -117,29 +103,31 @@ export default function MapContainer() {
               source={currentSource.id}
               filter={[
                 "all",
-                ["any", ["==", ["geometry-type"], "LineString"]],
+                ["==", ["geometry-type"], "LineString"],
+                ["==", ["get", "lineDash"], null],
                 ...visibilityFilter.slice(1),
               ]}
               paint={{
                 "line-color": ["get", "color"],
                 "line-width": ["get", "lineWidth"],
-                "line-dasharray": [3, 4],
                 "line-opacity": 1,
               }}
             />
             <RLayer
-              id={`${currentSource.id}-points`}
-              type="circle"
+              id={`${currentSource.id}-lines-dashed`}
+              type="line"
               source={currentSource.id}
               filter={[
                 "all",
-                ["any", ["==", ["get", "role"], "normal-point"]],
+                ["==", ["geometry-type"], "LineString"],
+                ["!=", ["get", "lineDash"], null],
                 ...visibilityFilter.slice(1),
               ]}
               paint={{
-                "circle-radius": ["get", "circleRadius"],
-                "circle-color": ["get", "color"],
-                "circle-opacity": 1,
+                "line-color": ["get", "color"],
+                "line-width": ["get", "lineWidth"],
+                "line-dasharray": ["get", "lineDash"],
+                "line-opacity": 1,
               }}
             />
             <RLayer
@@ -165,6 +153,18 @@ export default function MapContainer() {
               }}
             />
             <RLayer
+              id="draw-preview-points"
+              type="circle"
+              source="draw-preview"
+              filter={["==", ["geometry-type"], "Point"]}
+              paint={{
+                "circle-radius": 6,
+                "circle-color": "#ff0000",
+                "circle-stroke-width": 2,
+                "circle-stroke-color": "#ffffff",
+              }}
+            />
+            <RLayer
               id="draw-preview-area-for-print-line"
               type="line"
               source="draw-preview"
@@ -178,18 +178,6 @@ export default function MapContainer() {
                 "line-color": "#000000",
                 "line-width": 1.5,
                 "line-dasharray": [2, 1],
-              }}
-            />
-            <RLayer
-              id="draw-preview-points"
-              type="circle"
-              source="draw-preview"
-              filter={["==", ["geometry-type"], "Point"]}
-              paint={{
-                "circle-radius": 6,
-                "circle-color": "#ff0000",
-                "circle-stroke-width": 2,
-                "circle-stroke-color": "#ffffff",
               }}
             />
           </RMap>

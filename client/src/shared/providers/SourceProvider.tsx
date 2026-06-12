@@ -32,14 +32,7 @@ export default function SourceProvider() {
             checked: false,
           })),
         };
-    } else
-      localStorage.setItem(
-        Source.id,
-        JSON.stringify({
-          id: Source.id,
-          maps: Source.maps.map(({ checked, ...rest }) => ({ ...rest })),
-        }),
-      );
+    }
 
     setCurrentSource(Source);
   };

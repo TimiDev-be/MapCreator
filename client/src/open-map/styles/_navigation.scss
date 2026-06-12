@@ -65,16 +65,15 @@
 
         background-color: white;
         color: v.$black;
-
-        .panel-field {
-            padding: 0.2rem 0.5rem;
-            width: 100%;
-            max-width: 200px;
-
-            background-color: v.$blue-light-hover;
-            border: 1px solid v.$blue-light-active;
-            outline: none;
-            color: v.$blue-dark;
-        }
     }
+}
+.panel-field {
+    padding: 0.2rem 0.5rem;
+    width: 100%;
+    max-width: 200px;
+
+    background-color: v.$blue-light-hover;
+    border: 1px solid v.$blue-light-active;
+    outline: none;
+    color: v.$blue-dark;
 }

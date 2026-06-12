@@ -101,6 +101,7 @@
     background-color: transparent;
     border: none;
     outline: none;
+    text-transform: lowercase;
 
     &:focus {
         background-color: v.$blue-light-active;
