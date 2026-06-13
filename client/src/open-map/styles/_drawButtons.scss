@@ -1,0 +1,43 @@
+@use "../../shared/styles/v";
+
+.draw-buttons {
+    grid-area: 1 / 4 / 4 / 5;
+    padding: 0.5rem;
+    align-self: center;
+    justify-self: flex-end;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    background-color: white;
+    border-radius: 10px 0 0 10px;
+
+    .draw-button {
+        padding: 0.4rem;
+        width: max-content;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: white;
+        border: none;
+        border-radius: none;
+        outline: none;
+        cursor: pointer;
+
+        svg path {
+            fill: v.$blue-dark;
+        }
+
+        &.active {
+            background-color: v.$blue-light-active;
+        }
+
+        &:hover {
+            background-color: v.$blue-light-hover;
+        }
+    }
+}
