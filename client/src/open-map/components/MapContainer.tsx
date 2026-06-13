@@ -147,7 +147,11 @@ export default function MapContainer() {
               id="draw-preview-line"
               type="line"
               source="draw-preview"
-              filter={["==", ["geometry-type"], "LineString"]}
+              filter={[
+                "all",
+                ["==", ["geometry-type"], "LineString"],
+                ["!=", ["get", "role"], "area-for-print"],
+              ]}
               paint={{
                 "line-color": "#ff0000",
                 "line-width": 2.5,
