@@ -11,6 +11,7 @@ import type { Feature } from "geojson";
 import MarkerPanel from "./navigation/feature-panels/MarkerPanel";
 import LineStringPanel from "./navigation/feature-panels/LineStringPanel";
 import PolygonPanel from "./navigation/feature-panels/PolygonPanel";
+import DrawButtons from "./draw-buttons/DrawButtons";
 
 const FeaturePanels: Record<string, React.ReactNode> = {
   Point: <MarkerPanel />,
@@ -29,6 +30,10 @@ export default function OpenMapPage() {
   const [mapZoom, setMapZoom] = useState(
     (currentMap && currentMap.attractionPoint?.zoom) ?? 1,
   );
+  const [activeButton, setActiveButton] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const [drawFeatures, setDrawFeatures] = useState<Feature[]>([]);
   const MapRef = useRef<Map | null>(null);
   const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,11 +42,38 @@ export default function OpenMapPage() {
     setIsReady(!!m);
   };
 
+  const toggleActiveButton = (button: HTMLButtonElement | null) => {
+    if (activeButton === button || !button) {
+      if (activeButton) {
+        activeButton.classList.remove("active");
+      }
+      setActiveButton(null);
+    } else {
+      button.classList.add("active");
+      if (activeButton) {
+        activeButton.classList.remove("active");
+      }
+      setActiveButton(button);
+    }
+  };
+
   const toggleFeaturePanel = (newFeature: Feature | null) => {
+    if (!currentMap.features.find((f) => f.id === newFeature?.id)) return;
     setFeature((prev) => {
       return prev === newFeature ? null : newFeature;
     });
   };
+
+  useEffect(() => {
+    if (!currentMap || !feature) return;
+
+    const handleFeatureDeleteAndPanelIfActive = () => {
+      if (!currentMap.features.find((f) => f.id == feature.id)) {
+        setFeature(null);
+      }
+    };
+    handleFeatureDeleteAndPanelIfActive();
+  }, [currentMap, feature]);
 
   useEffect(() => {
     openMap(id);
@@ -52,6 +84,11 @@ export default function OpenMapPage() {
     };
     handleFeatureChange();
   }, [id, currentMap, openMap]);
+
+  useEffect(() => {
+    if (!currentMap) return;
+    console.log(drawFeatures);
+  }, [drawFeatures]);
 
   return (
     <>
@@ -67,6 +104,10 @@ export default function OpenMapPage() {
           toggleFeaturePanel,
           mapZoom,
           setMapZoom,
+          activeButton,
+          toggleActiveButton,
+          drawFeatures,
+          setDrawFeatures,
         }}
       >
         {currentMap && (
@@ -74,6 +115,7 @@ export default function OpenMapPage() {
             <Header />
             <Navigation />
             <MapContainer />
+            <DrawButtons />
             {feature && FeaturePanels[feature.geometry.type]}
           </div>
         )}

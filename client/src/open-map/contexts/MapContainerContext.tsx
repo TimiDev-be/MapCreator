@@ -15,6 +15,10 @@ type Context = {
   toggleFeaturePanel: (newFeature: Feature | null) => void;
   mapZoom: number;
   setMapZoom: React.Dispatch<React.SetStateAction<number>>;
+  activeButton: HTMLButtonElement | null;
+  toggleActiveButton: (button: HTMLButtonElement) => void;
+  drawFeatures: Feature[];
+  setDrawFeatures: React.Dispatch<React.SetStateAction<Feature[]>>;
 };
 
 export const MAP_CONTAINER_CONTEXT = createContext<Context | undefined>(

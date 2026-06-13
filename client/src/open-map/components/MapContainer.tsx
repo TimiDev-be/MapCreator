@@ -8,7 +8,8 @@ import MarkerComponent from "./marker/Marker";
 export default function MapContainer() {
   const { currentSource } = useSource();
   const { currentMap } = useMap();
-  const { setMapRef, areaForPrintFeature, setMapZoom } = useMapContainer();
+  const { setMapRef, areaForPrintFeature, setMapZoom, drawFeatures } =
+    useMapContainer();
   const { attractionPoint } = currentMap ?? {};
 
   const visibilityFilter: any = [
@@ -56,7 +57,9 @@ export default function MapContainer() {
               type="geojson"
               data={{
                 type: "FeatureCollection",
-                features: areaForPrintFeature ? [areaForPrintFeature] : [],
+                features: areaForPrintFeature
+                  ? [areaForPrintFeature, ...drawFeatures]
+                  : [...drawFeatures],
               }}
             />
             <RLayer
@@ -144,11 +147,7 @@ export default function MapContainer() {
               id="draw-preview-line"
               type="line"
               source="draw-preview"
-              filter={[
-                "all",
-                ["==", ["geometry-type"], "LineString"],
-                ["==", ["get", "role"], "draw-preview-line"],
-              ]}
+              filter={["==", ["geometry-type"], "LineString"]}
               paint={{
                 "line-color": "#ff0000",
                 "line-width": 2.5,

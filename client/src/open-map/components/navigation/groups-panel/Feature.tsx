@@ -56,7 +56,10 @@ export default function FeatureComponent({ feature }: Props) {
         <button
           type="button"
           className="delete-feature-button"
-          onClick={() => deleteFeature(feature.id.toString())}
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteFeature(feature.id.toString());
+          }}
         >
           <CloseLogo width={16} height={16} />
         </button>

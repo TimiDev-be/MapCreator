@@ -2,7 +2,7 @@ import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import { useLineFeature } from "../../../../shared/hooks/LineFeature";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import type { LineProperties } from "../../../../shared/types/LineProperties";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function LineStringPanel() {
   const { feature, toggleFeaturePanel } = useMapContainer();
@@ -14,9 +14,14 @@ export default function LineStringPanel() {
     handleLineDashChange,
     toggleLineDash,
   } = useLineFeature();
-  const [stateLineDash, setStateLineDash] = useState<number[]>(
-    lineDash ?? [3, 4],
+  const [stateLineDash, setStateLineDash] = useState<number[] | undefined>(
+    undefined,
   );
+
+  useEffect(() => {
+    const handleLineDash = () => setStateLineDash(lineDash);
+    handleLineDash();
+  }, [lineDash]);
 
   return (
     <>
@@ -68,7 +73,7 @@ export default function LineStringPanel() {
               name="dashed"
               id="is-dashed-checkbox"
               className="panel-checkbox"
-              defaultChecked={lineDash ? true : false}
+              checked={!!stateLineDash}
               onChange={(e) => {
                 if (e.target.checked) {
                   setStateLineDash([3, 4]);
