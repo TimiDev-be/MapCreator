@@ -29,9 +29,20 @@ export const usePolygonFeature = () => {
     });
   };
 
+  const handleOpacityChange = (opacity: number) => {
+    updateFeature({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        opacity,
+      },
+    });
+  };
+
   return {
     handleColorChange,
     handleWidthChange,
     handleBorderColorChange,
+    handleOpacityChange,
   };
 };

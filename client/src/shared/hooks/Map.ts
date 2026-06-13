@@ -2,6 +2,7 @@ import type { StateMap } from "../types/StateMap";
 import { useSource } from "./Source";
 import { Map } from "../classes/Map";
 import { useNavigate } from "react-router-dom";
+import { useCallback } from "react";
 
 export const useMap = () => {
   const { setCurrentSource, currentSource, currentMap, setCurrentMap } =
@@ -37,11 +38,14 @@ export const useMap = () => {
     Navigate("/");
   };
 
-  const openMap = (id: string) => {
-    if (!currentSource) return;
+  const openMap = useCallback(
+    (id: string) => {
+      if (!currentSource) return;
 
-    setCurrentMap(currentSource.maps.find((m) => m.id === id));
-  };
+      setCurrentMap(currentSource.maps.find((m) => m.id === id));
+    },
+    [currentSource],
+  );
 
   const closeMap = () => {
     setCurrentMap(null);
