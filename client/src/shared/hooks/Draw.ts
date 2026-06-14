@@ -34,10 +34,14 @@ export const useDraw = () => {
 
       if (Coords.length < 2) return;
 
+      const { zoom } = currentMap.attractionPoint ?? {
+        zoom: map.current.getZoom(),
+      };
+
       newFeature(
         new LineString(
           Coords,
-          map.current.getZoom(),
+          zoom,
           currentMap.id,
           currentGroup?.id ?? undefined,
           "normal-line",
@@ -67,11 +71,15 @@ export const useDraw = () => {
       )
         return;
 
+      const { zoom } = currentMap.attractionPoint ?? {
+        zoom: map.current.getZoom(),
+      };
+
       newFeature(
         new Polygon(
           Coords,
           currentMap.id,
-          map.current.getZoom(),
+          zoom,
           currentGroup?.id ?? undefined,
           "normal-polygon",
         ),
@@ -85,11 +93,15 @@ export const useDraw = () => {
     (e: MapMouseEvent) => {
       if (!map.current) return;
       const { lng, lat } = e.lngLat;
+      const { zoom } = currentMap.attractionPoint ?? {
+        zoom: map.current.getZoom(),
+      };
+
       newFeature(
         new Marker(
           [lng, lat],
           currentMap.id,
-          map.current.getZoom(),
+          zoom,
           currentGroup?.id ?? undefined,
         ),
       );

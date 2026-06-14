@@ -1,5 +1,5 @@
 import "../../../styles/_feature.scss";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import type { Feature } from "geojson";
 import { useFeature } from "../../../../shared/hooks/Feature";
 import { useMapContainer } from "../../../../shared/hooks/MapContainer";
@@ -42,6 +42,10 @@ export default function FeatureComponent({ feature }: Props) {
       setEditName(false);
     }
   };
+
+  useEffect(() => {
+    console.log(feature);
+  }, [feature]);
 
   return (
     <>

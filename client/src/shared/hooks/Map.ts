@@ -5,8 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
 
 export const useMap = () => {
-  const { setCurrentSource, currentSource, currentMap, setCurrentMap } =
-    useSource();
+  const {
+    setCurrentSource,
+    currentSource,
+    currentMap,
+    setCurrentMap,
+    setCurrentGroup,
+  } = useSource();
   const Navigate = useNavigate();
 
   const newMap = (name: string) => {
@@ -49,6 +54,7 @@ export const useMap = () => {
 
   const closeMap = () => {
     setCurrentMap(null);
+    setCurrentGroup(null);
   };
 
   const toggleCheckMap = (id: string, value: boolean) => {

@@ -39,7 +39,7 @@ export default function GroupsPanel() {
             return <Group key={g.id} group={g} />;
           })}
           {features
-            .filter((f) => f.properties.groupId === undefined)
+            .filter((f) => !f.properties.groupId)
             .map((f) => {
               return <FeatureComponent key={f.id} feature={f} />;
             })}

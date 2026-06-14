@@ -27,7 +27,25 @@ export const useMapSettings = () => {
           bearing: map.current.getBearing(),
         };
 
-    updateMap({ ...currentMap, attractionPoint: newAttractionPoint });
+    const minZoom = newAttractionPoint
+      ? newAttractionPoint.zoom - 3
+      : map.current.getZoom() - 3;
+    const maxZoom = newAttractionPoint
+      ? newAttractionPoint.zoom + 3
+      : map.current.getZoom() + 3;
+
+    updateMap({
+      ...currentMap,
+      features: [...currentMap.features].map((f) => ({
+        ...f,
+        properties: {
+          ...f.properties,
+          minZoom,
+          maxZoom,
+        },
+      })),
+      attractionPoint: newAttractionPoint,
+    });
   };
 
   const handleAreaForPrintChange = (areaForPrint: AreaForPrint) => {

@@ -85,11 +85,6 @@ export default function OpenMapPage() {
     handleFeatureChange();
   }, [id, currentMap, openMap]);
 
-  useEffect(() => {
-    if (!currentMap) return;
-    console.log(drawFeatures);
-  }, [drawFeatures]);
-
   return (
     <>
       <MAP_CONTAINER_CONTEXT.Provider
