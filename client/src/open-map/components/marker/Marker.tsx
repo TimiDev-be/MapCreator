@@ -2,7 +2,7 @@ import "../../styles/_marker.scss";
 import type { Feature } from "geojson";
 import type { Marker } from "maplibre-gl";
 import { RMarker, type Event } from "maplibre-react-components";
-import { useCallback, useEffect, useState, type CSSProperties } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 import type { MarkerProperties } from "../../../shared/types/MarkerProperties";
 import { OpacityToHex } from "../../../shared/utils/OpacityToHex";
 import { MarkerIcons } from "./MarkerIcons";
@@ -61,12 +61,14 @@ export default function MarkerComponent({ feature }: Props) {
             backgroundColor: BackgroundColor,
             borderRadius: borderRadius.map((b) => `${b}px`).join(" ") ?? "0",
             color,
-            padding: padding.map((p) => `${p}em`).join(" ") ?? "0",
             fontSize: `${fontSize}px`,
             transform: `rotate(${rotate}deg)`,
           }}
         >
-          <div className="wrapper">
+          <div
+            className="wrapper"
+            style={{ padding: padding.map((p) => `${p}em`).join(" ") ?? "0" }}
+          >
             {MarkerIcon && (
               <MarkerIcon
                 width={1.5 * fontSize}

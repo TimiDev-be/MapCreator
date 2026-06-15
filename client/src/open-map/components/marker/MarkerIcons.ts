@@ -18,6 +18,8 @@ import HorseLogo from "../../../assets/tabler_horse.svg?react";
 import GasStationLogo from "../../../assets/mdi_gas-station.svg?react";
 import CrossLogo from "../../../assets/mdi_cross-outline.svg?react";
 import RoundAboutLogo from "../../../assets/material-symbols_roundabout-left.svg?react";
+import PackageLogo from "../../../assets/boxicons_package.svg?react";
+import FactoryLogo from "../../../assets/mdi-light_factory.svg?react";
 
 export const MarkerIcons: Record<
   string,
@@ -43,4 +45,6 @@ export const MarkerIcons: Record<
   "gas-station": GasStationLogo,
   cross: CrossLogo,
   "round-about": RoundAboutLogo,
+  package: PackageLogo,
+  factory: FactoryLogo,
 };

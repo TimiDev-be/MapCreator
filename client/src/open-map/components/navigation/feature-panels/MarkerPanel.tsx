@@ -1,6 +1,8 @@
 import { useMarkerFeature } from "../../../../shared/hooks/MarkerFeature";
 import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import type { MarkerProperties } from "../../../../shared/types/MarkerProperties";
+import type { Feature } from "geojson";
+import { useState, useEffect, useCallback } from "react";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import PaddingLeft from "../../../../assets/boxicons_dock-left.svg?react";
 import PaddingRight from "../../../../assets/boxicons_dock-right.svg?react";
@@ -21,6 +23,9 @@ export default function MarkerPanel() {
     handleRotateChange,
   } = useMarkerFeature();
   const { feature, toggleFeaturePanel } = useMapContainer();
+
+  const properties = (feature?.properties as MarkerProperties) || undefined;
+
   const {
     name,
     color,
@@ -30,11 +35,11 @@ export default function MarkerPanel() {
     label,
     opacity,
     rotate,
-  } = feature.properties as MarkerProperties;
+  } = properties || {};
 
   return (
     <>
-      <div className="feature-panel marker">
+      <div className="feature-panel marker" key={feature.id}>
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"

@@ -43,10 +43,6 @@ export default function FeatureComponent({ feature }: Props) {
     }
   };
 
-  useEffect(() => {
-    console.log(feature);
-  }, [feature]);
-
   return (
     <>
       <li

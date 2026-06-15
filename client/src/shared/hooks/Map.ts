@@ -28,7 +28,9 @@ export const useMap = () => {
 
     setCurrentSource({
       ...currentSource,
-      maps: [...currentSource.maps].map((m) => (m.id === map.id ? map : m)),
+      maps: [...currentSource.maps].map((m) =>
+        m.id === map.id ? { ...map, updatedAt: new Date().toISOString() } : m,
+      ),
     });
     setCurrentMap(map);
   };

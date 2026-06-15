@@ -58,6 +58,7 @@ export default function OpenMapPage() {
   };
 
   const toggleFeaturePanel = (newFeature: Feature | null) => {
+    if (!newFeature) return setFeature(null);
     if (!currentMap.features.find((f) => f.id === newFeature?.id)) return;
     setFeature((prev) => {
       return prev === newFeature ? null : newFeature;

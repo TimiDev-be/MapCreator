@@ -25,7 +25,7 @@ export default function LineStringPanel() {
 
   return (
     <>
-      <div className="feature-panel lineString">
+      <div className="feature-panel lineString" key={feature.id}>
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"

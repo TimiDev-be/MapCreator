@@ -59,6 +59,8 @@ export const useMapSettings = () => {
     map.current.jumpTo({
       center: [attractionPoint.coords[0], attractionPoint.coords[1]],
       zoom: attractionPoint.zoom,
+      pitch: attractionPoint.pitch,
+      bearing: attractionPoint.bearing,
     });
 
     map.current.once("idle", () => {

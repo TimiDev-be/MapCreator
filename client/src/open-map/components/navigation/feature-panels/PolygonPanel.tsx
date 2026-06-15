@@ -16,7 +16,7 @@ export default function PolygonPanel() {
 
   return (
     <>
-      <div className="feature-panel polygon">
+      <div className="feature-panel polygon" key={feature.id}>
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"
