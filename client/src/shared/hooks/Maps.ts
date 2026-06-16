@@ -23,6 +23,7 @@ export const useMaps = () => {
     setCurrentSource({
       id: "source-of-user-data",
       maps: applySort(currentSource?.maps ?? [], value),
+      templates: currentSource?.templates ?? [],
     });
   };
 
@@ -33,6 +34,7 @@ export const useMaps = () => {
         ...map,
         checked: checked,
       })),
+      templates: currentSource?.templates ?? [],
     });
   };
 
@@ -41,6 +43,7 @@ export const useMaps = () => {
     setCurrentSource({
       id: "source-of-user-data",
       maps: [...(filteredMaps ?? [])],
+      templates: currentSource?.templates ?? [],
     });
   };
 

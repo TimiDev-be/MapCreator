@@ -1,4 +1,5 @@
 import { useSource } from "./Source";
+import type { DescriptionTemplate } from "../types/DescriptionTemplate";
 
 export const useFile = () => {
   const { setCurrentSource, currentSource } = useSource();
@@ -9,11 +10,38 @@ export const useFile = () => {
     if (!Json.maps) return;
     const isNewFormat = Json.maps.every((map) => Array.isArray(map.features));
     if (!isNewFormat) return;
-    setCurrentSource({ id: "source-of-user-data", maps: Json.maps });
-    localStorage.setItem(
-      "source-of-user-data",
-      JSON.stringify({ id: "source-of-user-data", maps: Json.maps }),
-    );
+    setCurrentSource({
+      id: "source-of-user-data",
+      maps: Json.maps,
+      templates: Json.templates ?? [],
+    });
+  };
+
+  const importTemplate = async (file: File) => {
+    const String = await file.text();
+    const NewTemplate: DescriptionTemplate = {
+      id: crypto.randomUUID(),
+      name: "default template",
+      htmlContent: String,
+    };
+    setCurrentSource((prev) => ({
+      ...prev,
+      templates: [...(prev.templates ?? []), NewTemplate],
+    }));
+  };
+
+  const updateTemplateName = (id: string, name: string) => {
+    setCurrentSource((prev) => ({
+      ...prev,
+      templates: prev.templates.map((t) => (t.id === id ? { ...t, name } : t)),
+    }));
+  };
+
+  const deleteTemplate = (id: string) => {
+    setCurrentSource((prev) => ({
+      ...prev,
+      templates: prev.templates.filter((t) => t.id !== id),
+    }));
   };
 
   const downloadFile = () => {
@@ -22,6 +50,7 @@ export const useFile = () => {
       maps: currentSource.maps
         .map(({ checked, ...rest }) => ({ ...rest }))
         .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
+      templates: currentSource.templates,
     });
     const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -34,5 +63,11 @@ export const useFile = () => {
     URL.revokeObjectURL(url);
   };
 
-  return { importFile, downloadFile };
+  return {
+    importFile,
+    downloadFile,
+    importTemplate,
+    deleteTemplate,
+    updateTemplateName,
+  };
 };

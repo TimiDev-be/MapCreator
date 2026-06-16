@@ -20,6 +20,7 @@ export default function SourceProvider() {
     let Source: UserSource = {
       id: "source-of-user-data",
       maps: [],
+      templates: [],
     };
 
     if (DataString) {
@@ -31,6 +32,7 @@ export default function SourceProvider() {
             ...map,
             checked: false,
           })),
+          templates: DataStringFormated.templates ?? [],
         };
     }
 
@@ -49,6 +51,7 @@ export default function SourceProvider() {
         JSON.stringify({
           id: currentSource.id,
           maps: currentSource.maps.map(({ checked, ...rest }) => ({ ...rest })),
+          templates: currentSource.templates,
         }),
       );
     }
