@@ -1,0 +1,45 @@
+@use "../../shared/styles/v";
+
+.template-preview.subpage {
+    padding: 1rem;
+    width: 100%;
+    max-width: 850px;
+    height: 100%;
+
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    overflow: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    background-color: white;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+
+    .wrapper {
+        width: 100%;
+        height: max-content;
+
+        position: relative;
+        display: flex;
+    }
+
+    .back-from-template-preview-link {
+        padding: 0.5rem 1rem;
+        width: max-content;
+
+        transition: all 0.2s ease-in-out;
+
+        background-color: v.$blue-normal;
+        color: white;
+        text-decoration: none;
+        text-transform: uppercase;
+
+        &:hover {
+            background-color: v.$blue-dark;
+        }
+    }
+}

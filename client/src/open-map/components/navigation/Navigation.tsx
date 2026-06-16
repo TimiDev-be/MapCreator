@@ -55,11 +55,11 @@ export default function Navigation() {
             <ExportLogo width={32} height={32} />
           </button>
         </div>
-        {activePanel === "settings" && <SettingsPanel />}
-        {activePanel === "groups" && <GroupsPanel />}
-        {activePanel === "description" && <DescriptionPanel />}
-        {activePanel === "export" && <ExportPanel />}
       </nav>
+      {activePanel === "settings" && <SettingsPanel />}
+      {activePanel === "groups" && <GroupsPanel />}
+      {activePanel === "description" && <DescriptionPanel />}
+      {activePanel === "export" && <ExportPanel />}
     </>
   );
 }
