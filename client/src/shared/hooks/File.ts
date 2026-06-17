@@ -1,5 +1,6 @@
 import { useSource } from "./Source";
 import type { DescriptionTemplate } from "../types/DescriptionTemplate";
+import html2pdf from "../../../node_modules/html2pdf.js/src";
 
 export const useFile = () => {
   const { setCurrentSource, currentSource } = useSource();
@@ -38,10 +39,32 @@ export const useFile = () => {
   };
 
   const deleteTemplate = (id: string) => {
+    const TemplateInUse = currentSource.maps.find(
+      (map) => map.description?.templateId === id,
+    );
+
+    if (TemplateInUse) {
+      alert("Template is in use. Cannot delete.");
+      return;
+    }
+
     setCurrentSource((prev) => ({
       ...prev,
       templates: prev.templates.filter((t) => t.id !== id),
     }));
+  };
+
+  const downloadPdfFromTemplate = (
+    element: HTMLElement,
+    mapName: string,
+    templateName: string,
+  ) => {
+    html2pdf(element, {
+      filename: `${mapName}-${templateName}-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.pdf`,
+      image: { type: "jpeg", quality: 1 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    });
   };
 
   const downloadFile = () => {
@@ -69,5 +92,6 @@ export const useFile = () => {
     importTemplate,
     deleteTemplate,
     updateTemplateName,
+    downloadPdfFromTemplate,
   };
 };

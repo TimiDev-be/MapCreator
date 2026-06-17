@@ -55,7 +55,7 @@ export default function CustomSelect({
         </div>
         <ul className={`options ${active && "active"}`}>
           {options.map((o) => {
-            let active = selectedOption.id == o.id ? "active" : "";
+            const active = selectedOption.id == o.id ? "active" : "";
             return (
               <li
                 key={o.id}

@@ -1,8 +1,49 @@
+@use "../../shared/styles/v";
+
 .nav.panel.description {
     width: 100%;
     max-width: 100% !important;
 
     z-index: 4;
-
     display: flex;
+    flex-direction: column;
+
+    .top-block {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+    }
+    .download-template-button {
+        padding: 0.5rem 1rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background-color: v.$black;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+            background-color: v.$blue-darker;
+        }
+    }
+    .template-content-wrapper {
+        padding: 1rem;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+
+        display: flex;
+        align-items: flex-start;
+    }
+    .custom-select {
+        max-width: 400px !important;
+        flex-wrap: wrap !important;
+    }
 }

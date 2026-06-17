@@ -7,7 +7,7 @@ type Props = {
 export default function Line({ height }: Props) {
   return (
     <>
-      <div className="line" style={{ height: `${height}px` }}></div>
+      <div className="custom-line" style={{ height: `${height}px` }}></div>
     </>
   );
 }

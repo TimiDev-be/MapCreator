@@ -1,14 +1,228 @@
-import Line from "../../../shared/components/Line";
 import "../../styles/_descriptionPanel.scss";
+import Line from "../../../shared/components/Line.tsx";
+import CustomSelect from "../../../shared/components/CustomSelect";
+import { useMapDescription } from "../../../shared/hooks/MapDescription.ts";
+import type { CustomSelectOption } from "../../../shared/types/CustomSelectOption.ts";
+import { useMap } from "../../../shared/hooks/Map.ts";
+import { useEffect, useRef } from "react";
+import { useMapContainer } from "../../../shared/hooks/MapContainer.ts";
+import { MmToPx } from "../../../shared/utils/MmToPx.ts";
+import html2canvas from "html2canvas";
+import { useFile } from "../../../shared/hooks/File.ts";
+import QRCode from "qrcode";
+import type { StateMap } from "../../../shared/types/StateMap.ts";
 
 export default function DescriptionPanel() {
+  const { assignTemplate, getTemplate } = useMapDescription();
+  const { downloadPdfFromTemplate } = useFile();
+  const { map } = useMapContainer();
+  const { currentMap, updateMap } = useMap();
+  const { description, attractionPoint } = currentMap ?? {};
+  const { templateId } = description ?? {};
+  const { templates } = useMapDescription();
+  const TemplateWrappeRef = useRef<HTMLDivElement | null>(null);
+  const TemplateRef = useRef<HTMLDivElement | null>(null);
+  const CurrentMapRef = useRef<StateMap | null>(null);
+
+  const Options: CustomSelectOption[] = [
+    ...templates.map((t) => ({ id: t.id, value: t.name })),
+    { id: "none", value: "none" },
+  ];
+  const DefaultOption: CustomSelectOption = {
+    id: getTemplate(templateId)?.id ?? "none",
+    value: getTemplate(templateId)?.name ?? "none",
+  };
+
+  const selectOption = (option: CustomSelectOption) => {
+    assignTemplate(option.id);
+  };
+
+  const setDescriptoinValue = (key: string, value: string) => {
+    if (!CurrentMapRef.current) return;
+    return updateMap({
+      ...CurrentMapRef.current,
+      description: {
+        ...CurrentMapRef.current.description,
+        values: { ...CurrentMapRef.current.description.values, [key]: value },
+      },
+    });
+  };
+
+  const handleDownloadPdf = () => {
+    if (!TemplateWrappeRef.current) return;
+    const Template =
+      TemplateWrappeRef.current.querySelector<HTMLElement>(".template");
+    if (!Template) return;
+    downloadPdfFromTemplate(
+      Template,
+      currentMap.name,
+      getTemplate(templateId)?.name ?? "none",
+    );
+  };
+
+  const handleLoadQrCode = async () => {
+    const QRCodeDom = TemplateWrappeRef.current.querySelector("#qr-code");
+    if (!QRCodeDom) return;
+
+    if (attractionPoint) {
+      const { coords, zoom } = attractionPoint;
+      const Canvas = document.createElement("canvas");
+      await QRCode.toCanvas(
+        Canvas,
+        `https://www.google.com/maps/@${coords[1]},${coords[0]},${zoom}z`,
+        {
+          width: QRCodeDom.clientWidth,
+          height: QRCodeDom.clientHeight,
+        },
+      );
+      QRCodeDom.innerHTML = "";
+      QRCodeDom.appendChild(Canvas);
+    }
+  };
+
+  const handleLoadMap = () => {
+    const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
+    if (!TemplateDom) return;
+
+    const TemplateMapContainer = TemplateDom.querySelector("#map-container");
+    TemplateMapContainer.innerHTML = "";
+    if (
+      currentMap.attractionPoint &&
+      TemplateMapContainer instanceof HTMLDivElement
+    ) {
+      const { coords, zoom, pitch, bearing } = currentMap.attractionPoint;
+      const { width, height } = currentMap.areaForPrint;
+      const MapContainer = map.current.getContainer();
+
+      MapContainer.style.width = `${MmToPx(width)}px`;
+      MapContainer.style.height = `${MmToPx(height)}px`;
+      map.current.resize();
+
+      const WidthNum = MmToPx(width);
+      const HeightNum = MmToPx(height);
+
+      map.current.jumpTo({
+        center: coords as [number, number],
+        zoom,
+        pitch,
+        bearing,
+      });
+      map.current.once("idle", async () => {
+        const MapCanvas = await html2canvas(MapContainer, {
+          useCORS: true,
+          backgroundColor: null,
+          ignoreElements: (el) =>
+            el.classList.contains("maplibregl-control-container"),
+        });
+        const UriData = MapCanvas.toDataURL("image/png");
+
+        const svg = `
+            <svg xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                version="1.1"
+                width="100%"
+                height="100%"
+                viewBox="0 0 ${WidthNum} ${HeightNum}"
+                xml:space="preserve">
+                    <image style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
+                xlink:href="${UriData}" width="${WidthNum}" height="${HeightNum}"></image>
+            </svg>`;
+
+        TemplateMapContainer.innerHTML = svg;
+        MapContainer.style.width = "100%";
+        MapContainer.style.height = "100%";
+        map.current.resize();
+      });
+    }
+  };
+
+  const handleLoadTemplate = () => {
+    if (!TemplateWrappeRef.current) return;
+    const Template = getTemplate(templateId);
+    if (!Template) return;
+    TemplateRef.current.innerHTML = Template.htmlContent;
+  };
+
+  const handleLoadData = () => {
+    const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
+    if (!TemplateDom) return;
+
+    Object.entries(description.values).forEach(([name, value]) => {
+      const el = TemplateDom.querySelector(`[name="${name}"]`);
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+        el.value = value;
+      }
+    });
+  };
+
+  const handleLoadListeners = () => {
+    if (
+      !currentMap ||
+      getTemplate(templateId) == undefined ||
+      !TemplateWrappeRef.current ||
+      !map.current
+    )
+      return;
+
+    const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
+    if (!TemplateDom) return;
+
+    const Handlers = new Map<Element, (e: Event) => void>([]);
+    TemplateDom.querySelectorAll("textarea, input").forEach((el) => {
+      const handler = (e: Event) => {
+        const Target = e.currentTarget as
+          | HTMLInputElement
+          | HTMLTextAreaElement;
+        setDescriptoinValue(Target.name, Target.value);
+      };
+      el.addEventListener("blur", handler);
+      Handlers.set(el, handler);
+    });
+
+    return () => {
+      Handlers.forEach((handler, el) => {
+        el.removeEventListener("blur", handler);
+      });
+    };
+  };
+
+  useEffect(() => {
+    handleLoadTemplate();
+    handleLoadData();
+    handleLoadMap();
+    handleLoadQrCode();
+    handleLoadListeners();
+  }, [templateId]);
+
+  useEffect(() => {
+    handleLoadData();
+    CurrentMapRef.current = currentMap;
+  }, [currentMap]);
+
   return (
     <>
       <div className="nav panel description">
         <div className="top-block">
           <p className="panel-name t-panel-name">Description</p>
+          <CustomSelect
+            type="default"
+            selectName="Choose Template"
+            defaultOption={DefaultOption}
+            options={Options}
+            selectOption={selectOption}
+          />
+          <button
+            type="button"
+            className="download-template-button t-panel-medium"
+            onClick={handleDownloadPdf}
+          >
+            Download PDF
+          </button>
         </div>
         <Line height={1} />
+        <div className="template-content-wrapper" ref={TemplateWrappeRef}>
+          {templateId && <div ref={TemplateRef}></div>}
+        </div>
       </div>
     </>
   );
