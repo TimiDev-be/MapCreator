@@ -25,6 +25,7 @@ export const useGroup = () => {
     });
   };
   const deleteGroup = (id: string) => {
+    setCurrentGroup((prev) => (prev && prev.id == id ? undefined : prev));
     updateMap({
       ...currentMap,
       features: currentMap.features.filter((f) => f.properties.groupId !== id),
