@@ -224,7 +224,7 @@ export default function DescriptionPanel() {
             <p className="warning t-panel-medium">
               <strong>
                 Warning: Changing your template will clear all currently entered
-                data.
+                data except for description for map maker.
               </strong>
               <br />
               Please ensure you have saved or exported your progress before

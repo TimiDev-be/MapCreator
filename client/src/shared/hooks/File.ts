@@ -6,24 +6,43 @@ export const useFile = () => {
   const { setCurrentSource, currentSource } = useSource();
 
   const importFile = async (file: File) => {
-    const String = await file.text();
-    const Json = JSON.parse(String);
-    if (!Json.maps) return;
-    const isNewFormat = Json.maps.every((map) => Array.isArray(map.features));
+    const text = await file.text();
+    const importedData = JSON.parse(text);
+
+    if (!importedData.maps) return;
+    const isNewFormat = importedData.maps.every((map: any) =>
+      Array.isArray(map.features),
+    );
     if (!isNewFormat) return;
-    setCurrentSource({
-      id: "source-of-user-data",
-      maps: Json.maps,
-      templates: Json.templates ?? [],
+
+    setCurrentSource((prev) => {
+      const currentMaps = prev?.maps ?? [];
+      const currentTemplates = prev?.templates ?? [];
+
+      const mergedMaps = new Map(currentMaps.map((m) => [m.id, m]));
+      importedData.maps.forEach((newMap) => {
+        mergedMaps.set(newMap.id, newMap);
+      });
+
+      const mergedTemplates = new Map(currentTemplates.map((t) => [t.id, t]));
+      (importedData.templates ?? []).forEach((newTemp) => {
+        mergedTemplates.set(newTemp.id, newTemp);
+      });
+
+      return {
+        id: "source-of-user-data",
+        maps: Array.from(mergedMaps.values()),
+        templates: Array.from(mergedTemplates.values()),
+      };
     });
   };
 
   const importTemplate = async (file: File) => {
-    const String = await file.text();
+    const Text = await file.text();
     const NewTemplate: DescriptionTemplate = {
       id: crypto.randomUUID(),
       name: "default template",
-      htmlContent: String,
+      htmlContent: Text,
     };
     setCurrentSource((prev) => ({
       ...prev,
