@@ -60,10 +60,12 @@ export const useFile = () => {
     templateName: string,
   ) => {
     html2pdf(element, {
+      margin: [0, 0, 0, 0],
       filename: `${mapName}-${templateName}-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.pdf`,
       image: { type: "jpeg", quality: 1 },
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: "avoid-all" },
     });
   };
 

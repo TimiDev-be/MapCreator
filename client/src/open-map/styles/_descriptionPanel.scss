@@ -14,6 +14,33 @@
         flex-wrap: wrap;
         align-items: center;
         gap: 1rem;
+
+        .about-panel {
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .warning {
+                color: v.$blue-darker;
+            }
+        }
+        .description-for-map-maker-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            .description-for-map-maker {
+                padding: 1rem;
+                min-width: 100%;
+                max-width: 100%;
+                min-height: 100px;
+                max-height: 150px;
+                overflow: auto;
+            }
+        }
     }
     .download-template-button {
         padding: 0.5rem 1rem;

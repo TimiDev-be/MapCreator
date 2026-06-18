@@ -11,14 +11,17 @@ import html2canvas from "html2canvas";
 import { useFile } from "../../../shared/hooks/File.ts";
 import QRCode from "qrcode";
 import type { StateMap } from "../../../shared/types/StateMap.ts";
+import MySvg from "../../../shared/components/MySvg.tsx";
+import { createRoot } from "react-dom/client";
 
 export default function DescriptionPanel() {
-  const { assignTemplate, getTemplate } = useMapDescription();
+  const { assignTemplate, getTemplate, updateMapDescription } =
+    useMapDescription();
   const { downloadPdfFromTemplate } = useFile();
   const { map } = useMapContainer();
   const { currentMap, updateMap } = useMap();
   const { description, attractionPoint } = currentMap ?? {};
-  const { templateId } = description ?? {};
+  const { templateId, descriptionForMapMaker } = description ?? {};
   const { templates } = useMapDescription();
   const TemplateWrappeRef = useRef<HTMLDivElement | null>(null);
   const TemplateRef = useRef<HTMLDivElement | null>(null);
@@ -116,22 +119,18 @@ export default function DescriptionPanel() {
         });
         const UriData = MapCanvas.toDataURL("image/png");
 
-        const svg = `
-            <svg xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                version="1.1"
-                width="100%"
-                height="100%"
-                viewBox="0 0 ${WidthNum} ${HeightNum}"
-                xml:space="preserve">
-                    <image style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(0,0,0); fill-rule: nonzero; opacity: 1;"
-                xlink:href="${UriData}" width="${WidthNum}" height="${HeightNum}"></image>
-            </svg>`;
+        const root = createRoot(TemplateMapContainer);
+        root.render(
+          <MySvg Width={WidthNum} Height={HeightNum} UriData={UriData} />,
+        );
 
-        TemplateMapContainer.innerHTML = svg;
         MapContainer.style.width = "100%";
         MapContainer.style.height = "100%";
         map.current.resize();
+
+        return () => {
+          root.unmount();
+        };
       });
     }
   };
@@ -218,6 +217,36 @@ export default function DescriptionPanel() {
           >
             Download PDF
           </button>
+          <div className="about-panel">
+            <p className="subtitle t-panel-medium">
+              Manage your document layout and content settings.
+            </p>
+            <p className="warning t-panel-medium">
+              <strong>
+                Warning: Changing your template will clear all currently entered
+                data.
+              </strong>
+              <br />
+              Please ensure you have saved or exported your progress before
+              switching, as all unsaved information in the current form will be
+              permanently lost.
+            </p>
+            <div className="description-for-map-maker-container">
+              <label
+                htmlFor="description-for-map-maker-textarea"
+                className="t-panel-medium"
+              >
+                Description for Map Maker
+              </label>
+              <textarea
+                name="description-for-map-maker"
+                id="description-for-map-maker-textarea"
+                className="description-for-map-maker t-panel-medium"
+                defaultValue={descriptionForMapMaker ?? ""}
+                onBlur={(e) => updateMapDescription(e.target.value)}
+              ></textarea>
+            </div>
+          </div>
         </div>
         <Line height={1} />
         <div className="template-content-wrapper" ref={TemplateWrappeRef}>

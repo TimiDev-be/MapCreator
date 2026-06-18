@@ -11,7 +11,10 @@ export const useMapDescription = () => {
   };
   const assignTemplate = (id: string) => {
     if (!currentMap) return;
+
     const ExistingTemplate = getTemplate(id);
+    const { descriptionForMapMaker } = currentMap.description;
+
     if (!ExistingTemplate)
       return updateMap({
         ...currentMap,
@@ -19,11 +22,28 @@ export const useMapDescription = () => {
           templateId: "",
           values: {},
           qrCodeUrl: undefined,
+          descriptionForMapMaker: descriptionForMapMaker ?? "",
         } as MapDescription,
       });
+    if (currentMap.description.templateId === id) return;
     return updateMap({
       ...currentMap,
-      description: { values: {}, templateId: id, qrCodeUrl: undefined },
+      description: {
+        values: {},
+        templateId: id,
+        qrCodeUrl: undefined,
+        descriptionForMapMaker: descriptionForMapMaker ?? "",
+      },
+    });
+  };
+  const updateMapDescription = (description: string) => {
+    if (!currentMap) return;
+    return updateMap({
+      ...currentMap,
+      description: {
+        ...currentMap.description,
+        descriptionForMapMaker: description,
+      },
     });
   };
 
@@ -31,5 +51,6 @@ export const useMapDescription = () => {
     templates: (currentSource && currentSource.templates) ?? [],
     getTemplate,
     assignTemplate,
+    updateMapDescription,
   };
 };
