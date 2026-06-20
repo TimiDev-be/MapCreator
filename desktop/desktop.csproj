@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net10.0-windows</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\logo.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4022.49" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Assets\logo.png">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Resource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Controls\ChangeUrlControl.xaml.cs">
+	    <SubType>Code</SubType>
+	  </Compile>
+	</ItemGroup>
+
+	<Target Name="BuildFrontend" BeforeTargets="BeforeBuild">
+		<Message Importance="high" Text="Building React frontend..." />
+		<Exec Command="npm run build" WorkingDirectory="$(ProjectDir)..\client" />
+
+		<Message Importance="high" Text="Copying files to wwwroot..." />
+		<ItemGroup>
+			<FrontendFiles Include="$(ProjectDir)..\client\dist\**\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(FrontendFiles)" DestinationFolder="$(ProjectDir)wwwroot\dist\%(RecursiveDir)" />
+	</Target>
+
+</Project>
