@@ -1,4 +1,5 @@
 #map-container {
     grid-area: 2 / 2 / 4 / -1;
+    touch-action: none;
     z-index: 0;
 }

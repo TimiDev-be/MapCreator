@@ -24,6 +24,7 @@ export default function MapContainer() {
       <div id="map-container">
         {currentSource && currentMap && (
           <RMap
+            key={currentMap.id}
             style={{ width: "100%", height: "100%" }}
             mapStyle={import.meta.env.VITE_MAP_STYLE}
             onMounted={(m) => {
@@ -49,7 +50,7 @@ export default function MapContainer() {
               type="geojson"
               data={{
                 type: "FeatureCollection",
-                features: currentMap.features,
+                features: currentMap?.features ?? [],
               }}
             />
             <RSource
