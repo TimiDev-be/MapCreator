@@ -19,6 +19,8 @@ type Context = {
   toggleActiveButton: (button: HTMLButtonElement) => void;
   drawFeatures: Feature[];
   setDrawFeatures: React.Dispatch<React.SetStateAction<Feature[]>>;
+  areaForPrintClientPreview: boolean;
+  setAreaForPrintClientPreview: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const MAP_CONTAINER_CONTEXT = createContext<Context | undefined>(

@@ -6,7 +6,12 @@ import { useMapContainer } from "../../../shared/hooks/MapContainer";
 import { useMapSettings } from "../../../shared/hooks/MapSettings";
 
 export default function SettingsPanel() {
-  const { map, areaForPrintFeature } = useMapContainer();
+  const {
+    map,
+    areaForPrintFeature,
+    areaForPrintClientPreview,
+    setAreaForPrintClientPreview,
+  } = useMapContainer();
   const { currentMap, deleteMap } = useMap();
   const {
     handleNameChange,
@@ -73,13 +78,12 @@ export default function SettingsPanel() {
           </button>
           {!attractionPoint && (
             <p className="about attraction-point t-panel-small">
-              Need to add an attraction to access jump to anchor and print area.
+              Need to add an attraction to access jump to anchor and show print
+              area.
             </p>
           )}
         </div>
-        <div
-          className={`group area-for-print ${attractionPoint ? "" : "disabled"}`}
-        >
+        <div className="group area-for-print">
           <p className="about area-for-print t-panel-medium">
             Area for print (mm)
           </p>
@@ -132,8 +136,17 @@ export default function SettingsPanel() {
             type="button"
             className={`show-print-area-button t-panel-small ${areaForPrintFeature ? "active" : ""}`}
             onClick={toggleAreaForPrint}
+            disabled={!attractionPoint}
           >
             Show print area
+          </button>
+          <button
+            type="button"
+            className={`show-print-area-client-preview-button t-panel-small ${areaForPrintClientPreview ? "active" : ""}`}
+            onClick={() => setAreaForPrintClientPreview((prev) => !prev)}
+          >
+            {areaForPrintClientPreview ? "Hide" : "Show"} print area client
+            preview
           </button>
         </div>
         <button
