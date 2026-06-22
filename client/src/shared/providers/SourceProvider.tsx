@@ -13,6 +13,7 @@ export default function SourceProvider() {
   const [currentGroup, setCurrentGroup] = useState<Group | undefined>(
     undefined,
   );
+  const [mapStyle, setMapStyle] = useState<string | undefined>(undefined);
 
   //load data
   const loadSourceDataToState = async () => {
@@ -34,8 +35,27 @@ export default function SourceProvider() {
     }
   };
 
+  const loadStyleToState = async () => {
+    const response = await fetch(`${import.meta.env.VITE_API_LINK}/style`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const responseJson = await response.json();
+      setMapStyle(responseJson.styleUrl);
+    } else {
+      setMapStyle(undefined);
+    }
+  };
+
   useEffect(() => {
-    const handleLoad = async () => loadSourceDataToState();
+    const handleLoad = async () => {
+      await loadSourceDataToState();
+      await loadStyleToState();
+    };
     handleLoad();
   }, []);
 
@@ -49,6 +69,7 @@ export default function SourceProvider() {
           setCurrentMap,
           currentGroup,
           setCurrentGroup,
+          mapStyle,
         }}
       >
         <Outlet />

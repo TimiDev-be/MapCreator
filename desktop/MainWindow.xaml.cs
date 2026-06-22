@@ -42,7 +42,8 @@ namespace desktop
                 }
             };
 
-            SetupUrlPage.CloseSetupUrlClicked += (s, e) => {
+            SetupUrlPage.CloseSetupUrlClicked += (s, e) => 
+            {
                 WelcomePage.Visibility = Visibility.Visible;
                 SetupUrlPage.Visibility = Visibility.Collapsed;
             };
@@ -57,6 +58,11 @@ namespace desktop
             {
                 ChangeUrlPage.Visibility = Visibility.Collapsed;
                 WebViewAppPage.Visibility = Visibility.Visible;
+            };
+
+            ChangeUrlPage.SaveChangeUrlClicked += (s, e) => 
+            { 
+                WebViewAppPage.WebView.Reload();
             };
         }
     }

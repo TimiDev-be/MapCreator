@@ -21,6 +21,7 @@ namespace desktop.Controls
     public partial class ChangeUrlControl : UserControl
     {
         public EventHandler? CloseChangeUrlClicked;
+        public EventHandler? SaveChangeUrlClicked;
         private string _url = string.Empty;
         public ChangeUrlControl()
         {
@@ -35,6 +36,7 @@ namespace desktop.Controls
         private void SaveUrlButton_Click (object sender, RoutedEventArgs e)
         {
             SaveUrlButton_Click();
+            SaveChangeUrlClicked?.Invoke(this, EventArgs.Empty);
         }
 
         private async Task SaveUrlButton_Click()

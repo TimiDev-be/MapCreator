@@ -10,6 +10,7 @@ type Context = {
   setCurrentMap: Dispatch<SetStateAction<Map | undefined>>;
   currentGroup: Group | undefined;
   setCurrentGroup: Dispatch<SetStateAction<Group | undefined>>;
+  mapStyle: string;
 };
 
 export const SOURCE_CONTEXT = createContext<Context | undefined>(undefined);
