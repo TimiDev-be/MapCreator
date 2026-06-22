@@ -23,12 +23,16 @@ namespace desktop
         {
             InitializeComponent();
 
-            WelcomePage.GetStartedClicked += (s, e) =>
+            WelcomePage.GetStartedClicked += async (s, e) =>
             {
                 WelcomePage.Visibility = Visibility.Collapsed;
 
-                AppData appData = ConfigService.Load();
-                if (string.IsNullOrEmpty(appData.StyleUrl))
+                UrlService urlService = new UrlService();
+                DataService dataService = new DataService();
+                UrlData style =  await urlService.Load();
+                await dataService.Load();
+
+                if (string.IsNullOrEmpty(style.StyleUrl))
                 {
                     SetupUrlPage.Visibility = Visibility.Visible;
                 }

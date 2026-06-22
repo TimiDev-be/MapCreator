@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using desktop.Classes;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -47,6 +48,10 @@ namespace desktop.Services
                     policy.AllowAnyOrigin();
                 });
             });
+
+            builder.Services.AddScoped<DataService>();
+            builder.Services.AddScoped<UrlService>();
+
             var app = builder.Build();
 
             app.UseCors();
@@ -63,6 +68,24 @@ namespace desktop.Services
             app.MapFallbackToFile("index.html", new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "dist"))
+            });
+
+            app.MapGet("/api/style", async (UrlService configService) =>
+            {
+                var style = await configService.GetUrl();
+                return Results.Ok(style);
+            });
+
+            app.MapGet("/api/data", async (DataService dataService) =>
+            {
+                var data = await dataService.GetData();
+                return Results.Ok(data);
+            });
+
+            app.MapPatch("/api/data", async (DataPatch dataPatch, DataService dataService) =>
+            {
+                await dataService.UpdateData(dataPatch.DataPatchValue);
+                return Results.NoContent();
             });
 
             app.RunAsync($"http://localhost:{port}");

@@ -2,8 +2,11 @@ import { useRef } from "react";
 import { useSource } from "./Source";
 import type { StateMap } from "../types/StateMap";
 import type { SortOrder } from "../types/SortOrder";
+import type { UserSource } from "../types/UserSource";
+import { useFile } from "./File";
 
 export const useMaps = () => {
+  const { updateData } = useFile();
   const { currentSource, setCurrentSource } = useSource();
   const SortRef = useRef<SortOrder>("default");
 
@@ -40,11 +43,13 @@ export const useMaps = () => {
 
   const deleteChecked = () => {
     const filteredMaps = currentSource?.maps?.filter((map) => !map.checked);
-    setCurrentSource({
+    const NewSource: UserSource = {
       id: "source-of-user-data",
       maps: [...(filteredMaps ?? [])],
       templates: currentSource?.templates ?? [],
-    });
+    };
+    setCurrentSource(NewSource);
+    updateData(NewSource);
   };
 
   return {

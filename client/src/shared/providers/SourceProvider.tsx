@@ -16,46 +16,28 @@ export default function SourceProvider() {
 
   //load data
   const loadSourceDataToState = async () => {
-    const DataString = localStorage.getItem("source-of-user-data");
-    let Source: UserSource = {
-      id: "source-of-user-data",
-      maps: [],
-      templates: [],
-    };
+    const response = await fetch(`${import.meta.env.VITE_API_LINK}/data`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    if (DataString) {
-      const DataStringFormated = JSON.parse(DataString);
-      if (DataStringFormated.id && DataStringFormated.maps)
-        Source = {
-          id: "source-of-user-data",
-          maps: DataStringFormated.maps.map((map) => ({
-            ...map,
-            checked: false,
-          })),
-          templates: DataStringFormated.templates ?? [],
-        };
+    if (response.ok) {
+      const responseJson = await response.json();
+      const parsedData = JSON.parse(responseJson.data);
+      setCurrentSource(
+        parsedData ?? { id: "source-of-user-data", maps: [], templates: [] },
+      );
+    } else {
+      setCurrentSource({ id: "source-of-user-data", maps: [], templates: [] });
     }
-
-    setCurrentSource(Source);
   };
 
   useEffect(() => {
     const handleLoad = async () => loadSourceDataToState();
     handleLoad();
   }, []);
-
-  useEffect(() => {
-    if (currentSource) {
-      localStorage.setItem(
-        currentSource.id,
-        JSON.stringify({
-          id: currentSource.id,
-          maps: currentSource.maps.map(({ checked, ...rest }) => ({ ...rest })),
-          templates: currentSource.templates,
-        }),
-      );
-    }
-  }, [currentSource]);
 
   return (
     <>

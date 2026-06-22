@@ -1,9 +1,26 @@
 import { useSource } from "./Source";
 import type { DescriptionTemplate } from "../types/DescriptionTemplate";
 import html2pdf from "../../../node_modules/html2pdf.js/src";
+import type { UserSource } from "../types/UserSource";
 
 export const useFile = () => {
   const { setCurrentSource, currentSource } = useSource();
+
+  const updateData = async (source: UserSource) => {
+    if (!currentSource) return;
+    await fetch(`${import.meta.env.VITE_API_LINK}/data`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        DataPatchValue: JSON.stringify({
+          ...source,
+          maps: source.maps.map(({ checked, ...rest }) => ({ ...rest })),
+        }),
+      }),
+    });
+  };
 
   const importFile = async (file: File) => {
     const text = await file.text();
@@ -13,28 +30,29 @@ export const useFile = () => {
     const isNewFormat = importedData.maps.every((map: any) =>
       Array.isArray(map.features),
     );
-    if (!isNewFormat) return;
+    if (!isNewFormat || !currentSource) return;
 
-    setCurrentSource((prev) => {
-      const currentMaps = prev?.maps ?? [];
-      const currentTemplates = prev?.templates ?? [];
+    const currentMaps = currentSource?.maps ?? [];
+    const currentTemplates = currentSource?.templates ?? [];
 
-      const mergedMaps = new Map(currentMaps.map((m) => [m.id, m]));
-      importedData.maps.forEach((newMap) => {
-        mergedMaps.set(newMap.id, newMap);
-      });
-
-      const mergedTemplates = new Map(currentTemplates.map((t) => [t.id, t]));
-      (importedData.templates ?? []).forEach((newTemp) => {
-        mergedTemplates.set(newTemp.id, newTemp);
-      });
-
-      return {
-        id: "source-of-user-data",
-        maps: Array.from(mergedMaps.values()),
-        templates: Array.from(mergedTemplates.values()),
-      };
+    const mergedMaps = new Map(currentMaps.map((m) => [m.id, m]));
+    importedData.maps.forEach((newMap) => {
+      mergedMaps.set(newMap.id, newMap);
     });
+
+    const mergedTemplates = new Map(currentTemplates.map((t) => [t.id, t]));
+    (importedData.templates ?? []).forEach((newTemp) => {
+      mergedTemplates.set(newTemp.id, newTemp);
+    });
+
+    const NewSource: UserSource = {
+      id: "source-of-user-data",
+      maps: Array.from(mergedMaps.values()),
+      templates: Array.from(mergedTemplates.values()),
+    };
+
+    updateData(NewSource);
+    setCurrentSource(NewSource);
   };
 
   const importTemplate = async (file: File) => {
@@ -51,10 +69,16 @@ export const useFile = () => {
   };
 
   const updateTemplateName = (id: string, name: string) => {
-    setCurrentSource((prev) => ({
-      ...prev,
-      templates: prev.templates.map((t) => (t.id === id ? { ...t, name } : t)),
-    }));
+    const NewSource: UserSource = {
+      id: "source-of-user-data",
+      maps: currentSource?.maps ?? [],
+      templates:
+        currentSource?.templates?.map((t) =>
+          t.id === id ? { ...t, name } : t,
+        ) ?? [],
+    };
+    updateData(NewSource);
+    setCurrentSource(NewSource);
   };
 
   const deleteTemplate = (id: string) => {
@@ -67,10 +91,13 @@ export const useFile = () => {
       return;
     }
 
-    setCurrentSource((prev) => ({
-      ...prev,
-      templates: prev.templates.filter((t) => t.id !== id),
-    }));
+    const NewSource: UserSource = {
+      id: "source-of-user-data",
+      maps: currentSource?.maps ?? [],
+      templates: currentSource?.templates?.filter((t) => t.id !== id) ?? [],
+    };
+    updateData(NewSource);
+    setCurrentSource(NewSource);
   };
 
   const downloadPdfFromTemplate = (
@@ -81,7 +108,7 @@ export const useFile = () => {
     html2pdf(element, {
       margin: [0, 0, 0, 0],
       filename: `${mapName}-${templateName}-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.pdf`,
-      image: { type: "jpeg", quality: 1 },
+      image: { type: "jpeg", quality: 3 },
       html2canvas: { scale: 2, useCORS: true },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
       pagebreak: { mode: "avoid-all" },
@@ -114,5 +141,6 @@ export const useFile = () => {
     deleteTemplate,
     updateTemplateName,
     downloadPdfFromTemplate,
+    updateData,
   };
 };

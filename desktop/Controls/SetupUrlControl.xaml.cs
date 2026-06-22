@@ -31,10 +31,17 @@ namespace desktop.Controls
             CloseSetupUrlClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SaveUrlButton_Click (object sender, RoutedEventArgs e)
+        private void SaveUrlButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_url)) {
-                ConfigService.Save(new AppData(_url));
+            SaveUrlButton_Click();
+        }
+
+        private async Task SaveUrlButton_Click()
+        {
+            if (!string.IsNullOrEmpty(_url))
+            {
+                UrlService urlService = new UrlService();
+                await urlService.Save(new UrlData(_url));
                 CloseSetupUrlClicked?.Invoke(this, EventArgs.Empty);
             }
         }

@@ -34,8 +34,15 @@ namespace desktop.Controls
 
         private void SaveUrlButton_Click (object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_url)) {
-                ConfigService.Save(new AppData(_url));
+            SaveUrlButton_Click();
+        }
+
+        private async Task SaveUrlButton_Click()
+        {
+            if (!string.IsNullOrEmpty(_url))
+            {
+                UrlService urlService = new UrlService();
+                await urlService.Save(new UrlData(_url));
                 CloseChangeUrlClicked?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -57,10 +64,17 @@ namespace desktop.Controls
 
         private void UrlTextBox_Loaded(object sender, RoutedEventArgs e)
         {
-            var style = ConfigService.GetUrl();
+            UrlTextBox_Loaded();
+        }
+
+        private async Task UrlTextBox_Loaded()
+        {
+            UrlService service = new UrlService();
+            var style = await service.GetUrl();
+
             if (style != null)
             {
-                this.UrlTextBox.Text = style;
+                this.UrlTextBox.Text = style.StyleUrl;
             }
         }
 
