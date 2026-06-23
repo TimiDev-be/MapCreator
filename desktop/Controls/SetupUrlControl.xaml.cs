@@ -31,12 +31,7 @@ namespace desktop.Controls
             CloseSetupUrlClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void SaveUrlButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveUrlButton_Click();
-        }
-
-        private async Task SaveUrlButton_Click()
+        private async void SaveUrlButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_url))
             {

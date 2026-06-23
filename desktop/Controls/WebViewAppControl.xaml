@@ -70,7 +70,6 @@
                       Grid.Column="0"
                       Grid.Row="1"
                       HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch"
-                      Loaded="WebView_Loaded"/>
+                      VerticalAlignment="Stretch"/>
     </Grid>
 </UserControl>

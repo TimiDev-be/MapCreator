@@ -24,12 +24,6 @@ namespace desktop.Controls
         {
             InitializeComponent();
         }
-        private void WebView_Loaded( object sender, RoutedEventArgs e )
-        {
-            if (Application.Current is not App app) return;
-
-            WebView.Source = new Uri($"http://localhost:{app._server.Port}");
-        }
         private void ChangeStyleUrlButton_Click(object sender, RoutedEventArgs e) {
             ChangeStyleUrlClicked?.Invoke( this, new EventArgs() );
         }

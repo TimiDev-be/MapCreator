@@ -6,8 +6,10 @@
 # dotenv files
 .env
 
-# wwwroot
+# build files / isntallers
 wwwroot
+[Oo]utput
+
 
 # User-specific files
 *.rsuser

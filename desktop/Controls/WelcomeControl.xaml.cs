@@ -23,7 +23,7 @@ namespace desktop.Controls
         public event EventHandler? GetStartedClicked;
         public WelcomeControl()
         {
-            InitializeComponent();
+            InitializeComponent();    
         }
         private void LetsGetStartedButton_Click(object sender, RoutedEventArgs e)
         {

@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿using desktop.Classes;
+using desktop.Controls;
+using desktop.Services;
+using Microsoft.Web.WebView2.Core;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -8,9 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using desktop.Classes;
-using desktop.Controls;
-using desktop.Services;
+using System.IO;
 
 namespace desktop
 {
@@ -64,6 +66,26 @@ namespace desktop
             { 
                 WebViewAppPage.WebView.Reload();
             };
+        }
+        private async void MainWindow_ContentRendered(object sender, EventArgs e)
+        {
+            try
+            {
+                string userDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MapCreator", "WebView2Data");
+                var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+                await this.WebViewAppPage.WebView.EnsureCoreWebView2Async(env);
+
+                dynamic app = Application.Current;
+                await app._server.HttpReady.Task;
+
+                string url = $"http://localhost:{app._server.Port}";
+                await this.WebViewAppPage.WebView.EnsureCoreWebView2Async();
+                this.WebViewAppPage.WebView.CoreWebView2.Navigate(url);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Something went wrong while loading a webview: " + ex.ToString());
+            }
         }
     }
 }

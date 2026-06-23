@@ -15,7 +15,7 @@ namespace desktop
         {
             base.OnStartup(e);
             await new UpdateService().CheckForUpdatesAsync();
-            _server.Start();
+            await _server.Start();
         }
         protected override void OnExit(ExitEventArgs e)
         {

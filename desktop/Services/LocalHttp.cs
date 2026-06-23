@@ -14,12 +14,15 @@ namespace desktop.Services
     {
         private WebApplication? _httpServer;
         public int Port { get; set; }
+        public TaskCompletionSource<bool> HttpReady { get; set; } = new TaskCompletionSource<bool>();
     
-        public void Start()
+        public async Task Start()
         {
             var port = FindAvailablePort(5500);
             Port = port;
-            _httpServer = this.CreateHttp(port);
+            _httpServer = await this.CreateHttp(port);
+            _httpServer.RunAsync($"http://localhost:{port}");
+            HttpReady.SetResult(true);
         }
         private int FindAvailablePort(int startPort = 5000)
         {
@@ -38,7 +41,7 @@ namespace desktop.Services
             throw new Exception("No available port found.");
         }
 
-        private WebApplication CreateHttp(int port)
+        private async Task<WebApplication> CreateHttp(int port)
         {
             var builder = WebApplication.CreateBuilder();
             builder.Services.AddCors(options =>
@@ -87,8 +90,6 @@ namespace desktop.Services
                 await dataService.UpdateData(dataPatch.DataPatchValue);
                 return Results.NoContent();
             });
-
-            app.RunAsync($"http://localhost:{port}");
 
             return app;
         }
