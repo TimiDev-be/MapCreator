@@ -4,6 +4,7 @@ import type { UserSource } from "../types/UserSource";
 import type { Group } from "../types/Group";
 import { SOURCE_CONTEXT } from "../contexts/SourceContext";
 import type { Map } from "../classes/Map";
+import type { Config } from "../types/Config";
 
 export default function SourceProvider() {
   const [currentSource, setCurrentSource] = useState<UserSource | undefined>(
@@ -14,10 +15,11 @@ export default function SourceProvider() {
     undefined,
   );
   const [mapStyle, setMapStyle] = useState<string | undefined>(undefined);
+  const [config, setConfig] = useState<Config | undefined>(undefined);
 
   //load data
   const loadSourceDataToState = async () => {
-    const response = await fetch(`${import.meta.env.VITE_API_LINK}/data`, {
+    const response = await fetch(`${config.api.link}/data`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -36,7 +38,7 @@ export default function SourceProvider() {
   };
 
   const loadStyleToState = async () => {
-    const response = await fetch(`${import.meta.env.VITE_API_LINK}/style`, {
+    const response = await fetch(`${config.api.link}/style`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -52,12 +54,19 @@ export default function SourceProvider() {
   };
 
   useEffect(() => {
+    fetch("config.json")
+      .then((res) => res.json())
+      .then(setConfig);
+  }, []);
+
+  useEffect(() => {
+    if (!config) return;
     const handleLoad = async () => {
       await loadSourceDataToState();
       await loadStyleToState();
     };
     handleLoad();
-  }, []);
+  }, [config]);
 
   return (
     <>

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 
 namespace desktop.Services
 {
@@ -15,13 +16,22 @@ namespace desktop.Services
         private WebApplication? _httpServer;
         public int Port { get; set; }
         public TaskCompletionSource<bool> HttpReady { get; set; } = new TaskCompletionSource<bool>();
-    
+
         public async Task Start()
         {
-            var port = FindAvailablePort(5500);
+            string webConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "dist", "config.json");
+            var jsonString = File.ReadAllText(webConfigPath);
+            var webConfig = JsonSerializer.Deserialize<WebConfig>(jsonString, new JsonSerializerOptions {
+                PropertyNameCaseInsensitive = true,
+            });
+
+            int configPort = webConfig?.Api.Port ?? 5500;
+            var port = FindAvailablePort(configPort);
             Port = port;
+
             _httpServer = await this.CreateHttp(port);
             _httpServer.RunAsync($"http://localhost:{port}");
+
             HttpReady.SetResult(true);
         }
         private int FindAvailablePort(int startPort = 5000)

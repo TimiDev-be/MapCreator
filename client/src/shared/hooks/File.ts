@@ -4,11 +4,11 @@ import html2pdf from "../../../node_modules/html2pdf.js/src";
 import type { UserSource } from "../types/UserSource";
 
 export const useFile = () => {
-  const { setCurrentSource, currentSource } = useSource();
+  const { setCurrentSource, currentSource, config } = useSource();
 
   const updateData = async (source: UserSource) => {
     if (!currentSource) return;
-    await fetch(`${import.meta.env.VITE_API_LINK}/data`, {
+    await fetch(`${config.api.link}/data`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

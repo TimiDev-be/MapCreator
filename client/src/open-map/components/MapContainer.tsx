@@ -4,7 +4,7 @@ import { useMapContainer } from "../../shared/hooks/MapContainer";
 import { useMap } from "../../shared/hooks/Map";
 import { useSource } from "../../shared/hooks/Source";
 import MarkerComponent from "./marker/Marker";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function MapContainer() {
   const { currentSource, mapStyle } = useSource();

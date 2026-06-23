@@ -2,6 +2,7 @@ import type { UserSource } from "../types/UserSource";
 import type { Group } from "../types/Group";
 import { createContext, type Dispatch, type SetStateAction } from "react";
 import type { Map } from "../classes/Map";
+import type { Config } from "../types/Config";
 
 type Context = {
   currentSource: UserSource | undefined;
@@ -11,6 +12,7 @@ type Context = {
   currentGroup: Group | undefined;
   setCurrentGroup: Dispatch<SetStateAction<Group | undefined>>;
   mapStyle: string;
+  config: Config;
 };
 
 export const SOURCE_CONTEXT = createContext<Context | undefined>(undefined);
