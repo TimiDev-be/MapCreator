@@ -11,7 +11,7 @@ namespace desktop.Services
     public class DataService
     {
         private static readonly string DataFilePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "MapCreator",
             "data.json"
         );
@@ -32,7 +32,7 @@ namespace desktop.Services
         }
         public async Task<AppData?> GetData()
         {
-            if (!File.Exists(DataFilePath)) return null;
+            if (!File.Exists(DataFilePath)) return await Load();
 
             var data = await File.ReadAllTextAsync(DataFilePath);
 

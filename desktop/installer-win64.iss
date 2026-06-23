@@ -21,3 +21,4 @@ Filename: "{app}\MapCreator.exe"; Description: "Launch MapCreator"; Flags: nowai
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}\wwwroot\dist"
+Type: filesandordirs; Name: "{localappdata}\MapCreator"

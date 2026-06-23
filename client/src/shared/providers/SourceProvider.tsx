@@ -19,6 +19,8 @@ export default function SourceProvider() {
 
   //load data
   const loadSourceDataToState = async () => {
+    if (!config) return;
+
     const response = await fetch(`${config.api.link}/data`, {
       method: "GET",
       headers: {
@@ -38,6 +40,7 @@ export default function SourceProvider() {
   };
 
   const loadStyleToState = async () => {
+    if (!config) return;
     const response = await fetch(`${config.api.link}/style`, {
       method: "GET",
       headers: {
@@ -79,6 +82,7 @@ export default function SourceProvider() {
           currentGroup,
           setCurrentGroup,
           mapStyle,
+          config,
         }}
       >
         <Outlet />

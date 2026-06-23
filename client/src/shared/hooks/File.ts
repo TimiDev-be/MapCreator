@@ -2,25 +2,30 @@ import { useSource } from "./Source";
 import type { DescriptionTemplate } from "../types/DescriptionTemplate";
 import html2pdf from "../../../node_modules/html2pdf.js/src";
 import type { UserSource } from "../types/UserSource";
+import { useCallback } from "react";
 
 export const useFile = () => {
   const { setCurrentSource, currentSource, config } = useSource();
 
-  const updateData = async (source: UserSource) => {
-    if (!currentSource) return;
-    await fetch(`${config.api.link}/data`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        DataPatchValue: JSON.stringify({
-          ...source,
-          maps: source.maps.map(({ checked, ...rest }) => ({ ...rest })),
+  const updateData = useCallback(
+    async (source: UserSource) => {
+      if (!currentSource || !config) return;
+      await fetch(`${config.api.link}/data`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          DataPatchValue: JSON.stringify({
+            ...source,
+            maps: source.maps.map(({ checked, ...rest }) => ({ ...rest })),
+            templates: source.templates,
+          }),
         }),
-      }),
-    });
-  };
+      });
+    },
+    [currentSource, config],
+  );
 
   const importFile = async (file: File) => {
     const text = await file.text();

@@ -72,6 +72,19 @@ namespace desktop
             try
             {
                 string userDataFolder = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MapCreator", "WebView2Data");
+                if (!Directory.Exists(userDataFolder))
+                {
+                    try
+                    {
+                        Directory.CreateDirectory(userDataFolder);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Something went wrong while creating directory " + ex.Message);
+                        return;
+                    }
+                }
+
                 var env = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
                 await this.WebViewAppPage.WebView.EnsureCoreWebView2Async(env);
 

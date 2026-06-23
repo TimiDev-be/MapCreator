@@ -19,10 +19,12 @@ export const useMap = () => {
   const newMap = (name: string) => {
     if (!currentSource) return;
 
-    setCurrentSource({
+    const NewSource = {
       ...currentSource,
       maps: [...currentSource.maps, new Map(name)],
-    });
+    };
+    updateData(NewSource);
+    setCurrentSource(NewSource);
   };
 
   const updateMap = (map: StateMap) => {

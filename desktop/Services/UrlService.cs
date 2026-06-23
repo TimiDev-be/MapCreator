@@ -10,9 +10,9 @@ namespace desktop.Services
     class UrlService
     {
         private static readonly string ConfigFilePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), 
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), 
             "MapCreator", 
-            "config.json"
+            "styles.json"
         );
 
         public async Task<UrlData> Load()
@@ -20,7 +20,7 @@ namespace desktop.Services
             if (!File.Exists(ConfigFilePath))
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(ConfigFilePath)!);
-                await File.WriteAllTextAsync(ConfigFilePath, JsonSerializer.Serialize(new AppData(null)));
+                await File.WriteAllTextAsync(ConfigFilePath, JsonSerializer.Serialize(new UrlData(null)));
                 return new UrlData(null);
             }
             string json = File.ReadAllText(ConfigFilePath);
@@ -29,6 +29,7 @@ namespace desktop.Services
 
         public async Task<UrlData?> GetUrl()
         {
+            if (!File.Exists(ConfigFilePath)) return await Load();
             var url = await File.ReadAllTextAsync(ConfigFilePath);
             var config = JsonSerializer.Deserialize<UrlData>(url, new JsonSerializerOptions
             {
