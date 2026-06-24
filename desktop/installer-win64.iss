@@ -7,6 +7,7 @@ OutputBaseFilename=MapCreator-Setup-winx64-1.0.0
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
+SetupIconFile=Assets\MapCreator.ico
 
 [Files]
 Source: "bin\Release\net10.0-windows\win-x64\publish\*"; DestDir: "{app}"; Flags: recursesubdirs

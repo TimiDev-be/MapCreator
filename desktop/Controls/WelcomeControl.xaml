@@ -22,7 +22,7 @@
             <StackPanel Orientation="Vertical"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center">
-                <Image Source="/Assets/logo.png" 
+                <Image Source="/Assets/MapCreator.png" 
                        Width="96" 
                        Height="96" 
                        Margin="0, 0, 0, 20"

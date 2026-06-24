@@ -12,8 +12,8 @@
         MinWidth="1200" 
         MinHeight="600"
         WindowStartupLocation="CenterScreen"
-        Background="#fff" Icon="Assets/logo.png"
-        ContentRendered="MainWindow_ContentRendered">
+        Background="#fff" 
+        ContentRendered="MainWindow_ContentRendered" Icon="/Assets/MapCreator.ico">
     <Grid>
         <controls:WelcomeControl x:Name="WelcomePage" Visibility="Visible"/>
         <controls:SetupUrlControl x:Name="SetupUrlPage" Visibility="Collapsed"/>
