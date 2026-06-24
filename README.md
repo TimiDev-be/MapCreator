@@ -1,18 +1,29 @@
 # MapCreator
 ### Open source web-based map editor. The application lets you draw lines, polygons and place text with icons as markers. You can also export your map to PDF using your own HTML template. 
 ## Installation
->  Remember to set up *.env* file in the *client* directory
 
-```txt
-  VITE_MAP_STYLE=[your map style]
-```
+### Desktop (Windows)
+Download and run the installer from the [latest release](https://github.com/TimiDev-be/MapCreator/releases/latest).
 
+> **Requirements:** Windows 10 or later (64-bit / 86-bit)
+
+### Development
 ```bash
-  git clone https://github.com/TimiDev-be/MapCreator.git
-  cd client
-  npm install
-  npm run dev
+git clone https://github.com/TimiDev-be/MapCreator.git
+cd desktop
+dotnet run
 ```
+
+> If you want to customize the application localhost port, edit `config.json` in `client/public`:
+```javascript
+{
+  "api": {
+    "link": "http://localhost:5550/api",
+    "port": 5550
+  }
+}
+```
+
 
 ## Features
 - Import existing data (JSON, own HTML template)
