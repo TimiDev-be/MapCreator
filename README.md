@@ -25,15 +25,13 @@ dotnet run
 ```
 
 
-## Features
-- Import existing data (JSON, own HTML template)
-- Download data (JSON)
-- Create new map
-- Edit existing map
-  - Draw/edit/delete lines, polygons, markers
-  - Set features properties
-  - Set template in description section
-- Export map template to pdf
+### Features
+- Draw, edit and delete lines, polygons and markers on the map
+- Add descriptions to your maps
+- Import custom HTML templates (see documentation for structure)
+- Fill textarea and input fields directly within templates
+- Export templates to PDF
+- Add and edit your own map style URL
 
 ## Templates
 ### You can build your own *HTML* templates here is some example code:
