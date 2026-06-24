@@ -12,6 +12,7 @@ import MarkerPanel from "./navigation/feature-panels/MarkerPanel";
 import LineStringPanel from "./navigation/feature-panels/LineStringPanel";
 import PolygonPanel from "./navigation/feature-panels/PolygonPanel";
 import DrawButtons from "./draw-buttons/DrawButtons";
+import PrintClientPreview from "./PrintAreaPreview";
 
 const FeaturePanels: Record<string, React.ReactNode> = {
   Point: <MarkerPanel />,
@@ -34,6 +35,8 @@ export default function OpenMapPage() {
     null,
   );
   const [drawFeatures, setDrawFeatures] = useState<Feature[]>([]);
+  const [areaForPrintClientPreview, setAreaForPrintClientPreview] =
+    useState(false);
   const MapRef = useRef<Map | null>(null);
   const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
 
@@ -104,6 +107,8 @@ export default function OpenMapPage() {
           toggleActiveButton,
           drawFeatures,
           setDrawFeatures,
+          areaForPrintClientPreview,
+          setAreaForPrintClientPreview,
         }}
       >
         {currentMap && (
@@ -113,6 +118,7 @@ export default function OpenMapPage() {
             <MapContainer />
             <DrawButtons />
             {feature && FeaturePanels[feature.geometry.type]}
+            {areaForPrintClientPreview && <PrintClientPreview />}
           </div>
         )}
       </MAP_CONTAINER_CONTEXT.Provider>

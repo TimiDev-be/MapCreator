@@ -1,4 +1,17 @@
+@use "../../shared/styles/v";
+
 #map-container {
     grid-area: 2 / 2 / 4 / -1;
+    touch-action: none;
     z-index: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .map-error {
+        width: 100%;
+        max-width: 600px;
+        color: v.$blue-normal;
+    }
 }

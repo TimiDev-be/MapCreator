@@ -4,6 +4,7 @@ import type { UserSource } from "../types/UserSource";
 import type { Group } from "../types/Group";
 import { SOURCE_CONTEXT } from "../contexts/SourceContext";
 import type { Map } from "../classes/Map";
+import type { Config } from "../types/Config";
 
 export default function SourceProvider() {
   const [currentSource, setCurrentSource] = useState<UserSource | undefined>(
@@ -13,49 +14,62 @@ export default function SourceProvider() {
   const [currentGroup, setCurrentGroup] = useState<Group | undefined>(
     undefined,
   );
+  const [mapStyle, setMapStyle] = useState<string | undefined>(undefined);
+  const [config, setConfig] = useState<Config | undefined>(undefined);
 
   //load data
   const loadSourceDataToState = async () => {
-    const DataString = localStorage.getItem("source-of-user-data");
-    let Source: UserSource = {
-      id: "source-of-user-data",
-      maps: [],
-      templates: [],
-    };
+    if (!config) return;
 
-    if (DataString) {
-      const DataStringFormated = JSON.parse(DataString);
-      if (DataStringFormated.id && DataStringFormated.maps)
-        Source = {
-          id: "source-of-user-data",
-          maps: DataStringFormated.maps.map((map) => ({
-            ...map,
-            checked: false,
-          })),
-          templates: DataStringFormated.templates ?? [],
-        };
+    const response = await fetch(`${config.api.link}/data`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const responseJson = await response.json();
+      const parsedData = JSON.parse(responseJson.data);
+      setCurrentSource(
+        parsedData ?? { id: "source-of-user-data", maps: [], templates: [] },
+      );
+    } else {
+      setCurrentSource({ id: "source-of-user-data", maps: [], templates: [] });
     }
+  };
 
-    setCurrentSource(Source);
+  const loadStyleToState = async () => {
+    if (!config) return;
+    const response = await fetch(`${config.api.link}/style`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      const responseJson = await response.json();
+      setMapStyle(responseJson.styleUrl);
+    } else {
+      setMapStyle(undefined);
+    }
   };
 
   useEffect(() => {
-    const handleLoad = async () => loadSourceDataToState();
-    handleLoad();
+    fetch("config.json")
+      .then((res) => res.json())
+      .then(setConfig);
   }, []);
 
   useEffect(() => {
-    if (currentSource) {
-      localStorage.setItem(
-        currentSource.id,
-        JSON.stringify({
-          id: currentSource.id,
-          maps: currentSource.maps.map(({ checked, ...rest }) => ({ ...rest })),
-          templates: currentSource.templates,
-        }),
-      );
-    }
-  }, [currentSource]);
+    if (!config) return;
+    const handleLoad = async () => {
+      await loadSourceDataToState();
+      await loadStyleToState();
+    };
+    handleLoad();
+  }, [config]);
 
   return (
     <>
@@ -67,6 +81,8 @@ export default function SourceProvider() {
           setCurrentMap,
           currentGroup,
           setCurrentGroup,
+          mapStyle,
+          config,
         }}
       >
         <Outlet />

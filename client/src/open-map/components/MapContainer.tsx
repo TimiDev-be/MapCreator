@@ -4,13 +4,15 @@ import { useMapContainer } from "../../shared/hooks/MapContainer";
 import { useMap } from "../../shared/hooks/Map";
 import { useSource } from "../../shared/hooks/Source";
 import MarkerComponent from "./marker/Marker";
+import { useState } from "react";
 
 export default function MapContainer() {
-  const { currentSource } = useSource();
+  const { currentSource, mapStyle } = useSource();
   const { currentMap } = useMap();
   const { setMapRef, areaForPrintFeature, setMapZoom, drawFeatures } =
     useMapContainer();
   const { attractionPoint } = currentMap ?? {};
+  const [mapError, setMapError] = useState<boolean>(false);
 
   const visibilityFilter: any = [
     "all",
@@ -22,10 +24,20 @@ export default function MapContainer() {
   return (
     <>
       <div id="map-container">
-        {currentSource && currentMap && (
+        {mapError && (
+          <div className="map-error t-panel-big">
+            Something went wrong while loading the map. Check your internet
+            connection and map style url and try again.
+          </div>
+        )}
+        {mapStyle && !mapError && currentSource && currentMap && (
           <RMap
+            key={currentMap.id}
             style={{ width: "100%", height: "100%" }}
-            mapStyle={import.meta.env.VITE_MAP_STYLE}
+            mapStyle={mapStyle}
+            onError={() => {
+              setMapError(true);
+            }}
             onMounted={(m) => {
               setMapRef(m);
               setMapZoom(attractionPoint?.zoom ?? 1);
@@ -39,17 +51,18 @@ export default function MapContainer() {
             initialBearing={attractionPoint?.bearing ?? 0}
             onZoom={(e) => setMapZoom(e.target.getZoom())}
           >
-            {currentMap.features
-              .filter((f) => f.properties.markerId !== undefined)
-              .map((f) => {
-                return <MarkerComponent key={f.id} feature={f} />;
-              })}
+            {!mapError &&
+              currentMap.features
+                .filter((f) => f.properties.markerId !== undefined)
+                .map((f) => {
+                  return <MarkerComponent key={f.id} feature={f} />;
+                })}
             <RSource
               id={currentSource.id}
               type="geojson"
               data={{
                 type: "FeatureCollection",
-                features: currentMap.features,
+                features: currentMap?.features ?? [],
               }}
             />
             <RSource

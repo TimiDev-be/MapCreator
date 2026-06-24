@@ -3,8 +3,10 @@ import { useSource } from "./Source";
 import { Map } from "../classes/Map";
 import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
+import { useFile } from "./File";
 
 export const useMap = () => {
+  const { updateData } = useFile();
   const {
     setCurrentSource,
     currentSource,
@@ -17,31 +19,37 @@ export const useMap = () => {
   const newMap = (name: string) => {
     if (!currentSource) return;
 
-    setCurrentSource({
+    const NewSource = {
       ...currentSource,
       maps: [...currentSource.maps, new Map(name)],
-    });
+    };
+    updateData(NewSource);
+    setCurrentSource(NewSource);
   };
 
   const updateMap = (map: StateMap) => {
     if (!currentSource) return;
 
-    setCurrentSource({
+    const NewSource = {
       ...currentSource,
       maps: [...currentSource.maps].map((m) =>
         m.id === map.id ? { ...map, updatedAt: new Date().toISOString() } : m,
       ),
-    });
+    };
+    updateData(NewSource);
+    setCurrentSource(NewSource);
     setCurrentMap(map);
   };
 
   const deleteMap = (id: string) => {
     if (!currentSource) return;
 
-    setCurrentSource({
+    const NewSource = {
       ...currentSource,
       maps: [...currentSource.maps].filter((m) => m.id !== id),
-    });
+    };
+    updateData(NewSource);
+    setCurrentSource(NewSource);
     Navigate("/");
   };
 

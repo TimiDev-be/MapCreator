@@ -1,0 +1,6 @@
+{
+  "api": {
+    "link": "http://localhost:5550/api",
+    "port": 5550
+  }
+}

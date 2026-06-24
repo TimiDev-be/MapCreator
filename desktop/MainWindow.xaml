@@ -1,0 +1,23 @@
+﻿<Window x:Class="desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:desktop"
+        xmlns:controls="clr-namespace:desktop.Controls"
+        mc:Ignorable="d"
+        Title="MapCreator"
+        Width="1200"
+        Height="600"
+        MinWidth="1200" 
+        MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#fff" 
+        ContentRendered="MainWindow_ContentRendered" Icon="/Assets/MapCreator.ico">
+    <Grid>
+        <controls:WelcomeControl x:Name="WelcomePage" Visibility="Visible"/>
+        <controls:SetupUrlControl x:Name="SetupUrlPage" Visibility="Collapsed"/>
+        <controls:WebViewAppControl x:Name="WebViewAppPage" Visibility="Collapsed"/>
+        <controls:ChangeUrlControl x:Name="ChangeUrlPage" Visibility="Collapsed"/>
+    </Grid>
+</Window>
