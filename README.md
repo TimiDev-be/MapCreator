@@ -42,7 +42,7 @@ dotnet run
         <!--id "map-container" is required if you want to display the map -->
         <div id="map-container" style="width: 500px; height: 300px; padding: 10px; display: flex; justify-content: center; align-items: center;"></div>
         <!--class "qrcode-container" is required if you want to display the qr code for google map -->
-        <div class="qrcode-container" style="width: 200px; height: 200px; padding: 10px;"></div>
+        <div id="qr-code" style="width: 200px; height: 200px; padding: 10px;"></div>
         <div class="description-container" style="width: 500px; height: max-content; padding: 10px;">
             <h3>Description</h3>
             <!--All of textarea and inputs when template is loaded gets listeners to update the map description values so data can be saved.-->
