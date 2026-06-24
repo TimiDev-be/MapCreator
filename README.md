@@ -1,5 +1,16 @@
 # MapCreator
 ### Open source web-based map editor. The application lets you draw lines, polygons and place text with icons as markers. You can also export your map to PDF using your own HTML template. 
+## Preview
+![WelcomePage](assets/screenshots/welcomePage.png)
+![SaveStylePage](assets/screenshots/saveStylePage.png)
+![MapsListPage](assets/screenshots/mapsListPage.png)
+![DataFilesPage](assets/screenshots/dataFilesPage.png)
+![TemplatePreview](assets/screenshots/templatePreview.png)
+![MapSettings](assets/screenshots/mapSettings.png)
+![MapDrawings](assets/screenshots/mapDrawings.png)
+![MapDescription](assets/screenshots/mapDescription.png)
+![FinalProduct](assets/screenshots/europePDF.png)
+
 ## Installation
 
 ### Desktop (Windows)
@@ -42,7 +53,7 @@ dotnet run
         <!--id "map-container" is required if you want to display the map -->
         <div id="map-container" style="width: 500px; height: 300px; padding: 10px; display: flex; justify-content: center; align-items: center;"></div>
         <!--class "qrcode-container" is required if you want to display the qr code for google map -->
-        <div id="qr-code" style="width: 200px; height: 200px; padding: 10px;"></div>
+        <div class="qrcode-container" style="width: 200px; height: 200px; padding: 10px;"></div>
         <div class="description-container" style="width: 500px; height: max-content; padding: 10px;">
             <h3>Description</h3>
             <!--All of textarea and inputs when template is loaded gets listeners to update the map description values so data can be saved.-->
