@@ -4,6 +4,7 @@ import Line from "../../../shared/components/Line";
 import { useMap } from "../../../shared/hooks/Map";
 import { useMapContainer } from "../../../shared/hooks/MapContainer";
 import { useMapSettings } from "../../../shared/hooks/MapSettings";
+// import { useState } from "react";
 
 export default function SettingsPanel() {
   const {
@@ -18,8 +19,11 @@ export default function SettingsPanel() {
     toggleAttractionPoint,
     handleAreaForPrintChange,
     toggleAreaForPrint,
+    // updateMinMaxZoom
   } = useMapSettings();
-  const { name, attractionPoint, areaForPrint } = currentMap;
+  const { id, name, attractionPoint, areaForPrint } = currentMap ?? {};
+  // const { minZoom, maxZoom } = attractionPoint ?? {};
+  // const [minMaxZoom, setMinMaxZoom] = useState<number[]>([minZoom ?? 0, maxZoom ?? 22]);
 
   return (
     <>
@@ -38,7 +42,7 @@ export default function SettingsPanel() {
             defaultValue={name}
             onBlur={(e) => {
               if (e.target.value.trim().length == 0)
-                return (e.target.value = name);
+                return (e.target.value = name ?? "");
               handleNameChange(e);
             }}
           />
@@ -61,7 +65,7 @@ export default function SettingsPanel() {
             className="jump-to-anchor-button t-panel-small"
             disabled={!attractionPoint}
             onClick={() => {
-              if (attractionPoint) {
+              if (attractionPoint && map.current) {
                 map.current.jumpTo({
                   center: [
                     attractionPoint.coords[0],
@@ -98,12 +102,12 @@ export default function SettingsPanel() {
                 id="width-input"
                 className="panel-field t-panel-small"
                 min={0}
-                defaultValue={areaForPrint.width}
+                defaultValue={areaForPrint?.width ?? 150}
                 onBlur={(e) => {
                   if (Number(e.target.value) < 0 || e.target.value === "")
                     return (e.target.value = "150");
                   handleAreaForPrintChange({
-                    ...areaForPrint,
+                    height: areaForPrint?.height ?? 95,
                     width: Number(e.target.value),
                   });
                 }}
@@ -120,12 +124,12 @@ export default function SettingsPanel() {
                 id="height-input"
                 className="panel-field t-panel-small"
                 min={0}
-                defaultValue={areaForPrint.height}
+                defaultValue={areaForPrint?.height ?? 95}
                 onBlur={(e) => {
                   if (Number(e.target.value) < 0 || e.target.value === "")
                     return (e.target.value = "95");
                   handleAreaForPrintChange({
-                    ...areaForPrint,
+                    width: areaForPrint?.width ?? 150,
                     height: Number(e.target.value),
                   });
                 }}
@@ -149,10 +153,66 @@ export default function SettingsPanel() {
             preview
           </button>
         </div>
+        {/* <div className="linked-input-container zoom">
+          <p className="about zoom t-panel-medium">
+            Zoom
+          </p>
+          <div className="wrapper">
+            <div className="group min-zoom">
+              <label htmlFor={`min-zoom-input-${id}`} className="t-panel-small">
+                Min
+              </label>
+              <input
+                type="number"
+                name="min-zoom"
+                id={`min-zoom-input-${id}`}
+                className="panel-field t-panel-small"
+                value={minMaxZoom[0]}
+                onChange={(e) => setMinMaxZoom(prev => [Number(e.target.value), prev[1]])}
+                onBlur={(e) => {
+                  e.stopPropagation();
+                  if (Number(e.target.value) < 0 || e.target.value === "")
+                    return (e.target.value = "0");
+                  const NewValues = [
+                    Number(e.target.value),
+                    minMaxZoom[1]
+                  ]
+                  setMinMaxZoom(NewValues);
+                  updateMinMaxZoom(NewValues);
+                }}
+              />
+            </div>
+            <span className="field-bridge" />
+            <div className="group max-zoom">
+              <label htmlFor={`max-zoom-input-${id}`} className="t-panel-small">
+                Max
+              </label>
+              <input
+                type="number"
+                name="max-zoom"
+                id={`max-zoom-input-${id}`}
+                className="panel-field t-panel-small"
+                value={minMaxZoom[1]}
+                onChange={(e) => setMinMaxZoom(prev => [prev[0], Number(e.target.value)])}
+                onBlur={(e) => {
+                  e.stopPropagation();
+                  if (Number(e.target.value) <= 0 || e.target.value === "")
+                    return (e.target.value = "22");
+                  const NewValues = [
+                    minMaxZoom[0],
+                    Number(e.target.value)
+                  ]
+                  setMinMaxZoom(NewValues);
+                  updateMinMaxZoom(NewValues);
+                }}
+              />
+            </div>
+          </div>
+        </div> */}
         <button
           type="button"
           className="delete-map-button t-panel-medium"
-          onClick={() => deleteMap(currentMap.id)}
+          onClick={() => deleteMap(id ?? "")}
         >
           Delete map
         </button>

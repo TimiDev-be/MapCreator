@@ -3,7 +3,8 @@ import Header from "./header/Header";
 import { useState, useRef, useEffect } from "react";
 import Navigation from "./navigation/Navigation";
 import { MAP_CONTAINER_CONTEXT } from "../contexts/MapContainerContext";
-import type { Map } from "maplibre-gl";
+import type { Map as MaplibreMap } from "maplibre-gl";
+import type { Map } from "../../shared/types/Map";
 import MapContainer from "./MapContainer";
 import { useParams } from "react-router-dom";
 import { useMap } from "../../shared/hooks/Map";
@@ -37,10 +38,11 @@ export default function OpenMapPage() {
   const [drawFeatures, setDrawFeatures] = useState<Feature[]>([]);
   const [areaForPrintClientPreview, setAreaForPrintClientPreview] =
     useState(false);
-  const MapRef = useRef<Map | null>(null);
+  const [connectedMaps, setConnectedMaps] = useState<Map[]>([]);
+  const MapRef = useRef<MaplibreMap | null>(null);
   const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
 
-  const setMapRef = (m: Map | null) => {
+  const setMapRef = (m: MaplibreMap | null) => {
     MapRef.current = m;
     setIsReady(!!m);
   };
@@ -62,7 +64,7 @@ export default function OpenMapPage() {
 
   const toggleFeaturePanel = (newFeature: Feature | null) => {
     if (!newFeature) return setFeature(null);
-    if (!currentMap.features.find((f) => f.id === newFeature?.id)) return;
+    if (!currentMap?.features.find((f) => f.id === newFeature?.id)) return;
     setFeature((prev) => {
       return prev === newFeature ? null : newFeature;
     });
@@ -80,7 +82,7 @@ export default function OpenMapPage() {
   }, [currentMap, feature]);
 
   useEffect(() => {
-    openMap(id);
+    openMap(id as string);
     const handleFeatureChange = () => {
       setFeature((prev) => {
         return currentMap?.features.find((f) => f.id === prev?.id) ?? prev;
@@ -109,6 +111,8 @@ export default function OpenMapPage() {
           setDrawFeatures,
           areaForPrintClientPreview,
           setAreaForPrintClientPreview,
+          connectedMaps,
+          setConnectedMaps,
         }}
       >
         {currentMap && (

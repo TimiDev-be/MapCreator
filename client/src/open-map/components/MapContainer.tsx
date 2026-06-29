@@ -9,7 +9,7 @@ import { useState } from "react";
 export default function MapContainer() {
   const { currentSource, mapStyle } = useSource();
   const { currentMap } = useMap();
-  const { setMapRef, areaForPrintFeature, setMapZoom, drawFeatures } =
+  const { setMapRef, areaForPrintFeature, setMapZoom, drawFeatures, connectedMaps } =
     useMapContainer();
   const { attractionPoint } = currentMap ?? {};
   const [mapError, setMapError] = useState<boolean>(false);
@@ -52,8 +52,9 @@ export default function MapContainer() {
             onZoom={(e) => setMapZoom(e.target.getZoom())}
           >
             {!mapError &&
-              currentMap.features
-                .filter((f) => f.properties.markerId !== undefined)
+              [...currentMap.features, ...connectedMaps.filter(m => m.id !== currentMap.id)
+                .flatMap(m => m.features)]
+                .filter((f) => f.properties?.markerId !== undefined)
                 .map((f) => {
                   return <MarkerComponent key={f.id} feature={f} />;
                 })}
@@ -62,7 +63,7 @@ export default function MapContainer() {
               type="geojson"
               data={{
                 type: "FeatureCollection",
-                features: currentMap?.features ?? [],
+                features: currentMap ? [...currentMap.features, ...connectedMaps.flatMap(m => m.features)] : [],
               }}
             />
             <RSource
