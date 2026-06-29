@@ -24,9 +24,9 @@ export default function PolygonButton() {
 
     const handleKeys = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        toggleDrawButton(null);
+        toggleDrawButton(undefined);
       } else if (e.key === "Enter") {
-        FinishPolygon(null);
+        FinishPolygon(undefined);
       } else if (e.key === "Backspace") {
         handleRemoveLastPoint();
       }
@@ -37,9 +37,9 @@ export default function PolygonButton() {
     window.addEventListener("keydown", handleKeys);
 
     return () => {
-      map.current.off("dblclick", FinishPolygon);
-      map.current.off("mousemove", handleMouseMove);
-      map.current.off("click", handleClick);
+      map.current!.off("dblclick", FinishPolygon);
+      map.current!.off("mousemove", handleMouseMove);
+      map.current!.off("click", handleClick);
       window.removeEventListener("keydown", handleKeys);
     };
   }, [activeButton, FinishPolygon, map]);

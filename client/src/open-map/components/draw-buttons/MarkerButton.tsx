@@ -17,13 +17,13 @@ export default function MarkerButton() {
 
     window.onkeydown = (e) => {
       if (e.key === "Escape") {
-        toggleDrawButton(null);
+        toggleDrawButton(undefined);
       }
     };
     map.current.on("click", FinishMarker);
 
     return () => {
-      map.current.off("click", FinishMarker);
+      map.current!.off("click", FinishMarker);
       window.onkeydown = null;
     };
   }, [activeButton, FinishMarker, map]);

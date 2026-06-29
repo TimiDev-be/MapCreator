@@ -24,9 +24,9 @@ export default function LineButton() {
 
     const handleKeys = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        toggleDrawButton(null);
+        toggleDrawButton(undefined);
       } else if (e.key === "Enter") {
-        FinishLine(null);
+        FinishLine(undefined);
       } else if (e.key === "Backspace") {
         handleRemoveLastPoint();
       }
@@ -38,9 +38,9 @@ export default function LineButton() {
     map.current.on("click", handleClick);
 
     return () => {
-      map.current.off("dblclick", FinishLine);
-      map.current.off("mousemove", handleMouseMove);
-      map.current.off("click", handleClick);
+      map.current?.off("dblclick", FinishLine);
+      map.current?.off("mousemove", handleMouseMove);
+      map.current?.off("click", handleClick);
       window.removeEventListener("keydown", handleKeys);
     };
   }, [activeButton, FinishLine, map]);
