@@ -3,6 +3,8 @@ import { useMapContainer } from "./MapContainer";
 import type { AreaForPrint } from "../types/AreaForPrint";
 import { MmToPx } from "../utils/MmToPx";
 import { useEffect } from "react";
+import type { AttractionPoint } from "../types/AttractionPoint";
+import type { StateMap } from "../types/StateMap";
 
 export const useMapSettings = () => {
   const { updateMap, currentMap } = useMap();
@@ -10,12 +12,13 @@ export const useMapSettings = () => {
     useMapContainer();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!currentMap) return;
     if (e.target.value.trim().length == 0) return;
     updateMap({ ...currentMap, name: e.target.value });
   };
 
   const toggleAttractionPoint = () => {
-    if (!map) return;
+    if (!map.current || !currentMap) return;
     setAreaForPrintFeature(undefined);
 
     const newAttractionPoint = currentMap.attractionPoint
@@ -25,6 +28,8 @@ export const useMapSettings = () => {
           zoom: map.current.getZoom(),
           pitch: map.current.getPitch(),
           bearing: map.current.getBearing(),
+          minZoom: map.current.getZoom() - 3,
+          maxZoom: map.current.getZoom() + 3
         };
 
     const minZoom = newAttractionPoint
@@ -49,42 +54,34 @@ export const useMapSettings = () => {
   };
 
   const handleAreaForPrintChange = (areaForPrint: AreaForPrint) => {
+    if (!currentMap) return;
     updateMap({ ...currentMap, areaForPrint });
   };
 
   const calculatePrintArea = () => {
-    if (!map?.current || !currentMap.areaForPrint) return;
+    if (!map?.current || !currentMap || !currentMap.areaForPrint) return;
     const { areaForPrint, attractionPoint } = currentMap;
+    const { pitch, coords, bearing, zoom } = attractionPoint ?? {};
+
+    const center = map.current.getCenter().toArray();
 
     map.current.jumpTo({
-      center: [attractionPoint.coords[0], attractionPoint.coords[1]],
-      zoom: attractionPoint.zoom,
-      pitch: attractionPoint.pitch,
-      bearing: attractionPoint.bearing,
+      pitch: pitch ?? map.current.getPitch(),
+      center: (coords as [number, number]) ?? center,
+      bearing: bearing ?? map.current.getBearing(),
+      zoom: zoom ?? map.current.getZoom(),
     });
 
     map.current.once("idle", () => {
-      const center = attractionPoint.coords;
-      const centerPx = map.current!.project([center[0], center[1]]);
+      const apCoords = attractionPoint?.coords ?? [0, 0];
+      const centerPx = map.current!.project([apCoords[0], apCoords[1]]);
       const halfWidth = MmToPx(areaForPrint.width) / 2;
       const halfHeight = MmToPx(areaForPrint.height) / 2;
 
-      const topLeft = map.current!.unproject([
-        centerPx.x - halfWidth,
-        centerPx.y - halfHeight,
-      ]);
-      const topRight = map.current!.unproject([
-        centerPx.x + halfWidth,
-        centerPx.y - halfHeight,
-      ]);
-      const bottomRight = map.current!.unproject([
-        centerPx.x + halfWidth,
-        centerPx.y + halfHeight,
-      ]);
-      const bottomLeft = map.current!.unproject([
-        centerPx.x - halfWidth,
-        centerPx.y + halfHeight,
-      ]);
+      const topLeft = map.current!.unproject([centerPx.x - halfWidth, centerPx.y - halfHeight]);
+      const topRight = map.current!.unproject([centerPx.x + halfWidth, centerPx.y - halfHeight]);
+      const bottomRight = map.current!.unproject([centerPx.x + halfWidth, centerPx.y + halfHeight]);
+      const bottomLeft = map.current!.unproject([centerPx.x - halfWidth, centerPx.y + halfHeight]);
 
       setAreaForPrintFeature({
         type: "Feature",
@@ -101,30 +98,64 @@ export const useMapSettings = () => {
         properties: {
           role: "area-for-print",
           visible: true,
-          minZoom: attractionPoint.zoom - 3,
-          maxZoom: attractionPoint.zoom + 3,
+          minZoom: (zoom ?? map.current!.getZoom()) - 3,
+          maxZoom: (zoom ?? map.current!.getZoom()) + 3,
         },
       });
     });
   };
 
   const toggleAreaForPrint = () => {
-    if (!areaForPrintFeature && currentMap.areaForPrint) {
+    if (!areaForPrintFeature && currentMap?.areaForPrint) {
       calculatePrintArea();
     } else {
       setAreaForPrintFeature(undefined);
     }
   };
 
+  const updateMinMaxZoom = (values: number[]) => {
+    if (!map.current || !currentMap) return;
+
+    const NewFeatures = [...currentMap.features].map(f => 
+      ({
+        ...f, 
+        properties: {
+          ...f.properties, 
+          minZoom: values[0] ?? 0, 
+          maxZoom: values[1] ?? 22
+        }
+      })
+    );
+
+    const {pitch, coords, bearing, zoom} = currentMap.attractionPoint ?? {};
+
+    const NewAttractionPoint : AttractionPoint = {
+      pitch: pitch ??  map.current!.getPitch(),
+      coords: coords ?? map.current!.getCenter().toArray(),
+      bearing: bearing ?? map.current!.getBearing(),
+      zoom: zoom ?? map.current!.getZoom(),
+      minZoom: values[0] ?? 0,
+      maxZoom: values[1] ?? 22
+    }
+    const NewMap : StateMap = {
+      ...currentMap,
+      features: NewFeatures,
+      attractionPoint: NewAttractionPoint,
+      updatedAt: new Date().toISOString()
+    }
+    updateMap(NewMap);
+  }
+
   useEffect(() => {
-    if (!currentMap.areaForPrint || !areaForPrintFeature) return;
+    if (!currentMap || !currentMap.areaForPrint || !areaForPrintFeature) return;
     calculatePrintArea();
-  }, [currentMap.areaForPrint?.width, currentMap.areaForPrint?.height]);
+  }, [currentMap?.areaForPrint?.width, currentMap?.areaForPrint?.height]);
 
   return {
     handleNameChange,
     toggleAttractionPoint,
     handleAreaForPrintChange,
     toggleAreaForPrint,
+    updateMinMaxZoom
   };
 };

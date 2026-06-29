@@ -50,6 +50,16 @@
                     stroke: v.$black;
                 }
             }
+            &.connect-drawings {
+                svg path {
+                    fill: transparent;
+                    stroke: v.$black;
+                }
+                &.active svg path {
+                    fill: transparent;
+                    stroke: white;
+                }
+            }
 
             &.description svg path {
                 stroke-width: 1;
@@ -84,4 +94,45 @@
     background-color: white;
     border-right: 1px solid v.$blue-light;
     color: v.$black;
+}
+
+.linked-input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+  }
+
+  .wrapper {
+      display: flex;
+      align-items: center;
+  }
+  .group {
+      padding: 0.2rem;
+      display: flex;
+      align-items: center;
+      background-color: v.$blue-light-hover;
+  }
+
+  .field-bridge {
+      width: 6px;
+      height: 6px;
+
+      background-color: v.$blue-light-hover;
+  }
+
+  input {
+      max-width: 80px;
+      border: none;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+  }
 }

@@ -63,8 +63,8 @@ export const useMap = () => {
   );
 
   const closeMap = () => {
-    setCurrentMap(null);
-    setCurrentGroup(null);
+    setCurrentMap(undefined);
+    setCurrentGroup(undefined);
   };
 
   const toggleCheckMap = (id: string, value: boolean) => {
