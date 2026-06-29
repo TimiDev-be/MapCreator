@@ -58,7 +58,7 @@ namespace desktop.Services
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.AllowAnyOrigin();
+                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                 });
             });
 
