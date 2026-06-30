@@ -1,8 +1,6 @@
 import { useMarkerFeature } from "../../../../shared/hooks/MarkerFeature";
 import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import type { MarkerProperties } from "../../../../shared/types/MarkerProperties";
-import type { Feature } from "geojson";
-import { useState, useEffect, useCallback } from "react";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import PaddingLeft from "../../../../assets/boxicons_dock-left.svg?react";
 import PaddingRight from "../../../../assets/boxicons_dock-right.svg?react";
@@ -39,7 +37,7 @@ export default function MarkerPanel() {
 
   return (
     <>
-      <div className="feature-panel marker" key={feature.id}>
+      <div className="feature-panel marker" key={feature?.id ?? crypto.randomUUID()}>
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"
@@ -122,7 +120,7 @@ export default function MarkerPanel() {
         <div className="group sizes">
           <div className="wrapper">
             <label htmlFor="range-width-input" className="t-panel-small">
-              Font Size ({fontSize})
+              Content Size ({fontSize})
             </label>
             <input
               type="range"

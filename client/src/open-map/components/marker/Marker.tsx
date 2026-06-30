@@ -37,7 +37,7 @@ export default function MarkerComponent({ feature }: Props) {
   const [markerCoords, setMarkerCoords] = useState<number[]>(coordinates);
   const BackgroundColor = `${backgroundColor}${OpacityToHex(opacity ?? 1)}`;
   const MarkerIcon = markerIconClass ? MarkerIcons[markerIconClass] : null;
-  const isVisible = mapZoom > minZoom && mapZoom < maxZoom;
+  const isVisible = mapZoom >= minZoom && mapZoom <= maxZoom;
 
   const handleMarkerDrag = useCallback(
     (e: Event<Marker>) => {

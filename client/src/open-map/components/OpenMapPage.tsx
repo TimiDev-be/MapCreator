@@ -24,20 +24,13 @@ const FeaturePanels: Record<string, React.ReactNode> = {
 export default function OpenMapPage() {
   const { id } = useParams();
   const { currentMap, openMap } = useMap();
-  const [areaForPrintFeature, setAreaForPrintFeature] = useState<
-    Feature | undefined
-  >(undefined);
+  const [areaForPrintFeature, setAreaForPrintFeature] = useState<Feature | undefined>(undefined);
   const [feature, setFeature] = useState<Feature | null>(null);
   const [isReady, setIsReady] = useState(false);
-  const [mapZoom, setMapZoom] = useState(
-    (currentMap && currentMap.attractionPoint?.zoom) ?? 1,
-  );
-  const [activeButton, setActiveButton] = useState<HTMLButtonElement | null>(
-    null,
-  );
+  const [mapZoom, setMapZoom] = useState((currentMap && currentMap.attractionPoint?.zoom) ?? 1, );
+  const [activeButton, setActiveButton] = useState<HTMLButtonElement | null>(null, );
   const [drawFeatures, setDrawFeatures] = useState<Feature[]>([]);
-  const [areaForPrintClientPreview, setAreaForPrintClientPreview] =
-    useState(false);
+  const [areaForPrintClientPreview, setAreaForPrintClientPreview] = useState(false);
   const [connectedMaps, setConnectedMaps] = useState<Map[]>([]);
   const MapRef = useRef<MaplibreMap | null>(null);
   const OpenMapPageRef = useRef<HTMLDivElement | null>(null);

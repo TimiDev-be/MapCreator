@@ -12,11 +12,11 @@ export default function PolygonPanel() {
     handleOpacityChange,
   } = usePolygonFeature();
   const { name, color, lineWidth, borderColor, opacity } =
-    feature.properties as PolygonProperties;
+    feature?.properties ?? {} as PolygonProperties;
 
   return (
     <>
-      <div className="feature-panel polygon" key={feature.id}>
+      <div className="feature-panel polygon" key={feature?.id ?? crypto.randomUUID()}>
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"

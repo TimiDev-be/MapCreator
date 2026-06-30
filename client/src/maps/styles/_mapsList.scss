@@ -7,6 +7,9 @@
 
     display: flex;
     flex-direction: column;
+    
+    background: url("../../assets/maps-bg.svg");
+    background-size: contain;
 
     .maps-list-wrapper {
         padding: 1rem;

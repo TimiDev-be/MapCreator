@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 export default function LineStringPanel() {
   const { feature, toggleFeaturePanel } = useMapContainer();
   const { name, color, lineWidth, lineDash } =
-    feature.properties as LineProperties;
+    feature?.properties ?? {} as LineProperties;
   const {
     handleColorChange,
     handleWidthChange,
@@ -25,7 +25,7 @@ export default function LineStringPanel() {
 
   return (
     <>
-      <div className="feature-panel lineString" key={feature.id}>
+      <div className="feature-panel lineString" key={feature?.id ?? crypto.randomUUID()}>
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"

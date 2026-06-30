@@ -4,7 +4,7 @@ import Line from "../../../shared/components/Line";
 import { useMap } from "../../../shared/hooks/Map";
 import { useMapContainer } from "../../../shared/hooks/MapContainer";
 import { useMapSettings } from "../../../shared/hooks/MapSettings";
-// import { useState } from "react";
+import { useState } from "react";
 
 export default function SettingsPanel() {
   const {
@@ -19,11 +19,11 @@ export default function SettingsPanel() {
     toggleAttractionPoint,
     handleAreaForPrintChange,
     toggleAreaForPrint,
-    // updateMinMaxZoom
+    updateMinMaxZoom
   } = useMapSettings();
   const { id, name, attractionPoint, areaForPrint } = currentMap ?? {};
-  // const { minZoom, maxZoom } = attractionPoint ?? {};
-  // const [minMaxZoom, setMinMaxZoom] = useState<number[]>([minZoom ?? 0, maxZoom ?? 22]);
+  const { minZoom, maxZoom } = attractionPoint ?? {};
+  const [minMaxZoom, setMinMaxZoom] = useState<number[]>([minZoom ?? 0, maxZoom ?? 22]);
 
   return (
     <>
@@ -153,7 +153,7 @@ export default function SettingsPanel() {
             preview
           </button>
         </div>
-        {/* <div className="linked-input-container zoom">
+        <div className="linked-input-container zoom">
           <p className="about zoom t-panel-medium">
             Zoom
           </p>
@@ -208,7 +208,7 @@ export default function SettingsPanel() {
               />
             </div>
           </div>
-        </div> */}
+        </div>
         <button
           type="button"
           className="delete-map-button t-panel-medium"
