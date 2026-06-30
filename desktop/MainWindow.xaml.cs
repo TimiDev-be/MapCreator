@@ -25,6 +25,17 @@ namespace desktop
         {
             InitializeComponent();
 
+            string isFirstLaunchedFilePath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MapCreator", "firstLaunch.txt");
+            if (!File.Exists(isFirstLaunchedFilePath))
+            {
+                File.Create(isFirstLaunchedFilePath);
+            }
+            else
+            {
+                WelcomePage.Visibility = Visibility.Collapsed;
+                WebViewAppPage.Visibility = Visibility.Visible;
+            }
+
             WelcomePage.GetStartedClicked += async (s, e) =>
             {
                 WelcomePage.Visibility = Visibility.Collapsed;
@@ -48,6 +59,11 @@ namespace desktop
             {
                 WelcomePage.Visibility = Visibility.Visible;
                 SetupUrlPage.Visibility = Visibility.Collapsed;
+            };
+            SetupUrlPage.SaveSetupUrlClicked += (s, e) =>
+            {
+                SetupUrlPage.Visibility = Visibility.Collapsed;
+                WebViewAppPage.Visibility = Visibility.Visible;
             };
 
             WebViewAppPage.ChangeStyleUrlClicked += (s, e) =>

@@ -21,6 +21,7 @@ namespace desktop.Controls
     public partial class SetupUrlControl : UserControl
     {
         public EventHandler? CloseSetupUrlClicked;
+        public EventHandler? SaveSetupUrlClicked;
         private string _url = string.Empty;
         public SetupUrlControl()
         {
@@ -37,7 +38,7 @@ namespace desktop.Controls
             {
                 UrlService urlService = new UrlService();
                 await urlService.Save(new UrlData(_url));
-                CloseSetupUrlClicked?.Invoke(this, EventArgs.Empty);
+                SaveSetupUrlClicked?.Invoke(this, EventArgs.Empty);
             }
         }
 
