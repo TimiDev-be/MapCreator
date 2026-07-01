@@ -21,6 +21,7 @@ namespace desktop
     /// </summary>
     public partial class MainWindow : Window
     {
+        public Control? CurrentPage { get; set; } = null;
         public MainWindow()
         {
             InitializeComponent();
@@ -33,8 +34,23 @@ namespace desktop
             else
             {
                 WelcomePage.Visibility = Visibility.Collapsed;
-                WebViewAppPage.Visibility = Visibility.Visible;
+                SetCurrentPage(this.WebViewAppPage);
             }
+
+            Header.PageChangeInvoked += (s, e) =>
+            {
+                if (this.CurrentPage is null) throw new Exception("Current page is null.");
+                if (this.CurrentPage == this.WorkspacePage)
+                {
+                    SetCurrentPage(this.WebViewAppPage);
+                    this.Header.ToggleButtons(this.WebViewAppPage.Name);
+                }
+                else if (this.CurrentPage == this.WebViewAppPage)
+                {
+                    SetCurrentPage(this.WorkspacePage);
+                    this.Header.ToggleButtons(this.WorkspacePage.Name);
+                }
+            };
 
             WelcomePage.GetStartedClicked += async (s, e) =>
             {
@@ -47,40 +63,12 @@ namespace desktop
 
                 if (string.IsNullOrEmpty(style.StyleUrl))
                 {
-                    SetupUrlPage.Visibility = Visibility.Visible;
+                    SetCurrentPage(this.WorkspacePage);
                 }
                 else
                 {
-                    WebViewAppPage.Visibility = Visibility.Visible;
+                    SetCurrentPage(this.WebViewAppPage);
                 }
-            };
-
-            SetupUrlPage.CloseSetupUrlClicked += (s, e) => 
-            {
-                WelcomePage.Visibility = Visibility.Visible;
-                SetupUrlPage.Visibility = Visibility.Collapsed;
-            };
-            SetupUrlPage.SaveSetupUrlClicked += (s, e) =>
-            {
-                SetupUrlPage.Visibility = Visibility.Collapsed;
-                WebViewAppPage.Visibility = Visibility.Visible;
-            };
-
-            WebViewAppPage.ChangeStyleUrlClicked += (s, e) =>
-            {
-                WebViewAppPage.Visibility = Visibility.Collapsed;
-                ChangeUrlPage.Visibility = Visibility.Visible;
-            };
-
-            ChangeUrlPage.CloseChangeUrlClicked += (s, e) =>
-            {
-                ChangeUrlPage.Visibility = Visibility.Collapsed;
-                WebViewAppPage.Visibility = Visibility.Visible;
-            };
-
-            ChangeUrlPage.SaveChangeUrlClicked += (s, e) => 
-            { 
-                WebViewAppPage.WebView.Reload();
             };
         }
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
@@ -115,6 +103,16 @@ namespace desktop
             {
                 Console.WriteLine("Something went wrong while loading a webview: " + ex.ToString());
             }
+        }
+
+        private void SetCurrentPage(Control page)
+        {
+            if (CurrentPage != null)
+            {
+                CurrentPage.Visibility = Visibility.Collapsed;
+            }
+            CurrentPage = page;
+            CurrentPage.Visibility = Visibility.Visible;
         }
     }
 }

@@ -22,6 +22,7 @@ namespace desktop.Controls
     {
         public EventHandler? CloseSetupUrlClicked;
         public EventHandler? SaveSetupUrlClicked;
+        private string _name = string.Empty;
         private string _url = string.Empty;
         public SetupUrlControl()
         {
@@ -32,9 +33,9 @@ namespace desktop.Controls
             CloseSetupUrlClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private async void SaveUrlButton_Click(object sender, RoutedEventArgs e)
+        private async void AddUrlButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_url))
+            if (!string.IsNullOrEmpty(_url) && !string.IsNullOrEmpty(_name))
             {
                 UrlService urlService = new UrlService();
                 await urlService.Save(new UrlData(_url));
@@ -49,24 +50,42 @@ namespace desktop.Controls
 
             if (string.IsNullOrEmpty(urlTextBox.Text))
             {
-                ShowError("Url is required.");
+                ShowError("Url is required.", this.UrlTextBoxErrorContainer, this.UrlTextBoxErrorMessage);
             }
             else
             {
-                CloseError();
+                CloseError(this.UrlTextBoxErrorContainer, this.UrlTextBoxErrorMessage);
+            }
+        }
+        private void UrlNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var urlTextBox = (TextBox)sender;
+            _url = urlTextBox.Text;
+
+            if (string.IsNullOrEmpty(urlTextBox.Text))
+            {
+                ShowError("Name is required.", this.UrlNameTextBoxErrorContainer, this.UrlNameTextBoxErrorMessage);
+            }
+            else
+            {
+                CloseError(this.UrlNameTextBoxErrorContainer, this.UrlNameTextBoxErrorMessage);
             }
         }
 
-        private void ShowError(string message)
+        private void ShowError(string message, Border? ErrorContainer, TextBlock? ErrorTextBlock)
         {
-            this.UrlTextBoxErrorContainer.Visibility = Visibility.Visible;
-            this.UrlTextBoxErrorMessage.Text = message;
+            if (ErrorContainer is null || ErrorTextBlock is null) return;
+
+            ErrorContainer.Visibility = Visibility.Visible;
+            ErrorTextBlock.Text = message;
         }
 
-        private void CloseError()
+        private void CloseError(Border? ErrorContainer, TextBlock? ErrorTextBlock)
         {
-            this.UrlTextBoxErrorContainer.Visibility = Visibility.Collapsed;
-            this.UrlTextBoxErrorMessage.Text = string.Empty;
+            if (ErrorContainer is null || ErrorTextBlock is null) return;
+
+            ErrorContainer.Visibility = Visibility.Collapsed;
+            ErrorTextBlock.Text = string.Empty;
         }
     }
 }

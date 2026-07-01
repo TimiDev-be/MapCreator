@@ -5,141 +5,81 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:desktop.Controls"
              mc:Ignorable="d"
-             HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch">
-    <Grid Background="#fff">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+             Width="auto"
+             Height="auto">
+    <Grid>
 
-        <Button x:Name="CloseButton"
-            Grid.Column="0"
-            Grid.Row="0"
-            Content="Close"
-            Width="60"
-            Height="25"
-            Margin="16"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Click="CloseButton_Click">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="Background" Value="#2E2C2A"/>
-                    <Setter Property="Foreground" Value="#fff"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Cursor" Value="Hand"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#064B8C"/>
-                            <Setter Property="Foreground" Value="#fff"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Border Background="{TemplateBinding Background}" 
-                        CornerRadius="5" 
-                        BorderBrush="{TemplateBinding BorderBrush}" 
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentPresenter HorizontalAlignment="Center" 
-                                      VerticalAlignment="Center"/>
+        <Border x:Name="AddNewUrlContainer"
+            Background="White"
+            Padding="16"
+            CornerRadius="10"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                    <TextBlock Text="Add new style" 
+                            FontSize="24"
+                            FontWeight="Medium"
+                            Foreground="{StaticResource BlueDark}"
+                            Margin="0, 0, 0, 8"/>
+                    
+                    <TextBlock Text="Name:" 
+                            FontSize="20"
+                            FontWeight="Medium"
+                            Foreground="{StaticResource BlueNormal}"
+                            Margin="0, 0, 0, 8"/>
+
+                    <TextBox x:Name="UrlNameTextBox"    
+                            Style="{StaticResource TextBoxInputStyle}"
+                            TextChanged="UrlNameTextBox_TextChanged"/>
+
+                    <Border x:Name="UrlNameTextBoxErrorContainer"
+                        Margin="0, 8, 0, 0"
+                        Visibility="Collapsed">
+                        <TextBlock x:Name="UrlNameTextBoxErrorMessage"
+                                TextWrapping="Wrap"
+                                FontSize="14" 
+                                Foreground="{StaticResource BlueNormal}"/>
                     </Border>
-                </ControlTemplate>
-            </Button.Template>
-        </Button>
+                    <TextBlock Text="Map style url:" 
+                            FontSize="20"
+                            FontWeight="Medium"
+                            Foreground="{StaticResource BlueNormal}"
+                            Margin="0, 0, 0, 8"/>
 
-        <StackPanel Grid.Column="0" 
-                Grid.Row="0"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-            <TextBlock Text="Enter the URL of your map file:" 
-                   FontSize="20"
-                   FontWeight="Medium"
-                   Foreground="#064B8C"
-                   Margin="0, 0, 0, 8"/>
-            <TextBox x:Name="UrlTextBox"    
-                 Width="300" 
-                 Height="auto" 
-                 Padding="16, 8"
-                 Background="#E6F0F8"
-                 TextChanged="UrlTextBox_TextChanged">
-                <TextBox.Style>
-                    <Style TargetType="TextBox">
-                        <Setter Property="BorderThickness" Value="1"/>
-                        <Setter Property="BorderBrush" Value="#B0C4DE"/>
-                        <Setter Property="Foreground" Value="#0864BA"/>
-                        <Setter Property="FontSize" Value="16"/>
-                        <Setter Property="FontWeight" Value="Medium"/>
-                        <Setter Property="Cursor" Value="IBeam"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#D0E4F5"/>
-                            </Trigger>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="Background" Value="#D0E4F5"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBox.Style>
-                <TextBox.Template>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border Background="{TemplateBinding Background}" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="{TemplateBinding BorderThickness}" 
-                            CornerRadius="5">
-                            <ScrollViewer x:Name="PART_ContentHost" 
-                                      Margin="0" 
-                                      VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </TextBox.Template>
-            </TextBox>
-            <Border x:Name="UrlTextBoxErrorContainer"
-                Margin="0, 8, 0, 0"
-                Visibility="Collapsed">
-                <TextBlock x:Name="UrlTextBoxErrorMessage"
-                       TextWrapping="Wrap"
-                       FontSize="14" 
-                       Foreground="#0864BA"/>
-            </Border>
-            <Button x:Name="SaveUrlButton"
-                Content="Save" 
-                Width="100" 
-                Height="35" 
-                FontSize="16"
-                FontWeight="Medium"
-                HorizontalAlignment="Right"
-                Margin="0, 8, 0, 0"
-                Click="SaveUrlButton_Click">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="#0864BA"/>
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Cursor" Value="Hand"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#075AA7"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-                <Button.Template>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                            CornerRadius="5" 
-                            BorderBrush="{TemplateBinding BorderBrush}" 
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                          VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Button.Template>
-            </Button>
-        </StackPanel>
+                    <TextBox x:Name="UrlTextBox"    
+                            Style="{StaticResource TextBoxInputStyle}"
+                            TextChanged="UrlTextBox_TextChanged"/>
+
+                    <Border x:Name="UrlTextBoxErrorContainer"
+                        Margin="0, 8, 0, 0"
+                        Visibility="Collapsed">
+                        <TextBlock x:Name="UrlTextBoxErrorMessage"
+                                TextWrapping="Wrap"
+                                FontSize="14" 
+                                Foreground="{StaticResource BlueNormal}"/>
+                    </Border>
+
+                    <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Right"
+                            Margin="0 8 0 0">
+                        <Button x:Name="CloseButton"
+                            Style="{StaticResource CloseButtonStyle}"
+                            Content="Close"
+                            Click="CloseButton_Click"/>
+                        <Button x:Name="AddUrlButton"
+                            Style="{StaticResource SaveButtonStyle}"
+                            Content="Add"
+                            Margin="8 0 0 0"
+                            Click="AddUrlButton_Click"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
     </Grid>
 </UserControl>

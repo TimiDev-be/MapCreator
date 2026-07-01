@@ -4,6 +4,15 @@
              xmlns:local="clr-namespace:desktop"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Colors.xaml"/>
+                <ResourceDictionary Source="/Resources/NavButton.xaml"/>
+                <ResourceDictionary Source="/Resources/CloseButton.xaml"/>
+                <ResourceDictionary Source="/Resources/SaveButton.xaml"/>
+                <ResourceDictionary Source="/Resources/HeaderButton.xaml"/>
+                <ResourceDictionary Source="/Resources/TextBoxInput.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

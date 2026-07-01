@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="desktop.Controls.Workspace.StylesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:desktop.Controls.Workspace"
+             mc:Ignorable="d" 
+             MinWidth="600"
+             Height="auto">
+    <Grid>
+        <Border x:Name="StylesPanel"
+            Padding="16 32"
+            Background="White">
+            <StackPanel Orientation="Vertical">
+
+                <StackPanel Orientation="Horizontal"
+                        Margin="0 0 0 8">
+                    <Image Source="/Assets/Paint.png"
+                        Width="24"
+                        Height="24"
+                        Margin="0 0 8 0"/>
+                    <TextBlock Text="Styles"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Foreground="{StaticResource Black}"/>
+                </StackPanel>
+
+                <TextBlock Text="Manage saved map style url’s. Click on style to activite."
+                        FontSize="16"
+                        Foreground="{StaticResource Black}"
+                        Margin="0 0 0 8"/>
+
+            </StackPanel>
+        </Border>  
+    </Grid>
+</UserControl>
