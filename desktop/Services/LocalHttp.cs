@@ -1,4 +1,5 @@
 ﻿using desktop.Classes;
+using desktop.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +12,7 @@ using System.Text.Json;
 
 namespace desktop.Services
 {
-    public class LocalHttp
+    public class LocalHttp(AppDataContext dataContext)
     {
         private WebApplication? _httpServer;
         public int Port { get; set; }
@@ -62,8 +63,9 @@ namespace desktop.Services
                 });
             });
 
+            builder.Services.AddSingleton<AppDataContext>(dataContext);
             builder.Services.AddScoped<DataService>();
-            builder.Services.AddScoped<UrlService>();
+            builder.Services.AddScoped<StyleService>();
 
             var app = builder.Build();
 
@@ -83,21 +85,21 @@ namespace desktop.Services
                 FileProvider = new PhysicalFileProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "dist"))
             });
 
-            app.MapGet("/api/style", async (UrlService configService) =>
+            app.MapGet("/api/style", async (StyleService _styleService) =>
             {
-                var style = await configService.GetUrl();
+                var style = _styleService.GetActiveStyle();
                 return Results.Ok(style);
             });
 
-            app.MapGet("/api/data", async (DataService dataService) =>
+            app.MapGet("/api/data", async (DataService _dataService) =>
             {
-                var data = await dataService.GetData();
+                var data = await _dataService.GetData();
                 return Results.Ok(data);
             });
 
-            app.MapPatch("/api/data", async (DataPatch dataPatch, DataService dataService) =>
+            app.MapPatch("/api/data", async (DataPatch dataPatch, DataService _dataService) =>
             {
-                await dataService.UpdateData(dataPatch.DataPatchValue);
+                await _dataService.UpdateData(dataPatch.DataPatchValue);
                 return Results.NoContent();
             });
 
