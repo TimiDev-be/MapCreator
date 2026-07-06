@@ -25,7 +25,8 @@
                                 Grid.Column="0"
                                 Grid.Row="0"/>
 
-        <ScrollViewer Grid.Column="1"
+        <ScrollViewer x:Name="WorkspaceScrollViewer" 
+                    Grid.Column="1"
                     Grid.Row="0"
                     VerticalAlignment="Stretch"
                     HorizontalAlignment="Stretch"
@@ -35,11 +36,11 @@
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch">
 
-                <local:StylesControl Margin="0 0 0 8"/>
-                
-                <Border BorderBrush="{StaticResource Black}"
-                    BorderThickness="0 0 0 1"
-                    Margin="0 0 0 16"/>
+                <local:StylesControl x:Name="StylesPanel" Margin="0 0 0 8"/>
+
+                <local:LogsControl x:Name="LogsPanel" Margin="0 0 0 8"/>
+
+                <local:AboutControl x:Name="AboutPanel" Margin="0 0 0 8"/>
 
             </StackPanel>
         </ScrollViewer>

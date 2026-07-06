@@ -21,6 +21,30 @@ namespace desktop.Controls.Workspace
         public WorkspaceControl()
         {
             InitializeComponent();
+            this.Navigation.OnNavigate = (panelName) =>
+            {
+                switch (panelName) {
+                    case "styles":
+                        this.ScrollToSection(this.StylesPanel); 
+                        break;
+                    case "logs":
+                        this.ScrollToSection(this.LogsPanel);
+                        break;
+                    case "about":
+                        this.ScrollToSection(this.AboutPanel);
+                        break;
+                    default:
+                        this.ScrollToSection(this.StylesPanel);
+                        break;
+                }
+            };
+        }
+
+        private void ScrollToSection(UIElement element)
+        {
+            var transform = element.TransformToAncestor(this.WorkspaceScrollViewer);
+            var position = transform.Transform(new Point(0, 0));
+            this.WorkspaceScrollViewer.ScrollToVerticalOffset(position.Y);
         }
     }
 }
