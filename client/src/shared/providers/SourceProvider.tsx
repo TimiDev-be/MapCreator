@@ -14,7 +14,6 @@ export default function SourceProvider() {
   const [currentGroup, setCurrentGroup] = useState<Group | undefined>(
     undefined,
   );
-  const [mapStyle, setMapStyle] = useState<string | undefined>(undefined);
   const [config, setConfig] = useState<Config | undefined>(undefined);
 
   //load data
@@ -39,23 +38,6 @@ export default function SourceProvider() {
     }
   };
 
-  const loadStyleToState = async () => {
-    if (!config) return;
-    const response = await fetch(`${config.api.link}/style`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const responseJson = await response.json();
-      setMapStyle(responseJson.styleUrl);
-    } else {
-      setMapStyle(undefined);
-    }
-  };
-
   useEffect(() => {
     fetch("config.json")
       .then((res) => res.json())
@@ -66,7 +48,6 @@ export default function SourceProvider() {
     if (!config) return;
     const handleLoad = async () => {
       await loadSourceDataToState();
-      await loadStyleToState();
     };
     handleLoad();
   }, [config]);
@@ -81,7 +62,6 @@ export default function SourceProvider() {
           setCurrentMap,
           currentGroup,
           setCurrentGroup,
-          mapStyle,
           config,
         }}
       >

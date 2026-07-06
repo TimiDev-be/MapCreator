@@ -1,6 +1,5 @@
 import "../styles/_mapsList.scss";
 import MapsListElement from "./MapsListElement";
-import QuickMenu from "./QuickMenu";
 import { useMaps } from "../../shared/hooks/Maps";
 import { useMap } from "../../shared/hooks/Map";
 import { useEffect } from "react";
@@ -16,7 +15,6 @@ export default function MapsList() {
   return (
     <>
       <section className="maps-list">
-        <QuickMenu />
         <div className="maps-list-wrapper">
           {maps &&
             maps.map((map) => <MapsListElement key={map.id} map={map} />)}

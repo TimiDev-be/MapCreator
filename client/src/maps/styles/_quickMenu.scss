@@ -1,69 +1,69 @@
 @use "../../shared/styles/v";
-
-.quick-menu.map-styles,
 .quick-menu.maps {
-    padding: 1rem;
-    width: 100%;
+  padding: 1rem;
+  width: max-content;
 
-    position: sticky;
-    top: 0;
-    z-index: 2;
+  position: fixed;
+  top: .5rem;
+  right: 0;
+  z-index: 2;
 
-    display: flex;
-    flex-wrap: wrap-reverse;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
 
-    background-color: white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border: 2px solid v.$blue-light;
+  border-radius: 10px;
 
-    .remove-map-style-button,
-    .remove-map-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+  .remove-map-style-button,
+  .remove-map-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-        background-color: white;
-        border: none;
-        outline: none;
-        cursor: pointer;
+      background-color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
 
-        &:hover {
-            svg path {
-                fill: rgb(196, 32, 32);
-            }
-        }
+      &:hover {
+          svg path {
+              fill: rgb(196, 32, 32);
+          }
+      }
 
-        svg path {
-            fill: v.$black;
-        }
-    }
-    .checkbox-group {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+      svg path {
+          fill: v.$black;
+      }
+  }
+  .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
 
-        label {
-            color: v.$black;
-            cursor: pointer;
-        }
-        input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-    }
-    .create-new-map-style-link,
-    .create-new-map-link {
-        padding: 0.5rem;
+      label {
+          color: v.$black;
+          cursor: pointer;
+      }
+      input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
+      }
+  }
+  .create-new-map-style-link,
+  .create-new-map-link {
+      padding: 0.5rem;
 
-        background-color: v.$black;
-        border-radius: 5px;
-        color: white;
+      background-color: v.$black;
+      border-radius: 5px;
+      color: white;
 
-        &:hover {
-            background-color: v.$blue-normal;
-        }
-    }
+      &:hover {
+          background-color: v.$blue-normal;
+      }
+  }
 }
