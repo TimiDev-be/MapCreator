@@ -29,8 +29,10 @@
                         Margin="0 0 0 16"/>
 
                 <RadioButton x:Name="StylesNavButton"
-                        Style="{StaticResource NavButtonStyle}"
-                        GroupName="Nav">
+                            Tag="styles"
+                            Style="{StaticResource NavButtonStyle}"
+                            GroupName="Nav"
+                            Click="NavigationButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Paint.png"
                             Width="24"
@@ -42,8 +44,10 @@
                 </RadioButton>
 
                 <RadioButton x:Name="LogsNavButton"
-                        Style="{StaticResource NavButtonStyle}"
-                        GroupName="Nav">
+                            Tag="logs"
+                            Style="{StaticResource NavButtonStyle}"
+                            GroupName="Nav"
+                            Click="NavigationButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Document.png"
                             Width="24"
@@ -55,8 +59,10 @@
                 </RadioButton>
 
                 <RadioButton x:Name="AboutNavButton"
-                        Style="{StaticResource NavButtonStyle}"
-                        GroupName="Nav">
+                            Tag="about"
+                            Style="{StaticResource NavButtonStyle}"
+                            GroupName="Nav"
+                            Click="NavigationButton_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/About.png"
                             Width="24"

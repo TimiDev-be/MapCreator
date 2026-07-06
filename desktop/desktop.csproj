@@ -11,6 +11,7 @@
 			win-x64;win-x86;
 		</RuntimeIdentifiers>
 		<ApplicationIcon>Assets\MapCreator.ico</ApplicationIcon>
+		<Version>0.2.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -33,6 +34,7 @@
 
 	<ItemGroup>
 		<None Remove="Assets\About.png" />
+		<None Remove="Assets\BlueEdit.png" />
 		<None Remove="Assets\BlueTrash.png" />
 		<None Remove="Assets\Document.png" />
 		<None Remove="Assets\Edit.png" />
@@ -40,7 +42,9 @@
 		<None Remove="Assets\MapCreator.png" />
 		<None Remove="Assets\Paint.png" />
 		<None Remove="Assets\WhiteMap.png" />
+		<None Remove="Assets\WhitePlus.png" />
 		<Resource Include="Assets\About.png" />
+		<Resource Include="Assets\BlueEdit.png" />
 		<Resource Include="Assets\BlueTrash.png" />
 		<Resource Include="Assets\Document.png" />
 		<Resource Include="Assets\Edit.png" />
@@ -49,6 +53,7 @@
 		<Resource Include="Assets\MapCreator.png" />
 		<Resource Include="Assets\Paint.png" />
 		<Resource Include="Assets\WhiteMap.png" />
+		<Resource Include="Assets\WhitePlus.png" />
 	</ItemGroup>
 	
 	<ItemGroup>

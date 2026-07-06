@@ -28,15 +28,17 @@ namespace desktop.Services
             return _dataContext.StyleData.Styles.FirstOrDefault(s => s.IsActive);
         }
 
-        public async Task ToggleActiveStyle(Guid id)
+        public async Task<bool> ToggleActiveStyle(Guid id)
         {
             var styleToActivate = _dataContext.StyleData.Styles.FirstOrDefault(s => s.Id == id);
-            if (styleToActivate != null)
+            if (styleToActivate is not null && styleToActivate.IsActive) return false;
+            else if (styleToActivate != null)
             {
                 _dataContext.StyleData.Styles.FirstOrDefault(s => s.IsActive)?.IsActive = false;
                 styleToActivate.IsActive = true;
             }
             await Save();
+            return true;
         }
 
         public List<Style> GetStyles()
@@ -59,6 +61,14 @@ namespace desktop.Services
                 existingStyle.Url = style.Url;
                 await Save();
             }
+        }
+
+        public async Task DeleteStyle(Guid id)
+        {
+            var item = _dataContext.StyleData.Styles.FirstOrDefault(s => s.Id == id);
+            if (item is null) return;
+            _dataContext.StyleData.Styles.Remove(item);
+            await Save();
         }
 
         public async Task Save()

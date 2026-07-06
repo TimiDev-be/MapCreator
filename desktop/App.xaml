@@ -1,8 +1,7 @@
 ﻿<Application x:Class="desktop.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:desktop"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:desktop">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -12,6 +11,9 @@
                 <ResourceDictionary Source="/Resources/SaveButton.xaml"/>
                 <ResourceDictionary Source="/Resources/HeaderButton.xaml"/>
                 <ResourceDictionary Source="/Resources/TextBoxInput.xaml"/>
+                <ResourceDictionary Source="/Resources/StylesList.xaml"/>
+                <ResourceDictionary Source="/Resources/AddStyleButton.xaml"/>
+                <ResourceDictionary Source="/Resources/StyleMenuButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

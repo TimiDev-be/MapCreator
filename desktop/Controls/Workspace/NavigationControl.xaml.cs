@@ -18,9 +18,17 @@ namespace desktop.Controls.Workspace
     /// </summary>
     public partial class NavigationControl : UserControl
     {
+        public Action<string>? OnNavigate { get; set; }
         public NavigationControl()
         {
             InitializeComponent();
+        }
+
+        private void NavigationButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (RadioButton)sender;
+            if (button is null) return;
+            OnNavigate?.Invoke(button.Tag.ToString() ?? "styles");
         }
     }
 }

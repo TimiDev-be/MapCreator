@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using desktop.Data;
+using desktop.Controls.Workspace;
+using desktop.Events;
 
 namespace desktop
 {
@@ -37,6 +40,14 @@ namespace desktop
                 SetCurrentPage(this.WebViewAppPage);
             }
 
+            this.AddHandler(AppEvents.OpenAddStylePopupEvent, new RoutedEventHandler(SetupStylePopup_Open));
+            this.AddHandler(AppEvents.OpenChangeStylePopupEvent, new EventHandler<StyleRoutedEventArgs>((s, e) =>
+            {
+                ChangeStylePopup.OldStyle = e.Style;
+                this.ChangeStylePopup.Visibility = Visibility.Visible;
+            }));
+            this.AddHandler(AppEvents.ReloadWebViewEvent, new RoutedEventHandler(OnReloadWebView));
+
             Header.PageChangeInvoked += (s, e) =>
             {
                 if (this.CurrentPage is null) throw new Exception("Current page is null.");
@@ -52,23 +63,11 @@ namespace desktop
                 }
             };
 
+
             WelcomePage.GetStartedClicked += async (s, e) =>
             {
                 WelcomePage.Visibility = Visibility.Collapsed;
-
-                UrlService urlService = new UrlService();
-                DataService dataService = new DataService();
-                UrlData style =  await urlService.Load();
-                await dataService.Load();
-
-                if (string.IsNullOrEmpty(style.StyleUrl))
-                {
-                    SetCurrentPage(this.WorkspacePage);
-                }
-                else
-                {
-                    SetCurrentPage(this.WebViewAppPage);
-                }
+                SetCurrentPage(this.WebViewAppPage);
             };
         }
         private async void MainWindow_ContentRendered(object sender, EventArgs e)
@@ -104,7 +103,6 @@ namespace desktop
                 Console.WriteLine("Something went wrong while loading a webview: " + ex.ToString());
             }
         }
-
         private void SetCurrentPage(Control page)
         {
             if (CurrentPage != null)
@@ -113,6 +111,14 @@ namespace desktop
             }
             CurrentPage = page;
             CurrentPage.Visibility = Visibility.Visible;
+        }
+        private void SetupStylePopup_Open(object sender, RoutedEventArgs e)
+        {
+            this.SetupStylePopup.Visibility = Visibility.Visible;
+        }
+        private void OnReloadWebView(object sender, RoutedEventArgs e)
+        {
+            this.WebViewAppPage.WebView.Reload();
         }
     }
 }

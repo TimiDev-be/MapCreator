@@ -45,5 +45,21 @@
                                 Visibility="Collapsed"
                                 Grid.Column="0"
                                 Grid.Row="1"/>
+
+        <controls:SetupUrlControl x:Name="SetupStylePopup"
+                                Visibility="Collapsed"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+
+        <controls:ChangeUrlControl x:Name="ChangeStylePopup"
+                        Visibility="Collapsed"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
     </Grid>
 </Window>
