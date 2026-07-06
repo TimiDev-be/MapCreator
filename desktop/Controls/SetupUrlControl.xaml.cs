@@ -20,26 +20,26 @@ namespace desktop.Controls
     /// </summary>
     public partial class SetupUrlControl : UserControl
     {
-        public EventHandler? CloseSetupUrlClicked;
-        public EventHandler? SaveSetupUrlClicked;
-        private string _name = string.Empty;
-        private string _url = string.Empty;
+        private string _name { get; set; }
+        private string _url { get; set; }
         public SetupUrlControl()
         {
             InitializeComponent();
         }
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            CloseSetupUrlClicked?.Invoke(this, EventArgs.Empty);
+            this.ClearData();
+            this.Visibility = Visibility.Collapsed;
         }
 
-        private async void AddUrlButton_Click(object sender, RoutedEventArgs e)
+        private async void AddStyleButton_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_url) && !string.IsNullOrEmpty(_name))
             {
-                UrlService urlService = new UrlService();
-                await urlService.Save(new UrlData(_url));
-                SaveSetupUrlClicked?.Invoke(this, EventArgs.Empty);
+                desktop.Classes.Style style = new desktop.Classes.Style(_name, _url);
+                await App.StyleService.AddStyle(style);
+                this.ClearData();
+                this.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -57,18 +57,18 @@ namespace desktop.Controls
                 CloseError(this.UrlTextBoxErrorContainer, this.UrlTextBoxErrorMessage);
             }
         }
-        private void UrlNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void NameTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var urlTextBox = (TextBox)sender;
-            _url = urlTextBox.Text;
+            var nameTextBox = (TextBox)sender;
+            _name = nameTextBox.Text;
 
-            if (string.IsNullOrEmpty(urlTextBox.Text))
+            if (string.IsNullOrEmpty(_name))
             {
-                ShowError("Name is required.", this.UrlNameTextBoxErrorContainer, this.UrlNameTextBoxErrorMessage);
+                ShowError("Name is required.", this.NameTextBoxErrorContainer, this.NameTextBoxErrorMessage);
             }
             else
             {
-                CloseError(this.UrlNameTextBoxErrorContainer, this.UrlNameTextBoxErrorMessage);
+                CloseError(this.NameTextBoxErrorContainer, this.NameTextBoxErrorMessage);
             }
         }
 
@@ -86,6 +86,14 @@ namespace desktop.Controls
 
             ErrorContainer.Visibility = Visibility.Collapsed;
             ErrorTextBlock.Text = string.Empty;
+        }
+
+        private void ClearData()
+        {
+            this.NameTextBox.Text = string.Empty;
+            this.UrlTextBox.Text = string.Empty;
+            CloseError(this.NameTextBoxErrorContainer, this.NameTextBoxErrorMessage);
+            CloseError(this.UrlTextBoxErrorContainer, this.UrlTextBoxErrorMessage);
         }
     }
 }

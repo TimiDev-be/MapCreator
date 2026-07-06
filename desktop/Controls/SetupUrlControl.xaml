@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:desktop.Controls"
              mc:Ignorable="d"
-             Width="auto"
-             Height="auto">
+             Width="Auto"
+             Height="Auto">
     <Grid>
 
         <Border x:Name="AddNewUrlContainer"
@@ -16,38 +16,45 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center">
 
+            <Border.Effect>
+                <DropShadowEffect Color="{StaticResource CBlack}"
+                                Opacity="0.1"
+                                BlurRadius="10"
+                                ShadowDepth="2"/>
+            </Border.Effect>
+
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Vertical"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                     <TextBlock Text="Add new style" 
-                            FontSize="24"
+                            FontSize="20"
                             FontWeight="Medium"
-                            Foreground="{StaticResource BlueDark}"
+                            Foreground="{StaticResource Black}"
                             Margin="0, 0, 0, 8"/>
                     
                     <TextBlock Text="Name:" 
-                            FontSize="20"
+                            FontSize="16"
                             FontWeight="Medium"
-                            Foreground="{StaticResource BlueNormal}"
+                            Foreground="{StaticResource Black}"
                             Margin="0, 0, 0, 8"/>
 
-                    <TextBox x:Name="UrlNameTextBox"    
+                    <TextBox x:Name="NameTextBox"    
                             Style="{StaticResource TextBoxInputStyle}"
-                            TextChanged="UrlNameTextBox_TextChanged"/>
+                            TextChanged="NameTextBox_TextChanged"/>
 
-                    <Border x:Name="UrlNameTextBoxErrorContainer"
-                        Margin="0, 8, 0, 0"
+                    <Border x:Name="NameTextBoxErrorContainer"
+                        Margin="0 8"
                         Visibility="Collapsed">
-                        <TextBlock x:Name="UrlNameTextBoxErrorMessage"
+                        <TextBlock x:Name="NameTextBoxErrorMessage"
                                 TextWrapping="Wrap"
                                 FontSize="14" 
                                 Foreground="{StaticResource BlueNormal}"/>
                     </Border>
                     <TextBlock Text="Map style url:" 
-                            FontSize="20"
+                            FontSize="16"
                             FontWeight="Medium"
-                            Foreground="{StaticResource BlueNormal}"
+                            Foreground="{StaticResource Black}"
                             Margin="0, 0, 0, 8"/>
 
                     <TextBox x:Name="UrlTextBox"    
@@ -55,7 +62,7 @@
                             TextChanged="UrlTextBox_TextChanged"/>
 
                     <Border x:Name="UrlTextBoxErrorContainer"
-                        Margin="0, 8, 0, 0"
+                        Margin="0 8"
                         Visibility="Collapsed">
                         <TextBlock x:Name="UrlTextBoxErrorMessage"
                                 TextWrapping="Wrap"
@@ -74,7 +81,7 @@
                             Style="{StaticResource SaveButtonStyle}"
                             Content="Add"
                             Margin="8 0 0 0"
-                            Click="AddUrlButton_Click"/>
+                            Click="AddStyleButton_Click"/>
                     </StackPanel>
 
                 </StackPanel>
