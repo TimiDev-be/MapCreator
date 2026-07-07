@@ -9,7 +9,7 @@ import { useGroup } from "../../../../shared/hooks/Group";
 export default function GroupsPanel() {
   const { currentMap } = useMap();
   const { newGroup, assignFeatureToGroup } = useGroup();
-  const { groups, features } = currentMap;
+  const { groups, features } = currentMap ?? {};
 
   return (
     <>
@@ -26,24 +26,26 @@ export default function GroupsPanel() {
             <PlusLogo width={24} height={24} />
           </button>
         </div>
-        <ul
-          className="groups-features-list"
-          onDragOver={(e) => e.preventDefault()}
-          onDrop={(e) => {
-            e.preventDefault();
-            const featureId = e.dataTransfer.getData("featureId");
-            assignFeatureToGroup(featureId, undefined);
-          }}
-        >
-          {groups.map((g) => {
-            return <Group key={g.id} group={g} />;
-          })}
-          {features
-            .filter((f) => !f.properties.groupId)
-            .map((f) => {
-              return <FeatureComponent key={f.id} feature={f} />;
+        <div className="groups-features-list-wrapper">
+          <ul
+            className="groups-features-list"
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => {
+              e.preventDefault();
+              const featureId = e.dataTransfer.getData("featureId");
+              assignFeatureToGroup(featureId, undefined);
+            }}
+          >
+            {groups && groups.map((g) => {
+              return <Group key={g.id} group={g} />;
             })}
-        </ul>
+            {features && features
+              .filter((f) => !f.properties?.groupId)
+              .map((f) => {
+                return <FeatureComponent key={f.id} feature={f} />;
+              })}
+          </ul>
+        </div>
       </div>
     </>
   );

@@ -1,45 +1,53 @@
 @use "../../shared/styles/v";
 
 .nav.panel.groups {
-    min-width: 325px;
+  min-width: 325px;
 
-    .group {
-        &.new-group {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-        }
-    }
-    .create-new-group-button {
-        padding: 0.2rem;
-
+  .group {
+    &.new-group {
         display: flex;
-
-        background-color: transparent;
-        border: none;
-        border-radius: 0.5rem;
-        color: white;
-        cursor: pointer;
-
-        svg path {
-            fill: v.$black;
-        }
-
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-    }
-    .groups-features-list {
-        padding: 0.5rem 0 0 0;
-        height: 100%;
-
-        display: flex;
-        flex-direction: column;
-        overflow-y: auto;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
         gap: 0.5rem;
-
-        list-style-type: none;
     }
+}
+  .create-new-group-button {
+    padding: 0.2rem;
+
+    display: flex;
+
+    background-color: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    cursor: pointer;
+
+    svg path {
+        fill: v.$black;
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+  .groups-features-list-wrapper {
+    padding-left: 0.5rem;
+    height: max-content;
+    width: 100%;
+    overflow-y: auto;
+    border-left: 2px solid v.$blue-light-hover;
+  }
+  .groups-features-list {
+    padding: 0.5rem;
+    width: max-content;
+    height: max-content;
+
+    display: grid;
+    grid-auto-rows: max-content;
+    justify-items: flex-end;
+    gap: 0.5rem;
+
+    list-style-type: none;
+  }
 }
