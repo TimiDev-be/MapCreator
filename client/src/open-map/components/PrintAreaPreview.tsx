@@ -11,7 +11,7 @@ export default function PrintAreaPreview() {
         className="print-area-preview"
         style={{
           width: `${MmToPx(areaForPrint?.width ?? 0)}px`,
-          height: `${MmToPx(areaForPrint.height ?? 0)}px`,
+          height: `${MmToPx(areaForPrint?.height ?? 0)}px`,
         }}
       >
         <div className="corner corner-top-left"></div>

@@ -16,7 +16,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Wydzielanie bibliotek do osobnych plików
           if (
             id.includes("maplibre-gl") ||
             id.includes("maplibre-react-components")

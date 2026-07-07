@@ -13,3 +13,4 @@
 | [geojson](https://github.com/caseycesari/geojson.js) | MIT |
 | [Sass](https://github.com/sass/sass) | MIT |
 | [Vite](https://github.com/vitejs/vite) | MIT |
+| [react-toastify](https://github.com/fkhadra/react-toastify) | MIT |

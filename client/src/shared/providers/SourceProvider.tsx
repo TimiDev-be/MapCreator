@@ -3,14 +3,15 @@ import { Outlet } from "react-router-dom";
 import type { UserSource } from "../types/UserSource";
 import type { Group } from "../types/Group";
 import { SOURCE_CONTEXT } from "../contexts/SourceContext";
-import type { Map } from "../classes/Map";
 import type { Config } from "../types/Config";
+import { ToastContainer } from 'react-toastify';
+import type { StateMap } from "../types/StateMap";
 
 export default function SourceProvider() {
   const [currentSource, setCurrentSource] = useState<UserSource | undefined>(
     undefined,
   );
-  const [currentMap, setCurrentMap] = useState<Map | undefined>(undefined);
+  const [currentMap, setCurrentMap] = useState<StateMap | null>(null);
   const [currentGroup, setCurrentGroup] = useState<Group | undefined>(
     undefined,
   );
@@ -66,6 +67,11 @@ export default function SourceProvider() {
         }}
       >
         <Outlet />
+        <ToastContainer
+          position="bottom-right"
+          newestOnTop
+          hideProgressBar
+          autoClose={5000}/>
       </SOURCE_CONTEXT.Provider>
     </>
   );
