@@ -1,4 +1,4 @@
-import type { Feature } from "maplibre-gl";
+import type { Feature } from "geojson";
 
 type Props = {
   feature: Feature;
@@ -6,7 +6,7 @@ type Props = {
 };
 
 export default function SearchResultElement({ feature, onJump }: Props) {
-  const { display_name } = feature.properties;
+  const { display_name } = feature.properties as any;
   return (
     <>
       <li
