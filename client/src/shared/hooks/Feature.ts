@@ -8,6 +8,7 @@ export const useFeature = () => {
   const { currentGroup } = useGroup();
 
   const newFeature = (feature: Feature) => {
+    if (!currentMap) return;
     const newFeature: Feature = {
       ...feature,
       properties: {
@@ -23,6 +24,7 @@ export const useFeature = () => {
     updateMap(UpdatedMap);
   };
   const updateFeature = (feature: Feature) => {
+    if (!currentMap) return;
     const UpdatedMap: StateMap = {
       ...currentMap,
       features: currentMap.features.map((f) =>
@@ -32,6 +34,7 @@ export const useFeature = () => {
     updateMap(UpdatedMap);
   };
   const deleteFeature = (id: string) => {
+    if (!currentMap) return;
     const UpdatedMap: StateMap = {
       ...currentMap,
       features: currentMap.features.filter((f) => f.id !== id),
