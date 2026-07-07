@@ -1,18 +1,12 @@
 import { useMapContainer } from "../../../../shared/hooks/MapContainer";
-import { usePolygonFeature } from "../../../../shared/hooks/PolygonFeature";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import type { PolygonProperties } from "../../../../shared/types/PolygonProperties";
+import PolygonColorsGroup from "./polygon-groups/PolygonColorsGroup";
+import PolygonSizesGroup from "./polygon-groups/PolygonSizesGroup";
 
 export default function PolygonPanel() {
   const { feature, toggleFeaturePanel } = useMapContainer();
-  const {
-    handleColorChange,
-    handleWidthChange,
-    handleBorderColorChange,
-    handleOpacityChange,
-  } = usePolygonFeature();
-  const { name, color, lineWidth, borderColor, opacity } =
-    feature?.properties ?? {} as PolygonProperties;
+  const {name} = feature?.properties ?? {} as PolygonProperties;
 
   return (
     <>
@@ -25,77 +19,8 @@ export default function PolygonPanel() {
           <CloseLogo width={20} height={20} />
         </button>
         <p className="feature-name t-panel-medium">feature / {name}</p>
-        <div className="group color">
-          <div className="wrapper">
-            <label htmlFor="feature-color-input" className="t-panel-small">
-              Background Color
-            </label>
-            <input
-              type="color"
-              id="feature-color-input"
-              name="feature-color"
-              className="color-input"
-              defaultValue={color}
-              onBlur={handleColorChange}
-            />
-          </div>
-          <div className="wrapper">
-            <label
-              htmlFor="feature-border-color-input"
-              className="t-panel-small"
-            >
-              Border Color
-            </label>
-            <input
-              type="color"
-              id="feature-border-color-input"
-              name="feature-border-color"
-              className="color-input"
-              defaultValue={borderColor}
-              onBlur={handleBorderColorChange}
-            />
-          </div>
-          <div className="wrapper background-opacity">
-            <label htmlFor="opacity-input" className="t-panel-small">
-              Opacity
-            </label>
-            <input
-              type="number"
-              id="opacity-input"
-              name="opacity"
-              className="panel-field t-panel-small"
-              defaultValue={opacity}
-              onBlur={(e) => {
-                let value = Number(e.currentTarget.value);
-                if (value < 0) {
-                  e.currentTarget.value = "0";
-                  value = 0;
-                }
-                if (value > 1) {
-                  e.currentTarget.value = "1";
-                  value = 1;
-                }
-                handleOpacityChange(value);
-              }}
-            />
-          </div>
-        </div>
-        <div className="group sizes">
-          <div className="wrapper">
-            <label htmlFor="range-width-input" className="t-panel-small">
-              Width ({lineWidth})
-            </label>
-            <input
-              type="range"
-              id="range-width-input"
-              name="range-width"
-              min="1"
-              max="12"
-              defaultValue={lineWidth}
-              onMouseUp={handleWidthChange}
-            />
-          </div>
-        </div>
+        <PolygonColorsGroup/>
+        <PolygonSizesGroup/>
       </div>
     </>
   );
