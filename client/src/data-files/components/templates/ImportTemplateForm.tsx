@@ -3,6 +3,7 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useFile } from "../../../shared/hooks/File";
 import Line from "../../../shared/components/Line";
+import { toast } from "react-toastify";
 
 const ValidationSchema = Yup.object().shape({
   file: Yup.mixed<File>()
@@ -28,10 +29,11 @@ export default function ImportTemplateForm() {
     try {
       setSubmitting(true);
       await importTemplate(values.file);
+      toast.success("Template imported with success");
       setSubmitting(false);
     } catch (error) {
       setSubmitting(false);
-      alert("Failed to import template file: " + (error as Error).message);
+      toast.error("Something went wrong");
     } finally {
       resetForm();
       setFile(undefined);

@@ -4,16 +4,48 @@ import { useMapContainer } from "../../shared/hooks/MapContainer";
 import { useMap } from "../../shared/hooks/Map";
 import { useSource } from "../../shared/hooks/Source";
 import MarkerComponent from "./marker/Marker";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { MapStyle } from "../../shared/types/MapStyle";
 
 export default function MapContainer() {
-  const { currentSource, mapStyle } = useSource();
+  const { currentSource, config } = useSource();
   const { currentMap } = useMap();
   const { setMapRef, areaForPrintFeature, setMapZoom, drawFeatures, connectedMaps } =
     useMapContainer();
   const { attractionPoint } = currentMap ?? {};
   const [mapError, setMapError] = useState<boolean>(false);
   const [featuresVisibility, setFeaturesVisibility] = useState<any>([]);
+  const [mapStyle, setMapStyle] = useState<MapStyle | undefined>(undefined);
+
+  const loadStyleToState = async () => {
+    if (!config) return;
+
+    try {
+      const response = await fetch(`${config.api.link}/style`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const responseJson = await response.json();
+        setMapStyle(responseJson);
+      } else {
+        setMapStyle(undefined);
+        setMapError(true);
+      } 
+    } catch (error) {
+      setMapStyle(undefined);
+      setMapError(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!config) setMapError(true);
+    const loadStyle = async () => loadStyleToState();
+    loadStyle();
+  }, [config])
 
   return (
     <>
@@ -24,11 +56,11 @@ export default function MapContainer() {
             connection and map style url and try again.
           </div>
         )}
-        {mapStyle && !mapError && currentSource && currentMap && (
+        {!mapError && mapStyle && currentSource && currentMap && (
           <RMap
             key={currentMap.id}
             style={{ width: "100%", height: "100%" }}
-            mapStyle={mapStyle}
+            mapStyle={mapStyle.url ?? "default style"}
             onError={() => {
               setMapError(true);
             }}

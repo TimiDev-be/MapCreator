@@ -20,25 +20,26 @@ namespace desktop.Controls
     /// </summary>
     public partial class SetupUrlControl : UserControl
     {
-        public EventHandler? CloseSetupUrlClicked;
-        public EventHandler? SaveSetupUrlClicked;
-        private string _url = string.Empty;
+        private string _name { get; set; }
+        private string _url { get; set; }
         public SetupUrlControl()
         {
             InitializeComponent();
         }
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            CloseSetupUrlClicked?.Invoke(this, EventArgs.Empty);
+            this.ClearData();
+            this.Visibility = Visibility.Collapsed;
         }
 
-        private async void SaveUrlButton_Click(object sender, RoutedEventArgs e)
+        private async void AddStyleButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(_url))
+            if (!string.IsNullOrEmpty(_url) && !string.IsNullOrEmpty(_name))
             {
-                UrlService urlService = new UrlService();
-                await urlService.Save(new UrlData(_url));
-                SaveSetupUrlClicked?.Invoke(this, EventArgs.Empty);
+                desktop.Classes.Style style = new desktop.Classes.Style(_name, _url);
+                await App.StyleService.AddStyle(style);
+                this.ClearData();
+                this.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -49,24 +50,50 @@ namespace desktop.Controls
 
             if (string.IsNullOrEmpty(urlTextBox.Text))
             {
-                ShowError("Url is required.");
+                ShowError("Url is required.", this.UrlTextBoxErrorContainer, this.UrlTextBoxErrorMessage);
             }
             else
             {
-                CloseError();
+                CloseError(this.UrlTextBoxErrorContainer, this.UrlTextBoxErrorMessage);
+            }
+        }
+        private void NameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var nameTextBox = (TextBox)sender;
+            _name = nameTextBox.Text;
+
+            if (string.IsNullOrEmpty(_name))
+            {
+                ShowError("Name is required.", this.NameTextBoxErrorContainer, this.NameTextBoxErrorMessage);
+            }
+            else
+            {
+                CloseError(this.NameTextBoxErrorContainer, this.NameTextBoxErrorMessage);
             }
         }
 
-        private void ShowError(string message)
+        private void ShowError(string message, Border? ErrorContainer, TextBlock? ErrorTextBlock)
         {
-            this.UrlTextBoxErrorContainer.Visibility = Visibility.Visible;
-            this.UrlTextBoxErrorMessage.Text = message;
+            if (ErrorContainer is null || ErrorTextBlock is null) return;
+
+            ErrorContainer.Visibility = Visibility.Visible;
+            ErrorTextBlock.Text = message;
         }
 
-        private void CloseError()
+        private void CloseError(Border? ErrorContainer, TextBlock? ErrorTextBlock)
         {
-            this.UrlTextBoxErrorContainer.Visibility = Visibility.Collapsed;
-            this.UrlTextBoxErrorMessage.Text = string.Empty;
+            if (ErrorContainer is null || ErrorTextBlock is null) return;
+
+            ErrorContainer.Visibility = Visibility.Collapsed;
+            ErrorTextBlock.Text = string.Empty;
+        }
+
+        private void ClearData()
+        {
+            this.NameTextBox.Text = string.Empty;
+            this.UrlTextBox.Text = string.Empty;
+            CloseError(this.NameTextBoxErrorContainer, this.NameTextBoxErrorMessage);
+            CloseError(this.UrlTextBoxErrorContainer, this.UrlTextBoxErrorMessage);
         }
     }
 }

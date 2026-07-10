@@ -24,7 +24,7 @@ export default function Group({ group }: Props) {
   const { id, name } = group;
   const [editName, setEditName] = useState<boolean>(false);
   const [features, setFeatures] = useState<Feature[]>(
-    currentMap.features.filter((f) => f.properties.groupId === id),
+    (currentMap && currentMap.features.filter((f) => f.properties?.groupId === id)) ?? [],
   );
   const NameInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -33,7 +33,9 @@ export default function Group({ group }: Props) {
     setTimeout(() => NameInputRef.current?.focus(), 0);
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e : any) => {
+    if (!NameInputRef.current) return;
+
     if (e.target.value.trim().length === 0) {
       NameInputRef.current.value = name;
       setEditName(false);
@@ -44,8 +46,9 @@ export default function Group({ group }: Props) {
 
   useEffect(() => {
     const handleMapUpdate = () => {
+      if (!currentMap) return;
       setFeatures(
-        currentMap.features.filter((f) => f.properties.groupId === id),
+        currentMap.features.filter((f) => f.properties?.groupId === id),
       );
     };
     handleMapUpdate();

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:desktop"
         xmlns:controls="clr-namespace:desktop.Controls"
+        xmlns:workspace="clr-namespace:desktop.Controls.Workspace"
         mc:Ignorable="d"
         Title="MapCreator"
         Width="1200"
@@ -15,9 +16,50 @@
         Background="#fff" 
         ContentRendered="MainWindow_ContentRendered" Icon="/Assets/MapCreator.ico">
     <Grid>
-        <controls:WelcomeControl x:Name="WelcomePage" Visibility="Visible"/>
-        <controls:SetupUrlControl x:Name="SetupUrlPage" Visibility="Collapsed"/>
-        <controls:WebViewAppControl x:Name="WebViewAppPage" Visibility="Collapsed"/>
-        <controls:ChangeUrlControl x:Name="ChangeUrlPage" Visibility="Collapsed"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <controls:HeaderControl x:Name="Header" 
+                            Grid.Column="0"
+                            Grid.Row="0"/>
+
+        <controls:WelcomeControl x:Name="WelcomePage" 
+                                Visibility="Visible"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                Grid.RowSpan="2"/>
+
+        <workspace:WorkspaceControl x:Name="WorkspacePage"
+                                Visibility="Collapsed"
+                                Grid.Column="0"
+                                Grid.Row="1"/>
+
+        <controls:WebViewAppControl x:Name="WebViewAppPage" 
+                                Visibility="Collapsed"
+                                Grid.Column="0"
+                                Grid.Row="1"/>
+
+        <controls:SetupUrlControl x:Name="SetupStylePopup"
+                                Visibility="Collapsed"
+                                Grid.Column="0"
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"/>
+
+        <controls:ChangeUrlControl x:Name="ChangeStylePopup"
+                        Visibility="Collapsed"
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Grid.RowSpan="2"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
     </Grid>
 </Window>

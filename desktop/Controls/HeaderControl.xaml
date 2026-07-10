@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="desktop.Controls.HeaderControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:desktop.Controls"
+             mc:Ignorable="d" 
+             MinWidth="1000"
+             Height="48"
+             HorizontalAlignment="Stretch">
+    <Grid>
+        <Border Padding="16 8 16 8"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            Background="White"
+            BorderThickness="0 0 0 1"
+            BorderBrush="{StaticResource BlueLight}">
+            <DockPanel LastChildFill="False">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <Image Source="/Assets/MapCreator.png"
+                        Width="32"
+                        Height="32"
+                        Margin="0 0 8 0"/>
+
+                    <TextBlock Text="MapCreator"
+                        FontSize="24"
+                        FontWeight="Medium"
+                        Foreground="{StaticResource Black}"
+                        Margin="0 0 8 0"/>
+
+                    <Border Padding="8 4 8 4"
+                        Background="#F2F2F2"
+                        BorderBrush="#E6E6E6"
+                        BorderThickness="1"
+                        CornerRadius="10">
+                        <TextBlock x:Name="PageName"
+                            Text="maps"
+                            Foreground="#9D9D9D"
+                            FontSize="14"
+                            VerticalAlignment="Center"/>
+                    </Border>
+
+                </StackPanel>
+
+                <Button x:Name="BackToWorkspaceButton"
+                    Style="{StaticResource HeaderButton}"
+                    DockPanel.Dock="Right"
+                    Click="ChangePage">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Back to Workspace"
+                            VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                
+                <Button x:Name="BackToMapsButton"
+                    Style="{StaticResource HeaderButton}"
+                    DockPanel.Dock="Right"
+                    Visibility="Collapsed"
+                    Click="ChangePage">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/WhiteMap.png"
+                            Margin="0 0 8 0"
+                            Width="20"
+                            Height="20"/>
+                        <TextBlock Text="Back to maps"
+                            VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                
+            </DockPanel>
+        </Border>   
+    </Grid>
+</UserControl>

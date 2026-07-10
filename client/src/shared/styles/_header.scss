@@ -1,40 +1,42 @@
 @use "../../shared/styles/v";
 
 .maps-header {
-    padding: 1rem;
+  padding: .5rem 1rem;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  position: relative;
 
-    background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-    nav {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
+  background-color: white;
 
-    .nav-link {
-        padding: 0.5rem 1rem;
+  nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+  }
 
-        transition: all 0.2s ease-in-out;
+  .nav-link {
+      padding: 0.5rem 1rem;
 
-        background-color: v.$blue-normal;
-        color: white;
-        text-decoration: none;
+      transition: all 0.2s ease-in-out;
 
-        &:hover {
-            background-color: v.$blue-dark;
-        }
-    }
+      background-color: v.$blue-normal;
+      color: white;
+      text-decoration: none;
 
-    .app-name {
-        text-decoration: none;
-        color: v.$black;
+      &:hover {
+          background-color: v.$blue-dark;
+      }
+  }
 
-        &:hover {
-            color: v.$blue-normal;
-        }
-    }
+  .app-name {
+      text-decoration: none;
+      color: v.$black;
+
+      &:hover {
+          color: v.$blue-normal;
+      }
+  }
 }

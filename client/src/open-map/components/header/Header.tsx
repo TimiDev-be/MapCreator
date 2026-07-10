@@ -12,7 +12,7 @@ export default function Header() {
     <>
       <header className="open-map-header">
         <p className="name-of-map t-name-of-map">
-          map / {name?.slice(0, 40)} {name?.length > 40 ? "..." : ""}
+          map / {name?.slice(0, 40)} {name && name.length > 40 ? "..." : ""}
         </p>
         <SearchBar />
         <Link to="/" className="close-open-map-link">

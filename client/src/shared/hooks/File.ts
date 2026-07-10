@@ -3,6 +3,7 @@ import type { DescriptionTemplate } from "../types/DescriptionTemplate";
 import html2pdf from "../../../node_modules/html2pdf.js/src";
 import type { UserSource } from "../types/UserSource";
 import { useCallback } from "react";
+import { toast } from "react-toastify";
 
 export const useFile = () => {
   const { setCurrentSource, currentSource, config } = useSource();
@@ -41,12 +42,12 @@ export const useFile = () => {
     const currentTemplates = currentSource?.templates ?? [];
 
     const mergedMaps = new Map(currentMaps.map((m) => [m.id, m]));
-    importedData.maps.forEach((newMap) => {
+    importedData.maps.forEach((newMap : any) => {
       mergedMaps.set(newMap.id, newMap);
     });
 
     const mergedTemplates = new Map(currentTemplates.map((t) => [t.id, t]));
-    (importedData.templates ?? []).forEach((newTemp) => {
+    (importedData.templates ?? []).forEach((newTemp : any) => {
       mergedTemplates.set(newTemp.id, newTemp);
     });
 
@@ -67,10 +68,13 @@ export const useFile = () => {
       name: "default template",
       htmlContent: Text,
     };
-    setCurrentSource((prev) => ({
-      ...prev,
-      templates: [...(prev.templates ?? []), NewTemplate],
-    }));
+    setCurrentSource((prev) => {
+      if (!prev) return;
+      return {
+        ...prev,
+        templates: [...(prev.templates ?? []), NewTemplate],
+      }
+    });
   };
 
   const updateTemplateName = (id: string, name: string) => {
@@ -87,12 +91,14 @@ export const useFile = () => {
   };
 
   const deleteTemplate = (id: string) => {
+    if (!currentSource) return;
+
     const TemplateInUse = currentSource.maps.find(
       (map) => map.description?.templateId === id,
     );
 
     if (TemplateInUse) {
-      alert("Template is in use. Cannot delete.");
+      toast.warning("Template is in use. Cannot delete.");
       return;
     }
 
@@ -105,38 +111,47 @@ export const useFile = () => {
     setCurrentSource(NewSource);
   };
 
-  const downloadPdfFromTemplate = (
-    element: HTMLElement,
-    mapName: string,
-    templateName: string,
-  ) => {
-    html2pdf(element, {
-      margin: [0, 0, 0, 0],
-      filename: `${mapName}-${templateName}-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.pdf`,
-      image: { type: "jpeg", quality: 3 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: "avoid-all" },
-    });
+  const downloadPdfFromTemplate = (element: HTMLElement, mapName: string, templateName: string,) => {
+    try {
+      const filename = `${mapName}-${templateName}-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.pdf`
+      html2pdf(element, {
+        margin: [0, 0, 0, 0],
+        filename,
+        image: { type: "jpeg", quality: 3 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: "avoid-all" },
+      }); 
+      toast.success(`${filename} downloaded`);
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
   };
 
   const downloadFile = () => {
-    const data = JSON.stringify({
-      id: currentSource.id,
-      maps: currentSource.maps
-        .map(({ checked, ...rest }) => ({ ...rest }))
-        .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
-      templates: currentSource.templates,
-    });
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `mapy-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    if (!currentSource) return;
+    try {
+      const data = JSON.stringify({
+        id: currentSource.id,
+        maps: currentSource.maps
+          .map(({ checked, ...rest }) => ({ ...rest }))
+          .sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
+        templates: currentSource.templates,
+      });
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const fileName = `maps-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.json`;
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url); 
+      toast.success(`${fileName} downloaded`);
+    } catch (error) {
+      toast.error(`Something went wrong`)
+    }
   };
 
   return {

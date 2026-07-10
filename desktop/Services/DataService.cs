@@ -1,52 +1,31 @@
-﻿using desktop.Classes;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Windows;
+using desktop.Data;
 
 namespace desktop.Services
 {
-    public class DataService
+    public class DataService(AppDataContext dataContext)
     {
         private static readonly string DataFilePath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "MapCreator",
             "data.json"
         );
+        private readonly AppDataContext _dataContext = dataContext;
 
-        public async Task<AppData> Load()
+        public async Task<AppData> GetData()
         {
-            if (!File.Exists(DataFilePath))
-            {
-                Directory.CreateDirectory(Path.GetDirectoryName(DataFilePath)!);
-                await File.WriteAllTextAsync(DataFilePath, JsonSerializer.Serialize(new AppData(null)));
-                return new AppData(null);
-            }
-            string json = await File.ReadAllTextAsync(DataFilePath);
-
-            if (string.IsNullOrWhiteSpace(json)) return new AppData(null);
-
-            return JsonSerializer.Deserialize<AppData>(json) ?? new AppData(null);
-        }
-        public async Task<AppData?> GetData()
-        {
-            if (!File.Exists(DataFilePath)) return await Load();
-
-            var data = await File.ReadAllTextAsync(DataFilePath);
-
-            if (string.IsNullOrWhiteSpace(data)) return null;
-
-            return JsonSerializer.Deserialize<AppData>(data, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            return _dataContext.AppData;
         }
 
         public async Task UpdateData(string dataToUpdate)
         {
             if (!File.Exists(DataFilePath)) return;
+            _dataContext.AppData.Data = dataToUpdate;
             await File.WriteAllTextAsync(DataFilePath, JsonSerializer.Serialize(new AppData(dataToUpdate)));
         }
     }

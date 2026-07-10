@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
 import { useMap } from "../../shared/hooks/Map";
 import Line from "../../shared/components/Line";
+import {toast} from "react-toastify";
 
 const ValidationSchema = yup.object({
   name: yup.string().required("Name is required"),
@@ -18,9 +19,10 @@ export default function NewMapForm() {
     setSubmitting(true);
     try {
       newMap(values.name);
+      toast.success(`"${values.name}" map was created`);
       resetForm();
     } catch (error) {
-      alert("Failed to create map: " + error);
+      toast.error(`Something went wrong`);
     } finally {
       setSubmitting(false);
     }

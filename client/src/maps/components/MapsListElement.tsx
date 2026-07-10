@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function MapsListElement({ map }: Props) {
-  const { toggleCheckMap, deleteMap, openMap } = useMap();
+  const { toggleCheckMap, deleteMap } = useMap();
   const [settingsActive, setSettingsActive] = useState<boolean>(false);
   const CheckBoxRef = useRef<HTMLInputElement>(null);
   const { id, name, checked, updatedAt, createdAt } = map;

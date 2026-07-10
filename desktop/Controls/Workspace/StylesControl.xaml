@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="desktop.Controls.Workspace.StylesControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:desktop.Controls.Workspace"
+             xmlns:classes="clr-namespace:desktop.Classes"
+             mc:Ignorable="d" 
+             MinWidth="600"
+             Height="auto">
+    <UserControl.Resources>
+        <classes:StringIsLongerConverter x:Key="StringIsLongerConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Border Padding="16 32"
+            Background="White">
+            <StackPanel Orientation="Vertical">
+
+                <StackPanel Orientation="Horizontal"
+                        Margin="0 0 0 8">
+                    <Image Source="/Assets/Paint.png"
+                        Width="24"
+                        Height="24"
+                        Margin="0 0 8 0"/>
+                    <TextBlock Text="Styles"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            Foreground="{StaticResource Black}"/>
+                </StackPanel>
+
+                <TextBlock Text="Manage saved map style url’s. Click on style to activite."
+                        FontSize="16"
+                        Foreground="{StaticResource Black}"
+                        Margin="0 0 0 8"/>
+
+                <ListBox x:Name="StylesList"
+                        Style="{StaticResource StylesListStyle}"
+                        Loaded="StylesList_Loaded"
+                        MouseLeftButtonUp="StyleItem_Click">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid HorizontalAlignment="Stretch">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Orientation="Horizontal"
+                                        Grid.Column="0"
+                                        Margin="0 0 8 0">
+                                    <Border Background="{StaticResource BlueLightActive}"
+                                        BorderBrush="{StaticResource BlueNormal}"
+                                        BorderThickness="1"
+                                        CornerRadius="50"
+                                        Width="10"
+                                        Height="10"
+                                        Margin="0 0 16 0"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Foreground="{StaticResource Black}"
+                                            FontSize="16"
+                                            Text="{Binding Name, Converter={StaticResource StringIsLongerConverter}, ConverterParameter=30}"/>
+                                        <TextBlock Foreground="#B3B3B3"
+                                            FontSize="14"
+                                            Text="{Binding Url, Converter={StaticResource StringIsLongerConverter}, ConverterParameter=75}"/>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal"
+                                        VerticalAlignment="Center"
+                                        Grid.Column="1">
+                                    <Button Tag="{Binding Id}"
+                                        Style="{StaticResource StyleMenuButton}"
+                                        Margin="0 0 8 0"
+                                        Click="ShowChangeStyleButton_Click">
+                                        <Image Source="/Assets/BlueEdit.png"
+                                            Width="24"
+                                            Height="24"/>
+                                    </Button>
+                                    <Button Tag="{Binding Id}" 
+                                        Style="{StaticResource StyleMenuButton}"
+                                        Click="DeleteItem_Click">
+                                        <Image Source="/Assets/BlueTrash.png"
+                                            Width="24"
+                                            Height="24"/>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Button x:Name="ShowAddNewStyleButton"
+                    Style="{StaticResource AddStyleButtonStyle}"
+                    Click="ShowAddNewStyleButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/WhitePlus.png"
+                            Width="24"
+                            Height="24"
+                            Margin="0 0 8 0"/>
+                        <TextBlock Text="Add style"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+        </Border>  
+    </Grid>
+</UserControl>

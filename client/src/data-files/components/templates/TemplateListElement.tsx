@@ -20,6 +20,7 @@ export default function TemplateListElement({ template }: Props) {
   };
 
   const handleBlur = (e) => {
+    if (!NameInputRef.current) return;
     if (e.target.value.trim().length === 0) {
       NameInputRef.current.value = template.name;
       setEditName(false);

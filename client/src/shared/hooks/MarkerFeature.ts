@@ -7,57 +7,63 @@ export const useMarkerFeature = () => {
   const { updateFeature } = useFeature();
 
   const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: { ...feature.properties, color: e.target.value },
     });
   };
-  const handleBackgroundColorChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleBackgroundColorChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: { ...feature.properties, backgroundColor: e.target.value },
     });
   };
   const handleFontSizeChange = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: { ...feature.properties, fontSize: e.currentTarget.value },
     });
   };
   const handlePaddingChange = (value: number[]) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: { ...feature.properties, padding: value },
     });
   };
   const handleLabelChange = (value: string) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: { ...feature.properties, label: value },
     });
   };
   const toggleLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: {
         ...feature.properties,
         label: e.currentTarget.checked
-          ? (feature.properties.label ?? "default label")
+          ? (feature.properties?.label ?? "default label")
           : undefined,
       },
     });
   };
   const handleOpacityChange = (value: number) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: { ...feature.properties, opacity: value },
     });
   };
   const handleDirectionSignChange = (value: string) => {
+    if (!feature) return;
     if (
-      feature.properties.markerSigns &&
+      feature.properties?.markerSigns &&
       !feature.properties.markerSigns.includes(value)
     ) {
       updateFeature({
@@ -68,7 +74,7 @@ export const useMarkerFeature = () => {
         },
       });
     } else if (
-      feature.properties.markerSigns &&
+      feature.properties?.markerSigns &&
       feature.properties.markerSigns.includes(value)
     ) {
       updateFeature({
@@ -83,6 +89,7 @@ export const useMarkerFeature = () => {
     }
   };
   const handleMarkerIconClassChange = (value: string) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: {
@@ -92,6 +99,7 @@ export const useMarkerFeature = () => {
     });
   };
   const handleRotateChange = (value: number) => {
+    if (!feature) return;
     updateFeature({
       ...feature,
       properties: {
@@ -100,7 +108,6 @@ export const useMarkerFeature = () => {
       },
     });
   };
-  //coś nie działą
   const handleChangeCoords = (coords: number[], currentFeature: Feature) => {
     updateFeature({
       ...currentFeature,

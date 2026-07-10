@@ -32,8 +32,8 @@ export default function DescriptionPanel() {
     { id: "none", value: "none" },
   ];
   const DefaultOption: CustomSelectOption = {
-    id: getTemplate(templateId)?.id ?? "none",
-    value: getTemplate(templateId)?.name ?? "none",
+    id: getTemplate(templateId ?? "")?.id ?? "none",
+    value: getTemplate(templateId ?? "")?.name ?? "none",
   };
 
   const selectOption = (option: CustomSelectOption) => {
@@ -52,18 +52,21 @@ export default function DescriptionPanel() {
   };
 
   const handleDownloadPdf = () => {
-    if (!TemplateWrappeRef.current) return;
-    const Template =
-      TemplateWrappeRef.current.querySelector<HTMLElement>(".template");
+    if (!TemplateWrappeRef.current || !currentMap) return;
+
+    const Template = TemplateWrappeRef.current.querySelector<HTMLElement>(".template");
     if (!Template) return;
+
     downloadPdfFromTemplate(
       Template,
       currentMap.name,
-      getTemplate(templateId)?.name ?? "none",
+      getTemplate(templateId ?? "")?.name ?? "none",
     );
   };
 
   const handleLoadQrCode = async () => {
+    if (!TemplateWrappeRef.current) return;
+
     const QRCodeDom = TemplateWrappeRef.current.querySelector("#qr-code");
     if (!QRCodeDom) return;
 
@@ -84,10 +87,13 @@ export default function DescriptionPanel() {
   };
 
   const handleLoadMap = () => {
+    if (!TemplateWrappeRef.current || !currentMap || !map.current) return;
+
     const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
     if (!TemplateDom) return;
 
     const TemplateMapContainer = TemplateDom.querySelector("#map-container");
+    if (!TemplateMapContainer) return;
     TemplateMapContainer.innerHTML = "";
     if (
       currentMap.attractionPoint &&
@@ -126,7 +132,7 @@ export default function DescriptionPanel() {
 
         MapContainer.style.width = "100%";
         MapContainer.style.height = "100%";
-        map.current.resize();
+        map.current!.resize();
 
         return () => {
           root.unmount();
@@ -136,17 +142,19 @@ export default function DescriptionPanel() {
   };
 
   const handleLoadTemplate = () => {
-    if (!TemplateWrappeRef.current) return;
-    const Template = getTemplate(templateId);
+    if (!TemplateWrappeRef.current || !TemplateRef.current) return;
+    const Template = getTemplate(templateId ?? "");
     if (!Template) return;
     TemplateRef.current.innerHTML = Template.htmlContent;
   };
 
   const handleLoadData = () => {
+    if (!TemplateWrappeRef.current) return;
+
     const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
     if (!TemplateDom) return;
 
-    Object.entries(description.values).forEach(([name, value]) => {
+    Object.entries((description && description.values) ?? {}).forEach(([name, value]) => {
       const el = TemplateDom.querySelector(`[name="${name}"]`);
       if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
         el.value = value;
@@ -155,13 +163,9 @@ export default function DescriptionPanel() {
   };
 
   const handleLoadListeners = () => {
-    if (
-      !currentMap ||
-      getTemplate(templateId) == undefined ||
+    if (!currentMap || getTemplate(templateId ?? "") == undefined ||
       !TemplateWrappeRef.current ||
-      !map.current
-    )
-      return;
+      !map.current) return;
 
     const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
     if (!TemplateDom) return;

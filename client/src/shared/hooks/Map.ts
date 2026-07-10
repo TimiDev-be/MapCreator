@@ -18,6 +18,7 @@ export const useMap = () => {
 
   const newMap = (name: string) => {
     if (!currentSource) return;
+    if (name == null) throw new Error("Name cannot be a null");
 
     const NewSource = {
       ...currentSource,
@@ -57,13 +58,13 @@ export const useMap = () => {
     (id: string) => {
       if (!currentSource) return;
 
-      setCurrentMap(currentSource.maps.find((m) => m.id === id));
+      setCurrentMap(currentSource.maps.find((m) => m.id === id) ?? null);
     },
     [currentSource],
   );
 
   const closeMap = () => {
-    setCurrentMap(undefined);
+    setCurrentMap(null);
     setCurrentGroup(undefined);
   };
 

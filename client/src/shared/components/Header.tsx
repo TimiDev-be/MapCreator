@@ -1,5 +1,6 @@
 import "../styles/_header.scss";
 import { Link, useLocation } from "react-router-dom";
+import QuickMenu from "../../maps/components/QuickMenu";
 
 export default function Header() {
   const { pathname } = useLocation();
@@ -7,9 +8,9 @@ export default function Header() {
   return (
     <>
       <header className="maps-header">
-        <Link to={"/"} className="app-name t-app-name">
+        {/* <Link to={"/"} className="app-name t-app-name">
           MapCreator
-        </Link>
+        </Link> */}
         <nav>
           {(pathname.includes("/data-files") ||
             pathname.includes("/new-map")) && (
@@ -24,6 +25,7 @@ export default function Header() {
               </Link>
             )}
         </nav>
+       {pathname == "/" && <QuickMenu />}
       </header>
     </>
   );
