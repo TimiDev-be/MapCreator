@@ -1,10 +1,11 @@
-﻿using System;
+﻿using desktop.Classes;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace desktop.Classes
+namespace desktop.Data
 {
     public class StyleData
     {
@@ -16,7 +17,7 @@ namespace desktop.Classes
         }
         public StyleData(List<Style> Styles)
         {
-            this.Styles = new ObservableCollection<Style>(Styles);
+            this.Styles = new ObservableCollection<Style>([..Styles]);
         }
     }
 }
