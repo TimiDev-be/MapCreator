@@ -98,5 +98,28 @@ namespace desktop.Services
             }
             this._dataContext.LogData.Logs.Clear();
         }
+        public static async Task ClearOldLogs()
+        {
+            try
+            {
+                string path = System.IO.Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                    "MapCreator",
+                    "logs"
+                );
+                if (!Directory.Exists(path)) return;
+
+                var cutoff = DateTime.Now.AddDays(-14);
+
+                foreach (var file in Directory.GetFiles(path, "*.txt"))
+                {
+                    if (File.GetLastWriteTime(file) < cutoff)
+                        File.Delete(file);
+                }
+            }
+            catch(Exception ex) {
+                await new Log(LogStatus.Error, "Error while clearing old logs", ex.Message.ToString()).Save();
+            }
+        }
     }
 }

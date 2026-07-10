@@ -20,6 +20,7 @@ namespace desktop
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            await LogService.ClearOldLogs();
             await new UpdateService().CheckForUpdatesAsync();
 
             AppDataContext = new AppDataContext();
