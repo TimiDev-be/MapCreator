@@ -48,9 +48,13 @@ namespace desktop
             }));
             this.AddHandler(AppEvents.ReloadWebViewEvent, new RoutedEventHandler(OnReloadWebView));
 
-            Header.PageChangeInvoked += (s, e) =>
+            Header.PageChangeInvoked += async (s, e) =>
             {
-                if (this.CurrentPage is null) throw new Exception("Current page is null.");
+                if (this.CurrentPage is null) 
+                {
+                    await new Log(LogStatus.Warning, "Current page is null", "").Save();
+                    return;
+                }
                 if (this.CurrentPage == this.WorkspacePage)
                 {
                     SetCurrentPage(this.WebViewAppPage);
@@ -83,7 +87,7 @@ namespace desktop
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Something went wrong while creating directory " + ex.Message);
+                        await new Log(LogStatus.Error, "Error while creating webview directory", ex.Message).Save();
                         return;
                     }
                 }
@@ -100,7 +104,7 @@ namespace desktop
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Something went wrong while loading a webview: " + ex.ToString());
+                await new Log(LogStatus.Error, "Error while loading webview", ex.Message).Save();
             }
         }
         private void SetCurrentPage(Control page)

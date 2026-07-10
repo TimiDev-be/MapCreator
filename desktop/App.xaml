@@ -14,6 +14,8 @@
                 <ResourceDictionary Source="/Resources/StylesList.xaml"/>
                 <ResourceDictionary Source="/Resources/AddStyleButton.xaml"/>
                 <ResourceDictionary Source="/Resources/StyleMenuButton.xaml"/>
+                <ResourceDictionary Source="/Resources/LogsList.xaml"/>
+                <ResourceDictionary Source="/Resources/LogsButton.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

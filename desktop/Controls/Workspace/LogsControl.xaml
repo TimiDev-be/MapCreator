@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:desktop.Controls.Workspace"
+             xmlns:classes="clr-namespace:desktop.Classes"
              mc:Ignorable="d" 
              MinHeight="100"
              MinWidth="600">
@@ -27,11 +28,148 @@
                             FontSize="20"
                             VerticalAlignment="Center"/>
                 </StackPanel>
-                <!--Errors are kept for 14 days, then removed automatically.-->
-                <TextBlock Text="in working progress..."
+                <TextBlock Text="Logs are kept for 14 days, then removed automatically."
                         Foreground="{StaticResource Black}"
                         FontSize="16"
                         Margin="0 0 0 8"/>
+
+                <Grid MaxHeight="400"
+                    Margin="0 0 0 8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox x:Name="LogsListBox"
+                            Grid.Column="0"
+                            Style="{StaticResource LogsListStyle}"
+                            Loaded="LogsListBox_Loaded">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Tag="{Binding Data.Id}" 
+                                            GroupName="logs"
+                                            Cursor="Hand"
+                                            HorizontalAlignment="Stretch"
+                                            Background="Transparent"    
+                                            BorderBrush="Transparent"
+                                            BorderThickness="2 0 0 0"
+                                            Margin="0"
+                                            Checked="LogsRadioButton_Checked">
+                                    <RadioButton.Template>
+                                        <ControlTemplate TargetType="RadioButton">
+                                            <Border x:Name="RadioButtonBorder"
+                                                Padding="8 4"
+                                                Background="{TemplateBinding Background}"
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}">
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBlock Text="{Binding Data.Status}"
+                                                            Foreground="{StaticResource Black}"
+                                                            FontSize="16"
+                                                            Margin="0 0 0 4"/>
+                                                    <TextBlock Text="{Binding Data.Title}"
+                                                            Foreground="{StaticResource Black}"
+                                                            FontSize="14"
+                                                            Margin="0 0 0 4"/>
+                                                    <TextBlock Text="{Binding Data.CreatedDate, StringFormat=dd.MM.yyyy HH:mm:ss}"
+                                                            Foreground="#808080"
+                                                            FontSize="12"
+                                                            FontWeight="SemiBold"/>
+                                                </StackPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="RadioButtonBorder" Property="Background" Value="{StaticResource BlueLight}"/>
+                                                </Trigger>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="RadioButtonBorder" Property="Background" Value="{StaticResource BlueLightHover}"/>
+                                                    <Setter TargetName="RadioButtonBorder" Property="BorderBrush" Value="{StaticResource BlueNormal}"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </RadioButton.Template>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBox x:Name="LogDescriptionTextBox"
+                            Background="{StaticResource BlueLight}"
+                            Foreground="{StaticResource BlueNormal}"
+                            TextWrapping="Wrap"
+                            FontSize="14"
+                            IsReadOnly="True"
+                            VerticalScrollBarVisibility="Auto"
+                            BorderThickness="0"
+                            Padding="8"
+                            VerticalAlignment="Stretch"
+                            MinHeight="200"
+                            Grid.Column="1">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <Trigger Property="Text" Value="">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="OpenFolderButton"
+                        Click="OpenLogsFolderButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/WhiteFolder.png"
+                                Width="24"
+                                Height="24"
+                                VerticalAlignment="Center"
+                                Margin="0 0 8 0"/>
+                            <TextBlock Text="Open Folder"/>
+                        </StackPanel>
+
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource LogsButtonStyle}" TargetType="Button">
+                                <Setter Property="Background" Value="{StaticResource BlueNormal}"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="CopyLogButton"
+                        Click="CopyLogButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/WhiteCopy.png"
+                                Width="24"
+                                Height="24"
+                                VerticalAlignment="Center"
+                                Margin="0 0 8 0"/>
+                            <TextBlock Text="Copy Log"/>
+                        </StackPanel>
+
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource LogsButtonStyle}" TargetType="Button">
+                                <Setter Property="Background" Value="{StaticResource BlueDark}"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="ClearLogsButton"
+                        Click="ClearLogsButton_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/WhiteTrash.png"
+                                Width="24"
+                                Height="24"
+                                VerticalAlignment="Center"
+                                Margin="0 0 8 0"/>
+                            <TextBlock Text="Clear Logs"/>
+                        </StackPanel>
+
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource LogsButtonStyle}" TargetType="Button">
+                                <Setter Property="Background" Value="{StaticResource BlueDarker}"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
 
             </StackPanel>
             

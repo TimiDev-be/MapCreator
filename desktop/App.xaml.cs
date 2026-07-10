@@ -1,4 +1,5 @@
-﻿using desktop.Data;
+﻿using desktop.Classes;
+using desktop.Data;
 using desktop.Services;
 using System.Configuration;
 using System.Data;
@@ -14,6 +15,7 @@ namespace desktop
         public static AppDataContext AppDataContext { get; private set; }
         public static StyleService StyleService { get; private set; }
         public static DataService DataService { get; private set; }
+        public static LogService LogService { get; private set; }
         public LocalHttp _server { get; set; }
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -23,9 +25,11 @@ namespace desktop
             AppDataContext = new AppDataContext();
             await AppDataContext.LoadStyleDataAsync();
             await AppDataContext.LoadAppDataAsync();
+            await AppDataContext.LoadLogDataAsync();
 
             StyleService = new StyleService(AppDataContext);
             DataService = new DataService(AppDataContext);
+            LogService = new LogService(AppDataContext);
 
             _server = new LocalHttp(AppDataContext);
             await _server.Start();

@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 
@@ -20,22 +21,32 @@ namespace desktop.Services
 
         public async Task Start()
         {
-            string webConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "dist", "config.json");
-            var jsonString = File.ReadAllText(webConfigPath);
-            var webConfig = JsonSerializer.Deserialize<WebConfig>(jsonString, new JsonSerializerOptions {
-                PropertyNameCaseInsensitive = true,
-            });
+            try
+            {
+                string webConfigPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "dist", "config.json");
+                var jsonString = File.ReadAllText(webConfigPath);
+                var webConfig = JsonSerializer.Deserialize<WebConfig>(jsonString, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                });
 
-            int configPort = webConfig?.Api.Port ?? 5500;
-            var port = FindAvailablePort(configPort);
-            Port = port;
+                int configPort = webConfig?.Api.Port ?? 5500;
+                var port = await FindAvailablePort(configPort);
+                if (port == -1) return;
+                Port = port;
 
-            _httpServer = await this.CreateHttp(port);
-            _httpServer.RunAsync($"http://localhost:{port}");
+                _httpServer = await this.CreateHttp(port);
+                _httpServer.RunAsync($"http://localhost:{port}");
 
-            HttpReady.SetResult(true);
+                HttpReady.SetResult(true);
+                await new Log(LogStatus.Info, "App started", $"Version {Assembly.GetExecutingAssembly().GetName().Version?.ToString(3)}").Save();
+            }
+            catch (Exception ex) {
+                await new Log(LogStatus.Error, "App local server start failed", ex.Message.ToString()).Save();
+            }
+
         }
-        private int FindAvailablePort(int startPort = 5000)
+        private async Task<int> FindAvailablePort(int startPort = 5000)
         {
             var listeners = System.Net.NetworkInformation.IPGlobalProperties
                 .GetIPGlobalProperties()
@@ -49,7 +60,8 @@ namespace desktop.Services
                     return port;
             }
 
-            throw new Exception("No available port found.");
+            await new Log(LogStatus.Info, "Http server port", "No port available for local server").Save();
+            return -1;
         }
 
         private async Task<WebApplication> CreateHttp(int port)
@@ -87,20 +99,43 @@ namespace desktop.Services
 
             app.MapGet("/api/style", async (StyleService _styleService) =>
             {
-                var style = _styleService.GetActiveStyle();
-                return Results.Ok(style);
+                try
+                {
+                    var style = _styleService.GetActiveStyle();
+                    return Results.Ok(style);
+                }
+                catch (Exception ex) {
+                    await new Log(LogStatus.Error, "Styles data return error", ex.Message.ToString()).Save();
+                    return Results.Problem("Something went wrong while returning styles data.");
+                }
             });
 
             app.MapGet("/api/data", async (DataService _dataService) =>
             {
-                var data = await _dataService.GetData();
-                return Results.Ok(data);
+                try
+                {
+                    var data = await _dataService.GetData();
+                    return Results.Ok(data);
+                }
+                catch (Exception ex)
+                {
+                    await new Log(LogStatus.Error, "Data return error", ex.Message.ToString()).Save();
+                    return Results.Problem("Something went wrong while returning maps / templates data.");
+                }
             });
 
             app.MapPatch("/api/data", async (DataPatch dataPatch, DataService _dataService) =>
             {
-                await _dataService.UpdateData(dataPatch.DataPatchValue);
-                return Results.NoContent();
+                try
+                {
+                    await _dataService.UpdateData(dataPatch.DataPatchValue);
+                    return Results.NoContent();
+                }
+                catch (Exception ex)
+                {
+                    await new Log(LogStatus.Error, "Data update error", ex.Message.ToString()).Save();
+                    return Results.Problem("Something went wrong while updating data.");
+                }
             });
 
             return app;
