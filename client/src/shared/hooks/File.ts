@@ -1,6 +1,6 @@
 import { useSource } from "./Source";
 import type { DescriptionTemplate } from "../types/DescriptionTemplate";
-import html2pdf from "../../../node_modules/html2pdf.js/src";
+import html2pdf from "html2pdf.js";
 import type { UserSource } from "../types/UserSource";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
@@ -120,7 +120,6 @@ export const useFile = () => {
         image: { type: "jpeg", quality: 3 },
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        pagebreak: { mode: "avoid-all" },
       }); 
       toast.success(`${filename} downloaded`);
     } catch (error) {

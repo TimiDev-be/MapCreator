@@ -6,7 +6,7 @@ import type { CustomSelectOption } from "../../../shared/types/CustomSelectOptio
 import { useMap } from "../../../shared/hooks/Map.ts";
 import { useEffect, useRef } from "react";
 import { useMapContainer } from "../../../shared/hooks/MapContainer.ts";
-import { MmToPx } from "../../../shared/utils/MmToPx.ts";
+import { UnitToPx } from "../../../shared/utils/UnitToPx.ts";
 import html2canvas from "html2canvas";
 import { useFile } from "../../../shared/hooks/File.ts";
 import QRCode from "qrcode";
@@ -15,14 +15,20 @@ import MySvg from "../../../shared/components/MySvg.tsx";
 import { createRoot } from "react-dom/client";
 
 export default function DescriptionPanel() {
-  const { assignTemplate, getTemplate, updateMapDescription } =
-    useMapDescription();
+  const { 
+    templates, 
+    getTemplate, 
+    assignTemplate, 
+    updateMapDescriptionForMapMaker, 
+    updateDescriptionValue
+  } =useMapDescription();
   const { downloadPdfFromTemplate } = useFile();
   const { map } = useMapContainer();
-  const { currentMap, updateMap } = useMap();
+  const { currentMap } = useMap();
+
   const { description, attractionPoint } = currentMap ?? {};
   const { templateId, descriptionForMapMaker } = description ?? {};
-  const { templates } = useMapDescription();
+
   const TemplateWrappeRef = useRef<HTMLDivElement | null>(null);
   const TemplateRef = useRef<HTMLDivElement | null>(null);
   const CurrentMapRef = useRef<StateMap | null>(null);
@@ -38,17 +44,6 @@ export default function DescriptionPanel() {
 
   const selectOption = (option: CustomSelectOption) => {
     assignTemplate(option.id);
-  };
-
-  const setDescriptoinValue = (key: string, value: string) => {
-    if (!CurrentMapRef.current) return;
-    return updateMap({
-      ...CurrentMapRef.current,
-      description: {
-        ...CurrentMapRef.current.description,
-        values: { ...CurrentMapRef.current.description.values, [key]: value },
-      },
-    });
   };
 
   const handleDownloadPdf = () => {
@@ -67,19 +62,18 @@ export default function DescriptionPanel() {
   const handleLoadQrCode = async () => {
     if (!TemplateWrappeRef.current) return;
 
-    const QRCodeDom = TemplateWrappeRef.current.querySelector("#qr-code");
+    const QRCodeDom = TemplateWrappeRef.current.querySelector("#qrcode");
     if (!QRCodeDom) return;
 
     if (attractionPoint) {
       const { coords, zoom } = attractionPoint;
       const Canvas = document.createElement("canvas");
-      await QRCode.toCanvas(
+      QRCode.toCanvas(
         Canvas,
         `https://www.google.com/maps/@${coords[1]},${coords[0]},${zoom}z`,
         {
           width: QRCodeDom.clientWidth,
-          height: QRCodeDom.clientHeight,
-        },
+        }
       );
       QRCodeDom.innerHTML = "";
       QRCodeDom.appendChild(Canvas);
@@ -103,12 +97,12 @@ export default function DescriptionPanel() {
       const { width, height } = currentMap.areaForPrint;
       const MapContainer = map.current.getContainer();
 
-      MapContainer.style.width = `${MmToPx(width)}px`;
-      MapContainer.style.height = `${MmToPx(height)}px`;
+      MapContainer.style.width = `${UnitToPx(currentMap.printSettings, width)}px`;
+      MapContainer.style.height = `${UnitToPx(currentMap.printSettings, height)}px`;
       map.current.resize();
 
-      const WidthNum = MmToPx(width);
-      const HeightNum = MmToPx(height);
+      const WidthNum = UnitToPx(currentMap.printSettings, width);
+      const HeightNum = UnitToPx(currentMap.printSettings, height);
 
       map.current.jumpTo({
         center: coords as [number, number],
@@ -176,7 +170,7 @@ export default function DescriptionPanel() {
         const Target = e.currentTarget as
           | HTMLInputElement
           | HTMLTextAreaElement;
-        setDescriptoinValue(Target.name, Target.value);
+        updateDescriptionValue(Target.name, Target.value);
       };
       el.addEventListener("blur", handler);
       Handlers.set(el, handler);
@@ -247,7 +241,7 @@ export default function DescriptionPanel() {
                 id="description-for-map-maker-textarea"
                 className="description-for-map-maker t-panel-medium"
                 defaultValue={descriptionForMapMaker ?? ""}
-                onBlur={(e) => updateMapDescription(e.target.value)}
+                onBlur={(e) => updateMapDescriptionForMapMaker(e.target.value)}
               ></textarea>
             </div>
           </div>

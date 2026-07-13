@@ -1,10 +1,11 @@
 import { useMap } from "./Map";
 import { useMapContainer } from "./MapContainer";
 import type { AreaForPrint } from "../types/AreaForPrint";
-import { MmToPx } from "../utils/MmToPx";
+import { UnitToPx } from "../utils/UnitToPx";
 import { useEffect } from "react";
 import type { AttractionPoint } from "../types/AttractionPoint";
 import type { StateMap } from "../types/StateMap";
+import type { MapPrintSettings } from "../types/MapPrintSettings";
 
 export const useMapSettings = () => {
   const { updateMap, currentMap } = useMap();
@@ -60,7 +61,7 @@ export const useMapSettings = () => {
 
   const calculatePrintArea = () => {
     if (!map?.current || !currentMap || !currentMap.areaForPrint) return;
-    const { areaForPrint, attractionPoint } = currentMap;
+    const { areaForPrint, attractionPoint, printSettings } = currentMap;
     const { pitch, coords, bearing, zoom } = attractionPoint ?? {};
 
     const center = map.current.getCenter().toArray();
@@ -75,8 +76,8 @@ export const useMapSettings = () => {
     map.current.once("idle", () => {
       const apCoords = attractionPoint?.coords ?? [0, 0];
       const centerPx = map.current!.project([apCoords[0], apCoords[1]]);
-      const halfWidth = MmToPx(areaForPrint.width) / 2;
-      const halfHeight = MmToPx(areaForPrint.height) / 2;
+      const halfWidth = UnitToPx(printSettings, areaForPrint.width) / 2;
+      const halfHeight = UnitToPx(printSettings, areaForPrint.height) / 2;
 
       const topLeft = map.current!.unproject([centerPx.x - halfWidth, centerPx.y - halfHeight]);
       const topRight = map.current!.unproject([centerPx.x + halfWidth, centerPx.y - halfHeight]);
@@ -146,6 +147,17 @@ export const useMapSettings = () => {
     updateMap(NewMap);
   }
 
+  const handlePrintSettingsChange = (changedPrintSettings: MapPrintSettings) => {
+    if (!currentMap) return;
+    updateMap({
+      ...currentMap,
+      printSettings: {
+        ...currentMap.printSettings,
+        ...changedPrintSettings
+      }
+    });
+  }
+
   useEffect(() => {
     if (!currentMap || !currentMap.areaForPrint || !areaForPrintFeature) return;
     calculatePrintArea();
@@ -156,6 +168,7 @@ export const useMapSettings = () => {
     toggleAttractionPoint,
     handleAreaForPrintChange,
     toggleAreaForPrint,
-    updateMinMaxZoom
+    updateMinMaxZoom,
+    handlePrintSettingsChange
   };
 };

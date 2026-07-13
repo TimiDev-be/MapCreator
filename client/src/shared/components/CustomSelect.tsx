@@ -23,7 +23,7 @@ export default function CustomSelect({
     useState<CustomSelectOption>(defaultOption);
 
   const TYPO_CLASS =
-    type == "field" ? "t-app-field" : "t-custom-select-content";
+    type == "field" ? "t-panel-small" : "t-custom-select-content";
 
   const handleSelect = (SelectedOption: CustomSelectOption) => {
     setSelectedOption(SelectedOption);

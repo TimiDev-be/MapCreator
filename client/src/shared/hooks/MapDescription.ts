@@ -36,7 +36,7 @@ export const useMapDescription = () => {
       },
     });
   };
-  const updateMapDescription = (description: string) => {
+  const updateMapDescriptionForMapMaker = (description: string) => {
     if (!currentMap) return;
     return updateMap({
       ...currentMap,
@@ -46,11 +46,22 @@ export const useMapDescription = () => {
       },
     });
   };
+  const updateDescriptionValue = (key: string, value: string) => {
+    if (!currentMap) return;
+    return updateMap({
+      ...currentMap,
+      description: {
+        ...currentMap.description,
+        values: { ...currentMap.description.values, [key]: value },
+      },
+    });
+  }
 
   return {
     templates: (currentSource && currentSource.templates) ?? [],
     getTemplate,
     assignTemplate,
-    updateMapDescription,
+    updateMapDescriptionForMapMaker,
+    updateDescriptionValue
   };
 };

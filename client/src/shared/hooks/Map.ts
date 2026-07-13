@@ -18,8 +18,6 @@ export const useMap = () => {
 
   const newMap = (name: string) => {
     if (!currentSource) return;
-    if (name == null) throw new Error("Name cannot be a null");
-
     const NewSource = {
       ...currentSource,
       maps: [...currentSource.maps, new Map(name)],
@@ -57,7 +55,6 @@ export const useMap = () => {
   const openMap = useCallback(
     (id: string) => {
       if (!currentSource) return;
-
       setCurrentMap(currentSource.maps.find((m) => m.id === id) ?? null);
     },
     [currentSource],

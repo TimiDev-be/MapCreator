@@ -1,17 +1,18 @@
 import { useMap } from "../../shared/hooks/Map";
-import { MmToPx } from "../../shared/utils/MmToPx";
+import { UnitToPx } from "../../shared/utils/UnitToPx";
 
 export default function PrintAreaPreview() {
   const { currentMap } = useMap();
-  const { areaForPrint } = currentMap ?? {};
+  const { areaForPrint, printSettings } = currentMap ?? {};
+  if (!printSettings) return null;
 
   return (
     <>
       <div
         className="print-area-preview"
         style={{
-          width: `${MmToPx(areaForPrint?.width ?? 0)}px`,
-          height: `${MmToPx(areaForPrint?.height ?? 0)}px`,
+          width: `${UnitToPx(printSettings, areaForPrint?.width ?? 0)}px`,
+          height: `${UnitToPx(printSettings, areaForPrint?.height ?? 0)}px`,
         }}
       >
         <div className="corner corner-top-left"></div>

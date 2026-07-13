@@ -14,8 +14,13 @@ export default function MapContainer() {
     useMapContainer();
   const { attractionPoint } = currentMap ?? {};
   const [mapError, setMapError] = useState<boolean>(false);
-  const [featuresVisibility, setFeaturesVisibility] = useState<any>([]);
   const [mapStyle, setMapStyle] = useState<MapStyle | undefined>(undefined);
+
+  const zoomVisibilityFilter : any = [
+    ["boolean", ["get", "visible"], true],
+    ["<=", ["coalesce", ["get", "minZoom"], 0], ["zoom"]],
+    [">=", ["coalesce", ["get", "maxZoom"], 22], ["zoom"]]
+  ];
 
   const loadStyleToState = async () => {
     if (!config) return;
@@ -78,12 +83,6 @@ export default function MapContainer() {
             onZoom={(e) => {
               const zoom = e.target.getZoom();
               setMapZoom(zoom);
-              setFeaturesVisibility([
-                "all",
-                ["boolean", ["get", "visible"], true],
-                ["<=", ["coalesce", ["get", "minZoom"], 0], zoom],
-                [">=", ["coalesce", ["get", "maxZoom"], 22], zoom],
-              ]);
             }}
           >
             {!mapError &&
@@ -122,7 +121,7 @@ export default function MapContainer() {
                   ["==", ["geometry-type"], "Polygon"],
                   ["==", ["geometry-type"], "MultiPolygon"],
                 ],
-                ...featuresVisibility.slice(1),
+                ...zoomVisibilityFilter.slice(1),
               ]}
               paint={{
                 "line-color": ["get", "borderColor"],
@@ -145,7 +144,7 @@ export default function MapContainer() {
                   ["==", ["geometry-type"], "Polygon"],
                   ["==", ["geometry-type"], "MultiPolygon"],
                 ],
-                ...featuresVisibility.slice(1),
+                ...zoomVisibilityFilter.slice(1),
               ]}
               paint={{
                 "fill-color": ["get", "color"],
@@ -160,7 +159,7 @@ export default function MapContainer() {
                 "all",
                 ["==", ["geometry-type"], "LineString"],
                 ["==", ["get", "lineDash"], null],
-                ...featuresVisibility.slice(1),
+                ...zoomVisibilityFilter.slice(1),
               ]}
               paint={{
                 "line-color": ["get", "color"],
@@ -176,7 +175,7 @@ export default function MapContainer() {
                 "all",
                 ["==", ["geometry-type"], "LineString"],
                 ["!=", ["get", "lineDash"], null],
-                ...featuresVisibility.slice(1),
+                ...zoomVisibilityFilter.slice(1),
               ]}
               paint={{
                 "line-color": ["get", "color"],
@@ -223,12 +222,6 @@ export default function MapContainer() {
               id="draw-preview-area-for-print-line"
               type="line"
               source="draw-preview"
-              filter={[
-                "all",
-                ["==", ["geometry-type"], "LineString"],
-                ["==", ["get", "role"], "area-for-print"],
-                ...featuresVisibility.slice(1),
-              ]}
               paint={{
                 "line-color": "#000000",
                 "line-width": 1.5,
