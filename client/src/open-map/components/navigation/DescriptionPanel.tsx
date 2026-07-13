@@ -40,6 +40,28 @@ export default function DescriptionPanel() {
     assignTemplate(option.id);
   };
 
+  const updateMapDescriptionForMapMaker = (description: string) => {
+    if (!CurrentMapRef.current) return;
+    return updateMap({
+      ...CurrentMapRef.current,
+      description: {
+        ...CurrentMapRef.current.description,
+        descriptionForMapMaker: description,
+      },
+    });
+  };
+  
+  const updateDescriptionValue = (key: string, value: string) => {
+    if (!CurrentMapRef.current) return;
+    return updateMap({
+      ...CurrentMapRef.current,
+      description: {
+        ...CurrentMapRef.current.description,
+        values: { ...CurrentMapRef.current.description.values, [key]: value },
+      },
+    });
+  }
+
   const handleDownloadPdf = () => {
     if (!TemplateWrappeRef.current || !currentMap) return;
 
@@ -152,9 +174,7 @@ export default function DescriptionPanel() {
 
   const handleLoadListeners = () => {
     if (!currentMap || getTemplate(templateId ?? "") == undefined ||
-      !TemplateWrappeRef.current ||
-      !map.current) return;
-
+      !TemplateWrappeRef.current) return;
     const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
     if (!TemplateDom) return;
 
@@ -177,32 +197,11 @@ export default function DescriptionPanel() {
     };
   };
 
-  const updateMapDescriptionForMapMaker = (description: string) => {
-    if (!CurrentMapRef.current) return;
-    return updateMap({
-      ...CurrentMapRef.current,
-      description: {
-        ...CurrentMapRef.current.description,
-        descriptionForMapMaker: description,
-      },
-    });
-  };
-  const updateDescriptionValue = (key: string, value: string) => {
-    if (!CurrentMapRef.current) return;
-    return updateMap({
-      ...CurrentMapRef.current,
-      description: {
-        ...CurrentMapRef.current.description,
-        values: { ...CurrentMapRef.current.description.values, [key]: value },
-      },
-    });
-  }
-
   useEffect(() => {
     handleLoadTemplate();
     handleLoadData();
     handleLoadMap();
-    handleLoadQrCode();
+    handleLoadQrCode(); 
     handleLoadListeners();
   }, [templateId]);
 
