@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@types/html-pdf": "^3.0.3",
     "formik": "^2.4.9",
     "geojson": "^0.5.0",
     "html2pdf.js": "^0.14.0",
