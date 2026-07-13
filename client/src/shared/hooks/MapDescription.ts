@@ -1,6 +1,7 @@
 import { useMap } from "./Map";
 import { useSource } from "./Source";
 import type { MapDescription } from "../types/MapDescription";
+import { PrintFormatsRecord } from "../types/PrintFormats";
 
 export const useMapDescription = () => {
   const { currentSource } = useSource();
@@ -23,6 +24,12 @@ export const useMapDescription = () => {
           values: {},
           qrCodeUrl: undefined,
           descriptionForMapMaker: descriptionForMapMaker ?? "",
+          templatePrintSettings: {
+            format: PrintFormatsRecord.A4,
+            orientation: "portrait",
+            margins: [0, 0, 0, 0],
+            unit: "mm"
+          }
         } as MapDescription,
       });
     if (currentMap.description.templateId === id) return;
@@ -33,35 +40,19 @@ export const useMapDescription = () => {
         templateId: id,
         qrCodeUrl: undefined,
         descriptionForMapMaker: descriptionForMapMaker ?? "",
+        templatePrintSettings: {
+          format: PrintFormatsRecord.A4,
+          orientation: "portrait",
+          margins: [0, 0, 0, 0],
+          unit: "mm"
+        }
       },
     });
   };
-  const updateMapDescriptionForMapMaker = (description: string) => {
-    if (!currentMap) return;
-    return updateMap({
-      ...currentMap,
-      description: {
-        ...currentMap.description,
-        descriptionForMapMaker: description,
-      },
-    });
-  };
-  const updateDescriptionValue = (key: string, value: string) => {
-    if (!currentMap) return;
-    return updateMap({
-      ...currentMap,
-      description: {
-        ...currentMap.description,
-        values: { ...currentMap.description.values, [key]: value },
-      },
-    });
-  }
 
   return {
     templates: (currentSource && currentSource.templates) ?? [],
     getTemplate,
-    assignTemplate,
-    updateMapDescriptionForMapMaker,
-    updateDescriptionValue
+    assignTemplate
   };
 };

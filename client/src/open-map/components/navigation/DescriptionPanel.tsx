@@ -15,16 +15,10 @@ import MySvg from "../../../shared/components/MySvg.tsx";
 import { createRoot } from "react-dom/client";
 
 export default function DescriptionPanel() {
-  const { 
-    templates, 
-    getTemplate, 
-    assignTemplate, 
-    updateMapDescriptionForMapMaker, 
-    updateDescriptionValue
-  } =useMapDescription();
+  const { templates, getTemplate, assignTemplate } = useMapDescription();
   const { downloadPdfFromTemplate } = useFile();
   const { map } = useMapContainer();
-  const { currentMap } = useMap();
+  const { currentMap, updateMap } = useMap();
 
   const { description, attractionPoint } = currentMap ?? {};
   const { templateId, descriptionForMapMaker } = description ?? {};
@@ -182,6 +176,27 @@ export default function DescriptionPanel() {
       });
     };
   };
+
+  const updateMapDescriptionForMapMaker = (description: string) => {
+    if (!CurrentMapRef.current) return;
+    return updateMap({
+      ...CurrentMapRef.current,
+      description: {
+        ...CurrentMapRef.current.description,
+        descriptionForMapMaker: description,
+      },
+    });
+  };
+  const updateDescriptionValue = (key: string, value: string) => {
+    if (!CurrentMapRef.current) return;
+    return updateMap({
+      ...CurrentMapRef.current,
+      description: {
+        ...CurrentMapRef.current.description,
+        values: { ...CurrentMapRef.current.description.values, [key]: value },
+      },
+    });
+  }
 
   useEffect(() => {
     handleLoadTemplate();
