@@ -33,7 +33,6 @@ export default function OpenMapPage() {
   const [areaForPrintClientPreview, setAreaForPrintClientPreview] = useState(false);
   const [connectedMaps, setConnectedMaps] = useState<Map[]>([]);
   const MapRef = useRef<MaplibreMap | null>(null);
-  const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
 
   const setMapRef = (m: MaplibreMap | null) => {
     MapRef.current = m;
@@ -109,7 +108,7 @@ export default function OpenMapPage() {
         }}
       >
         {currentMap && (
-          <div className="open-map page" ref={OpenMapPageRef}>
+          <div className="open-map page">
             <Header />
             <Navigation />
             <MapContainer />

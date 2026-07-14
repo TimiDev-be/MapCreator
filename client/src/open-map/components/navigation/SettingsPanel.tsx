@@ -35,6 +35,10 @@ export default function SettingsPanel() {
           />
         </div>
         <ZoomGroup/>
+        {/**
+         * Settings for print can deliver render problems for too big maps
+         * In the future propably will be create c# converter for creating maps and pdfs
+         */}
         {/* <PrintSettingGroup/> */}
         <AnchorPrintGroup/>
         <AreaForPrintGroup/>
