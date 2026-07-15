@@ -4,5 +4,5 @@ export interface TemplatePrintSettings {
   format: PrintFormats,
   orientation: "portrait" | "landscape",
   margins: number[],
-  unit: "mm" | "cm" | "m"
+  unit: "px" | "mm" | "cm" | "in"
 }
