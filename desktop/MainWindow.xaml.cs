@@ -96,9 +96,9 @@ namespace desktop
                 await this.WebViewAppPage.WebView.EnsureCoreWebView2Async(env);
 
                 dynamic app = Application.Current;
-                await app._server.HttpReady.Task;
+                await app.Server.HttpReady.Task;
 
-                string url = $"http://localhost:{app._server.Port}";
+                string url = $"http://localhost:{app.Server.Port}";
                 await this.WebViewAppPage.WebView.EnsureCoreWebView2Async();
                 this.WebViewAppPage.WebView.CoreWebView2.Navigate(url);
             }

@@ -7,6 +7,8 @@ export const useGroup = () => {
   const { currentMap, updateMap } = useMap();
 
   const newGroup = () => {
+    if (!currentMap) return;
+
     updateMap({
       ...currentMap,
       groups: [
@@ -15,8 +17,10 @@ export const useGroup = () => {
       ],
     });
   };
+
   const updateGroupName = (group: Group) => {
-    if (group.name.trim().length === 0) return;
+    if (!currentMap || group.name.trim().length === 0) return;
+
     updateMap({
       ...currentMap,
       groups: currentMap.groups.map((g) =>
@@ -24,20 +28,27 @@ export const useGroup = () => {
       ),
     });
   };
+
   const deleteGroup = (id: string) => {
+    if (!currentMap) return;
     setCurrentGroup((prev) => (prev && prev.id == id ? undefined : prev));
+
     updateMap({
       ...currentMap,
-      features: currentMap.features.filter((f) => f.properties.groupId !== id),
+      features: currentMap.features.filter((f) => f.properties?.groupId !== id),
       groups: currentMap.groups.filter((g) => g.id !== id),
     });
   };
+
   const toggleActive = (group: Group) => {
     setCurrentGroup((prev) =>
       prev && prev.id === group.id ? undefined : group,
     );
   };
+
   const assignFeatureToGroup = (featureId: string, groupId?: string) => {
+    if (!currentMap) return;
+    
     updateMap({
       ...currentMap,
       features: currentMap.features.map((f) =>

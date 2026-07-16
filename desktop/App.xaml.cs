@@ -16,7 +16,7 @@ namespace desktop
         public static StyleService StyleService { get; private set; }
         public static DataService DataService { get; private set; }
         public static LogService LogService { get; private set; }
-        public LocalHttp _server { get; set; }
+        public LocalHttp Server { get; set; }
         protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
@@ -32,15 +32,15 @@ namespace desktop
             DataService = new DataService(AppDataContext);
             LogService = new LogService(AppDataContext);
 
-            _server = new LocalHttp(AppDataContext);
-            await _server.Start();
+            Server = new LocalHttp(AppDataContext);
+            await Server.Start();
 
             MainWindow mainWindow = new MainWindow();
             mainWindow.Show();
         }
         protected override void OnExit(ExitEventArgs e)
         {
-            _server.Stop();
+            Server.Stop();
             base.OnExit(e);
         }
     }

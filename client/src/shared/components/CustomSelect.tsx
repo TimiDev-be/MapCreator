@@ -42,7 +42,7 @@ export default function CustomSelect({
           >
             {typeof selectedOption.value === "string"
               ? selectedOption.value.slice(0, 16)
-              : selectedOption.value.name.slice(0, 16)}
+              : selectedOption.value.name.slice(0, 16) }
             {typeof selectedOption.value === "string" &&
             selectedOption.value.length > 16
               ? "..."

@@ -1,9 +1,13 @@
 import { useSource } from "./Source";
 import type { DescriptionTemplate } from "../types/DescriptionTemplate";
-import html2pdf from "html2pdf.js";
+import html2canvas from "html2canvas";
 import type { UserSource } from "../types/UserSource";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
+import type { TemplatePrintSettings } from "../types/TemplatePrintSettings";
+import { PrintFormatsRecord } from "../types/PrintFormats";
+import jsPDF from "jspdf";
+import { PaddingAsNumber } from "../utils/PaddingAsNumber";
 
 export const useFile = () => {
   const { setCurrentSource, currentSource, config } = useSource();
@@ -111,16 +115,54 @@ export const useFile = () => {
     setCurrentSource(NewSource);
   };
 
-  const downloadPdfFromTemplate = (element: HTMLElement, mapName: string, templateName: string,) => {
+  const downloadPdfFromTemplate = async (element: HTMLElement, mapName: string, templateName: string, printSettings: TemplatePrintSettings) => {
     try {
-      const filename = `${mapName}-${templateName}-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.pdf`
-      html2pdf(element, {
-        margin: [0, 0, 0, 0],
-        filename,
-        image: { type: "jpeg", quality: 3 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      }); 
+      const pages = element.querySelectorAll(".page");
+      if (pages.length == 0) {
+        toast.error("Template does not contain any element with class 'page'. Change your HTML template and try again.");
+        return;
+      }
+
+      const {format, orientation} = printSettings;
+      const formatString = Object.keys(PrintFormatsRecord).find(
+        key => PrintFormatsRecord[key as keyof typeof PrintFormatsRecord][0] === format[0]
+      )?.toLowerCase() ?? "a4";
+
+      // padding of template is a margin in pdf
+      const elementStyle = getComputedStyle(element);
+      // top - left - bottom - right
+      const margins : [number, number, number, number] = [
+        PaddingAsNumber(elementStyle.paddingTop),
+        PaddingAsNumber(elementStyle.paddingLeft),
+        PaddingAsNumber(elementStyle.paddingBottom),
+        PaddingAsNumber(elementStyle.paddingRight)
+      ]
+
+      const pxToMm = (px: number): number => {
+        return px * (25.4 / 96);
+      };
+
+      const filename = `${mapName}-${templateName}-${new Date().toLocaleString("pl-PL", { timeZoneName: "short" })}.pdf`;
+
+      const pdf = new jsPDF({unit: "mm", format: formatString, orientation});
+
+      for (let i = 0; i < pages.length; i++) {
+        const canvas = await html2canvas(pages[i] as HTMLElement, {scale: 2, useCORS: true});
+        const img = canvas.toDataURL('image/jpeg', 1);
+
+        if (i > 0) pdf.addPage();
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        const widthWithoutMargins = pageWidth - pxToMm(margins[1]) - pxToMm(margins[3]);
+        const heightWithoutMargins = pageHeight - pxToMm(margins[0]) - pxToMm(margins[2]);
+
+        pdf.addImage(img, 'JPEG', pxToMm(margins[1]), pxToMm(margins[0]), widthWithoutMargins, heightWithoutMargins);
+      }
+
+      pdf.save(filename);
+
       toast.success(`${filename} downloaded`);
     } catch (error) {
       toast.error("Something went wrong");

@@ -3,7 +3,7 @@ import Header from "./header/Header";
 import { useState, useRef, useEffect } from "react";
 import Navigation from "./navigation/Navigation";
 import { MAP_CONTAINER_CONTEXT } from "../contexts/MapContainerContext";
-import type { Map as MaplibreMap } from "maplibre-gl";
+import type { Map as MaplibreMap, StyleSpecification } from "maplibre-gl";
 import type { Map } from "../../shared/types/Map";
 import MapContainer from "./MapContainer";
 import { useParams } from "react-router-dom";
@@ -14,6 +14,8 @@ import LineStringPanel from "./navigation/feature-panels/LineStringPanel";
 import PolygonPanel from "./navigation/feature-panels/PolygonPanel";
 import DrawButtons from "./draw-buttons/DrawButtons";
 import PrintClientPreview from "./PrintAreaPreview";
+import type { StateMap } from "../../shared/types/StateMap";
+import DownloadMapContainer from "./DownloadMapContainer";
 
 const FeaturePanels: Record<string, React.ReactNode> = {
   Point: <MarkerPanel />,
@@ -24,16 +26,19 @@ const FeaturePanels: Record<string, React.ReactNode> = {
 export default function OpenMapPage() {
   const { id } = useParams();
   const { currentMap, openMap } = useMap();
+
   const [areaForPrintFeature, setAreaForPrintFeature] = useState<Feature | undefined>(undefined);
   const [feature, setFeature] = useState<Feature | null>(null);
-  const [isReady, setIsReady] = useState(false);
-  const [mapZoom, setMapZoom] = useState((currentMap && currentMap.attractionPoint?.zoom) ?? 1, );
-  const [activeButton, setActiveButton] = useState<HTMLButtonElement | null>(null, );
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const [mapZoom, setMapZoom] = useState<number>((currentMap && currentMap.attractionPoint?.zoom) ?? 1);
+  const [activeButton, setActiveButton] = useState<HTMLButtonElement | null>(null);
   const [drawFeatures, setDrawFeatures] = useState<Feature[]>([]);
   const [areaForPrintClientPreview, setAreaForPrintClientPreview] = useState(false);
   const [connectedMaps, setConnectedMaps] = useState<Map[]>([]);
+  const [downloadParams, setDownloadParams] = useState<{map: StateMap, style: string | StyleSpecification} | null>(null);
+
   const MapRef = useRef<MaplibreMap | null>(null);
-  const OpenMapPageRef = useRef<HTMLDivElement | null>(null);
+  const DownlaodPromiseRef = useRef<((value: string) => void) | null>(null);
 
   const setMapRef = (m: MaplibreMap | null) => {
     MapRef.current = m;
@@ -62,6 +67,22 @@ export default function OpenMapPage() {
       return prev === newFeature ? null : newFeature;
     });
   };
+
+  const downloadURIData = async (map: StateMap, style: string | StyleSpecification) : Promise<string | undefined> => {
+    if (DownlaodPromiseRef.current != null) return undefined; 
+    return new Promise<string>((resolve) => {
+      DownlaodPromiseRef.current = resolve;
+      setDownloadParams({map, style});
+    });
+  }
+
+  const handleDownloadLoad = (dataUrl: string) => {
+    if (DownlaodPromiseRef.current) {
+      DownlaodPromiseRef.current(dataUrl);
+    }
+    setDownloadParams(null);
+    DownlaodPromiseRef.current = null;
+  }
 
   useEffect(() => {
     if (!currentMap || !feature) return;
@@ -106,14 +127,20 @@ export default function OpenMapPage() {
           setAreaForPrintClientPreview,
           connectedMaps,
           setConnectedMaps,
+          downloadURIData
         }}
       >
         {currentMap && (
-          <div className="open-map page" ref={OpenMapPageRef}>
+          <div className="open-map page">
             <Header />
             <Navigation />
             <MapContainer />
             <DrawButtons />
+            <div id="dowload-map-container-wrapper">
+              {downloadParams && (
+                <DownloadMapContainer {...downloadParams} loaded={handleDownloadLoad}/>
+              )}
+            </div>
             {feature && FeaturePanels[feature.geometry.type]}
             {areaForPrintClientPreview && <PrintClientPreview />}
           </div>

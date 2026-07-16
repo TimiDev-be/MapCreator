@@ -1,7 +1,8 @@
 import type { Map } from "../../shared/types/Map";
-import type { Map as MaplibreMap } from "maplibre-gl";
+import type { Map as MaplibreMap, StyleSpecification } from "maplibre-gl";
 import type { Feature } from "geojson";
 import { createContext, type RefObject } from "react";
+import type { StateMap } from "../../shared/types/StateMap";
 
 type Context = {
   map: RefObject<MaplibreMap | null>;
@@ -24,6 +25,7 @@ type Context = {
   setAreaForPrintClientPreview: React.Dispatch<React.SetStateAction<boolean>>;
   connectedMaps: Map[];
   setConnectedMaps: React.Dispatch<React.SetStateAction<Map[]>>;
+  downloadURIData: (map: StateMap, style: string | StyleSpecification) => Promise<string | undefined>;
 };
 
 export const MAP_CONTAINER_CONTEXT = createContext<Context | undefined>(
