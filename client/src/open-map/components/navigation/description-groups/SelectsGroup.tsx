@@ -2,7 +2,7 @@ import CustomSelect from "../../../../shared/components/CustomSelect";
 import { useMapDescription } from "../../../../shared/hooks/MapDescription";
 
 /**
- * There is no need to use units in that version of map becasue while creating pdf sizes are from
+ * There is no need to use units in that version of app becasue while creating pdf sizes are from
  * size of template pages.
  * Maybe in the future it will be usefull for some cases.
  */

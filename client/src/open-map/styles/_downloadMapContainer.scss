@@ -1,0 +1,20 @@
+@use "../../shared/styles/v";
+
+#download-map-container {
+  position: fixed;
+  top: 0;
+  left: -200%;
+  z-index: -9999999999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  touch-action: none;
+
+  .map-error {
+    width: 100%;
+    max-width: 600px;
+    color: v.$blue-normal;
+  }
+}

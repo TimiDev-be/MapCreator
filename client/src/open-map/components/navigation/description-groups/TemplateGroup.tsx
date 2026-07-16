@@ -3,18 +3,17 @@ import type { StateMap } from "../../../../shared/types/StateMap";
 import { useMap } from "../../../../shared/hooks/Map";
 import { useMapDescription } from "../../../../shared/hooks/MapDescription";
 import QRCode from "qrcode";
-import { UnitToPx } from "../../../../shared/utils/UnitToPx";
 import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import { createRoot } from "react-dom/client";
 import MySvg from "../../../../shared/components/MySvg";
-import html2canvas from "html2canvas";
+import { UnitToPx } from "../../../../shared/utils/UnitToPx";
 
 type Props = {
   templateId: string
 }
 
 export default function TemplateGroup({templateId} : Props) {
-  const {map} = useMapContainer();
+  const {map, downloadURIData} = useMapContainer();
   const {currentMap, updateMap} = useMap();
   const {getTemplate} = useMapDescription();
 
@@ -57,58 +56,31 @@ export default function TemplateGroup({templateId} : Props) {
     }
   };
 
-  const handleLoadMap = () => {
+  const handleLoadMap = async () => {
     if (!TemplateWrappeRef.current || !currentMap || !map.current) return;
 
+    const DownloadMapContainerWrapper = document.querySelector("#dowload-map-container-wrapper");
     const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
-    if (!TemplateDom) return;
+    if (!DownloadMapContainerWrapper || !TemplateDom) return;
 
     const TemplateMapContainer = TemplateDom.querySelector("#map-container");
     if (!TemplateMapContainer) return;
     TemplateMapContainer.innerHTML = "";
-    if (
-      currentMap.attractionPoint &&
-      TemplateMapContainer instanceof HTMLDivElement
-    ) {
-      const { coords, zoom, pitch, bearing } = currentMap.attractionPoint;
-      const { width, height } = currentMap.areaForPrint;
-      const MapContainer = map.current.getContainer();
 
-      MapContainer.style.width = `${UnitToPx(currentMap.printSettings, width)}px`;
-      MapContainer.style.height = `${UnitToPx(currentMap.printSettings, height)}px`;
-      map.current.resize();
+    if (!currentMap.attractionPoint || TemplateMapContainer instanceof HTMLDivElement == false) return;
+    const {printSettings, areaForPrint} = currentMap;
+    const dataUrl = await downloadURIData(currentMap, map.current.getStyle());
 
-      const WidthNum = UnitToPx(currentMap.printSettings, width);
-      const HeightNum = UnitToPx(currentMap.printSettings, height);
+    const templateMapContainerRoot = createRoot(TemplateMapContainer);
+    const width = UnitToPx(printSettings, areaForPrint.width);
+    const height = UnitToPx(printSettings, areaForPrint.height);
 
-      map.current.jumpTo({
-        center: coords as [number, number],
-        zoom,
-        pitch,
-        bearing,
-      });
-      map.current.once("idle", async () => {
-        const MapCanvas = await html2canvas(MapContainer, {
-          useCORS: true,
-          backgroundColor: null,
-          ignoreElements: (el: any) =>
-            el.classList.contains("maplibregl-control-container"),
-        });
-        const UriData = MapCanvas.toDataURL("image/png");
+    templateMapContainerRoot.render(
+      <MySvg Width={width} Height={height} UriData={dataUrl ?? ""}/>
+    );
 
-        const root = createRoot(TemplateMapContainer);
-        root.render(
-          <MySvg Width={WidthNum} Height={HeightNum} UriData={UriData} />,
-        );
-
-        MapContainer.style.width = "100%";
-        MapContainer.style.height = "100%";
-        map.current!.resize();
-
-        return () => {
-          root.unmount();
-        };
-      });
+    return () => {
+      templateMapContainerRoot.unmount();
     }
   };
 

@@ -66,6 +66,7 @@ export default function MapContainer() {
             key={currentMap.id}
             style={{ width: "100%", height: "100%" }}
             mapStyle={mapStyle.url ?? "default style"}
+            initialCanvasContextAttributes={{preserveDrawingBuffer: true}}
             onError={() => {
               setMapError(true);
             }}
@@ -222,6 +223,7 @@ export default function MapContainer() {
               id="draw-preview-area-for-print-line"
               type="line"
               source="draw-preview"
+              filter={["==", ["get", "role"], "area-for-print"]}
               paint={{
                 "line-color": "#000000",
                 "line-width": 1.5,
