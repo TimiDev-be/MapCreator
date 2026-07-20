@@ -2,16 +2,29 @@
 
 .nav.panel.groups {
   min-width: 325px;
+  max-width: 700px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+
+  .nav-panel-groups-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 
   .group {
     &.new-group {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
-}
+  }
   .create-new-group-button {
     padding: 0.2rem;
 
@@ -24,11 +37,11 @@
     cursor: pointer;
 
     svg path {
-        fill: v.$black;
+      fill: v.$black;
     }
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
+      background-color: rgba(0, 0, 0, 0.1);
     }
   }
   .groups-features-list-wrapper {

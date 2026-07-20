@@ -1,227 +1,227 @@
 @use "../../shared/styles/v";
 
 .maps-list-element {
-    min-width: 400px;
-    max-width: 400px;
-    height: 100%;
-    min-height: 300px;
-    max-height: 300px;
+  min-width: 400px;
+  max-width: 400px;
+  height: 100%;
+  min-height: 300px;
+  max-height: 300px;
 
-    position: relative;
-    overflow: hidden;
-    transition: all 0.2s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+
+  background: linear-gradient(to bottom, v.$blue-normal, v.$blue-dark);
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.25);
+
+  &:hover {
+    .top-block .wrapper {
+      .map-checkbox,
+      .open-map-menu-button,
+      .open-map-link {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+  }
+
+  .top-block {
+    padding: 1rem;
+    height: 100%;
+
+    .wrapper {
+      height: 100%;
+
+      transition: all 0.2s ease-in-out;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+
+      cursor: pointer;
+
+      &:has(input:checked) {
+        .map-checkbox {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+
+      .map-checkbox,
+      .open-map-menu-button,
+      .open-map-link {
+        transition: all 0.2s ease-in-out;
+        visibility: hidden;
+        opacity: 0;
+      }
+    }
+
+    .menu-container {
+      width: 100%;
+
+      display: flex;
+      justify-content: space-between;
+    }
+    .map-checkbox {
+      appearance: none;
+      width: 24px;
+      height: 24px;
+
+      position: relative;
+      transition: all 0.2s ease-in-out;
+
+      display: flex;
+
+      background: v.$black;
+      border: 2px solid white;
+      border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.5);
+      }
+      &:checked {
+        background-color: v.$blue-normal;
+        &::after {
+          content: "";
+          width: 6px;
+          height: 11px;
+
+          position: absolute;
+          top: 40%;
+          left: 50%;
+          transform: translate(-50%, -50%) rotate(35deg);
+
+          border-bottom: 3px solid white;
+          border-right: 3px solid white;
+        }
+      }
+    }
+    .open-map-menu-button {
+      padding: 0.2rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background-color: transparent;
+      outline: none;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+
+      &.active {
+        visibility: visible;
+        opacity: 1;
+        z-index: 4;
+
+        svg path {
+          fill: v.$black;
+        }
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      svg path {
+        fill: white;
+      }
+    }
+    .open-map-link {
+      padding: 0.5rem 1rem;
+
+      transition: all 0.2s ease-in-out;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background-color: v.$black;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+
+      &:hover {
+        background-color: v.$blue-dark-hover;
+      }
+    }
+  }
+  .bottom-block {
+    padding: 0.5rem 1rem;
+    min-height: 80px;
+    height: 100%;
+    max-height: max-content;
 
     display: flex;
     flex-direction: column;
+    gap: 0.5rem;
 
-    background: linear-gradient(to bottom, v.$blue-normal, v.$blue-dark);
-    border-radius: 10px;
-    box-shadow: 4px 4px 10px 0 rgba(0, 0, 0, 0.25);
+    background-color: white;
+    color: v.$black;
 
-    &:hover {
-        .top-block .wrapper {
-            .map-checkbox,
-            .open-map-menu-button,
-            .open-map-link {
-                visibility: visible;
-                opacity: 1;
-            }
-        }
+    .map-last-update {
+      width: max-content;
+      padding: 0.5rem;
+
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      background-color: v.$black;
+      border-radius: 5px;
+      color: white;
+
+      svg path {
+        fill: white;
+      }
+    }
+  }
+  .settings {
+    width: 100%;
+    height: 100%;
+
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: white;
+
+    .map-settings-wrapper {
+      width: max-content;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
-    .top-block {
-        padding: 1rem;
-        height: 100%;
+    .remove-map-button,
+    .edit-map-link {
+      width: 100%;
+      padding: 0.5rem 1rem;
 
-        .wrapper {
-            height: 100%;
+      transition: all 0.2s ease-in-out;
 
-            transition: all 0.2s ease-in-out;
+      background-color: white;
+      outline: none;
+      border: none;
+      cursor: pointer;
+      color: v.$black;
 
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-
-            cursor: pointer;
-
-            &:has(input:checked) {
-                .map-checkbox {
-                    visibility: visible;
-                    opacity: 1;
-                }
-            }
-
-            .map-checkbox,
-            .open-map-menu-button,
-            .open-map-link {
-                transition: all 0.2s ease-in-out;
-                visibility: hidden;
-                opacity: 0;
-            }
-        }
-
-        .menu-container {
-            width: 100%;
-
-            display: flex;
-            justify-content: space-between;
-        }
-        .map-checkbox {
-            appearance: none;
-            width: 24px;
-            height: 24px;
-
-            position: relative;
-            transition: all 0.2s ease-in-out;
-
-            display: flex;
-
-            background: v.$black;
-            border: 2px solid white;
-            border-radius: 5px;
-            cursor: pointer;
-
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.5);
-                border: 2px solid rgba(255, 255, 255, 0.5);
-            }
-            &:checked {
-                background-color: v.$blue-normal;
-                &::after {
-                    content: "";
-                    width: 6px;
-                    height: 11px;
-
-                    position: absolute;
-                    top: 40%;
-                    left: 50%;
-                    transform: translate(-50%, -50%) rotate(35deg);
-
-                    border-bottom: 3px solid white;
-                    border-right: 3px solid white;
-                }
-            }
-        }
-        .open-map-menu-button {
-            padding: 0.2rem;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background-color: transparent;
-            outline: none;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-
-            &.active {
-                visibility: visible;
-                opacity: 1;
-                z-index: 4;
-
-                svg path {
-                    fill: v.$black;
-                }
-            }
-
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.2);
-            }
-
-            svg path {
-                fill: white;
-            }
-        }
-        .open-map-link {
-            padding: 0.5rem 1rem;
-
-            transition: all 0.2s ease-in-out;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background-color: v.$black;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            text-decoration: none;
-
-            &:hover {
-                background-color: v.$blue-dark-hover;
-            }
-        }
+      &:hover {
+        background-color: v.$blue-dark;
+        color: white;
+      }
     }
-    .bottom-block {
-        padding: 0.5rem 1rem;
-        min-height: 80px;
-        height: 100%;
-        max-height: max-content;
-
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-
-        background-color: white;
-        color: v.$black;
-
-        .map-last-update {
-            width: max-content;
-            padding: 0.5rem;
-
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-
-            background-color: v.$black;
-            border-radius: 5px;
-            color: white;
-
-            svg path {
-                fill: white;
-            }
-        }
-    }
-    .settings {
-        width: 100%;
-        height: 100%;
-
-        position: absolute;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-color: white;
-
-        .map-settings-wrapper {
-            width: max-content;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .remove-map-button,
-        .edit-map-link {
-            width: 100%;
-            padding: 0.5rem 1rem;
-
-            transition: all 0.2s ease-in-out;
-
-            background-color: white;
-            outline: none;
-            border: none;
-            cursor: pointer;
-            color: v.$black;
-
-            &:hover {
-                background-color: v.$blue-dark;
-                color: white;
-            }
-        }
-    }
+  }
 }

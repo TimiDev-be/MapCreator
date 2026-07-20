@@ -1,5 +1,5 @@
 /** <VARIABLES> **/
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap");
 
 //colors from figma generated palette
 $blue-light: #e6f0f8;
@@ -41,18 +41,17 @@ $f-montserrat: "Montserrat", sans-serif;
 $f-oswald: "Oswald", sans-serif;
 
 // NEUTRAL / TEXT
-$green-ink:          #262C24; // rgb(38,44,36)
-$green-ink-muted:    #4A524A;
+$green-ink: #262c24; // rgb(38,44,36)
+$green-ink-muted: #4a524a;
 
 // ACCENT (water / geo)
-$blue-accent:        #389AC9; // rgb(56,154,201)
-$blue-accent-hover:  #2F8BB7;
-$blue-accent-active: #267DA6;
+$blue-accent: #389ac9; // rgb(56,154,201)
+$blue-accent-hover: #2f8bb7;
+$blue-accent-active: #267da6;
 
 // BACKGROUND helpers
-$bg-soft:            #EEF3F1;
-$bg-green-tint:      #E4EFE8;
+$bg-soft: #eef3f1;
+$bg-green-tint: #e4efe8;
 
 // Soft black
-$black: #2E2C2A;
-
+$black: #2e2c2a;

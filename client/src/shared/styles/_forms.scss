@@ -1,35 +1,35 @@
 @use "./v";
 
 form {
-    .group {
-        width: 100%;
+  .group {
+    width: 100%;
 
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-        .wrapper {
-            width: 100%;
-            max-width: 350px;
+    .wrapper {
+      width: 100%;
+      max-width: 350px;
 
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
-    .form-error {
-        width: 100%;
-        max-width: max-content;
+  }
+  .form-error {
+    width: 100%;
+    max-width: max-content;
 
-        color: red;
-    }
-    .form-field {
-        padding: 0.5rem 1rem;
-        width: 100%;
+    color: red;
+  }
+  .form-field {
+    padding: 0.5rem 1rem;
+    width: 100%;
 
-        background-color: white;
-        border: 1px solid v.$blue-dark;
-        border-radius: 5px;
-        box-shadow: 5px 5px 0 0 v.$blue-normal;
-    }
+    background-color: white;
+    border: 1px solid v.$blue-dark;
+    border-radius: 5px;
+    box-shadow: 5px 5px 0 0 v.$blue-normal;
+  }
 }
