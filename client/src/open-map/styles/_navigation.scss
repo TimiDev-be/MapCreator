@@ -113,9 +113,12 @@
 
     .linked-group {
       padding: 0.2rem;
+
       display: flex;
       flex-direction: row;
       align-items: center;
+      gap: .5rem; 
+
       background-color: v.$blue-light-hover;
 
       label {
@@ -144,12 +147,25 @@
 }
 
 .linked-input-container {
-  &.box-shadow {
+  &.box-shadow,
+  &.border {
     .linked-wrapper.without-bridge {
       gap: 0.5rem;
     }
     .linked-group {
       width: 100%;
+    }
+    .group {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+  &.border {
+    .linked-wrapper.without-bridge {
+      gap: 0.5rem;
+    }
+    .linked-group {
+      width: max-content;
     }
   }
 }

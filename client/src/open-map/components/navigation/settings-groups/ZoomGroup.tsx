@@ -21,8 +21,8 @@ export default function ZoomGroup() {
         <p className="about zoom t-panel-medium">
           Zoom
         </p>
-        <div className="wrapper">
-          <div className="group min-zoom">
+        <div className="linked-wrapper">
+          <div className="linked-group min-zoom">
             <label htmlFor={`min-zoom-input-${id}`} className="t-panel-small">
               Min
             </label>
@@ -47,7 +47,7 @@ export default function ZoomGroup() {
             />
           </div>
           <span className="field-bridge" />
-          <div className="group max-zoom">
+          <div className="linked-group max-zoom">
             <label htmlFor={`max-zoom-input-${id}`} className="t-panel-small">
               Max
             </label>

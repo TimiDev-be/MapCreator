@@ -1,0 +1,59 @@
+@use "../../shared/styles/v";
+
+.feature-panel-group-container {
+  width: 100%;
+  height: max-content;
+  
+  display: flex;
+  flex-direction: column;
+
+  .feature-panel-group-button {
+    width: 100%;
+    padding: .5rem;
+
+    transition: all .2s ease-in-out;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+
+    background-color: transparent;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    color: v.$black;
+
+    svg {
+      transition: inherit;
+      path {
+        fill: v.$black;
+      }
+    }
+
+    &.active {
+      background-color: v.$blue-light;
+      svg {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .bottom-block {
+    padding: 0 .5rem;
+    height: 0px;
+
+    visibility: collapse;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &.active {
+      padding: .5rem;
+      height: max-content;
+      visibility: visible;
+    }
+  }
+}

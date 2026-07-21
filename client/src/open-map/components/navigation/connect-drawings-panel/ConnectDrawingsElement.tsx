@@ -51,8 +51,8 @@ export default function ConnectDrawingsElement({ map, isCurrentMap, isConnected 
               <p className="about zoom t-panel-medium">
                 Zoom
               </p>
-              <div className="wrapper">
-                <div className="group min-zoom">
+              <div className="linked-wrapper">
+                <div className="linked-group min-zoom">
                   <label htmlFor={`min-zoom-input-${map.id}-${isConnected ? "connected" : "unconnected"}`} className="t-panel-small">
                     Min
                   </label>
@@ -77,7 +77,7 @@ export default function ConnectDrawingsElement({ map, isCurrentMap, isConnected 
                   />
                 </div>
                 <span className="field-bridge" />
-                <div className="group max-zoom">
+                <div className="linked-group max-zoom">
                   <label htmlFor={`max-zoom-input-${map.id}-${isConnected ? "connected" : "unconnected"}`} className="t-panel-small">
                     Max
                   </label>

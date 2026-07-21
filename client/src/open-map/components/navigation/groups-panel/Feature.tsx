@@ -1,5 +1,5 @@
 import "../../../styles/_feature.scss";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import type { Feature } from "geojson";
 import { useFeature } from "../../../../shared/hooks/Feature";
 import { useMapContainer } from "../../../../shared/hooks/MapContainer";
@@ -23,14 +23,15 @@ export default function FeatureComponent({ feature }: Props) {
   const { updateFeature, deleteFeature } = useFeature();
   const [editName, setEditName] = useState<boolean>(false);
   const NameInputRef = useRef<HTMLInputElement | null>(null);
-  const { name } = feature.properties;
+  const { name } = feature.properties ?? {};
 
   const handleDoubleClick = () => {
     setEditName(true);
     setTimeout(() => NameInputRef.current?.focus(), 0);
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = (e: any) => {
+    if (!NameInputRef.current) return;
     if (e.target.value.trim().length === 0) {
       NameInputRef.current.value = name;
       setEditName(false);

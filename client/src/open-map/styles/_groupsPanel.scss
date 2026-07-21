@@ -1,7 +1,9 @@
 @use "../../shared/styles/v";
 
 .nav.panel.groups {
+  padding: 0 1rem !important;
   min-width: 325px;
+  width: max-content;
   max-width: 700px;
 
   display: flex;
@@ -11,6 +13,8 @@
   gap: 1rem;
 
   .nav-panel-groups-wrapper {
+    padding: 1rem 0;
+
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
