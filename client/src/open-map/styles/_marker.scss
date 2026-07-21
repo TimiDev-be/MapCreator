@@ -1,93 +1,61 @@
 .custom-marker {
-    position: relative;
+  display: grid;
+  grid-template-areas: 
+    ". sign-top ."
+    "sign-left content sign-right"
+    ". sign-bottom ."
+  ;
+
+  &.hidden {
+    display: none;
+  }
+
+  .wrapper {
+    grid-area: content;
+
+    z-index: 2;
 
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    gap: .5rem;
 
-    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.1);
-
-    &.hidden {
-        display: none;
-    }
-
-    .name {
-        white-space: pre-line;
-    }
-
-    .wrapper {
-        width: 100%;
-        height: 100%;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-
-        z-index: 2;
-        background-color: inherit;
-
-        .icon {
-            path {
-                fill: var(--icon-color);
-            }
-            &.point,
-            &.football-pitch,
-            &.shop,
-            &.city,
-            &.dog {
-                path {
-                    fill: none !important;
-                    stroke: var(--icon-color);
-                }
-            }
+    .icon {
+      path {
+        fill: var(--icon-color);
+      }
+      &.point,
+      &.football-pitch,
+      &.shop,
+      &.city,
+      &.dog {
+        path {
+          fill: none !important;
+          stroke: var(--icon-color);
         }
+      }
     }
+  }
 
-    .signs {
-        width: 100%;
-        height: 100%;
+  .mysign {
+    padding: .7em;
+    justify-self: center;
+    align-self: center;
 
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-
-        .sign {
-            width: 1em;
-            height: 1em;
-
-            position: absolute;
-            z-index: 1;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            &.left {
-                top: 50%;
-                left: 0;
-                transform: translate(-0.5em, -50%) rotate(45deg);
-            }
-
-            &.right {
-                top: 50%;
-                right: 0;
-                transform: translate(0.5em, -50%) rotate(45deg);
-            }
-
-            &.top {
-                top: 0;
-                left: 50%;
-                transform: translate(-50%, -0.5em) rotate(45deg);
-            }
-
-            &.bottom {
-                bottom: 0;
-                left: 50%;
-                transform: translate(-50%, 0.5em) rotate(45deg);
-            }
-        }
+    &.left {
+      grid-area: sign-left;
+      transform: translateX(0.9em) rotate(45deg);
     }
+    &.top {
+      grid-area: sign-top;
+      transform: translateY(0.9em) rotate(45deg);
+    }
+    &.right {
+      grid-area: sign-right;
+      transform: translateX(-0.9em) rotate(45deg);
+    }
+    &.bottom {
+      grid-area: sign-bottom;
+      transform: translateY(-0.9em) rotate(45deg);
+    }
+  }
 }

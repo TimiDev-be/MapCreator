@@ -4,26 +4,26 @@
 @use "./forms";
 
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    min-height: 100svh;
+  min-height: 100svh;
 }
 
 #root {
-    max-width: 100svw;
-    min-height: 100svh;
-    max-height: 100svh;
-    display: flex;
+  max-width: 100svw;
+  min-height: 100svh;
+  max-height: 100svh;
+  display: flex;
 
-    .page {
-        width: 100%;
-    }
+  .page {
+    width: 100%;
+  }
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }

@@ -1,7 +1,7 @@
 @use "../../shared/styles/v";
 
 .maps-header {
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
 
   position: relative;
 
@@ -12,31 +12,31 @@
   background-color: white;
 
   nav {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
 
   .nav-link {
-      padding: 0.5rem 1rem;
+    padding: 0.5rem 1rem;
 
-      transition: all 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 
-      background-color: v.$blue-normal;
-      color: white;
-      text-decoration: none;
+    background-color: v.$blue-normal;
+    color: white;
+    text-decoration: none;
 
-      &:hover {
-          background-color: v.$blue-dark;
-      }
+    &:hover {
+      background-color: v.$blue-dark;
+    }
   }
 
   .app-name {
-      text-decoration: none;
-      color: v.$black;
+    text-decoration: none;
+    color: v.$black;
 
-      &:hover {
-          color: v.$blue-normal;
-      }
+    &:hover {
+      color: v.$blue-normal;
+    }
   }
 }

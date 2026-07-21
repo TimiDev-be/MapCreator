@@ -1,3 +1,5 @@
+import type { Border } from "../types/Border";
+import type { BoxShadow } from "../types/Boxshadow";
 import { useFeature } from "./Feature";
 import { useMapContainer } from "./MapContainer";
 import type { Feature } from "geojson";
@@ -82,7 +84,7 @@ export const useMarkerFeature = () => {
         properties: {
           ...feature.properties,
           markerSigns: feature.properties.markerSigns.filter(
-            (sign) => sign !== value,
+            (sign: any) => sign !== value,
           ),
         },
       });
@@ -117,6 +119,26 @@ export const useMarkerFeature = () => {
       },
     });
   };
+  const handleBoxshadowChange = (value: BoxShadow) => {
+    if (!feature) return;
+    updateFeature({
+      ...feature, 
+      properties: {
+        ...feature.properties,
+        boxShadow: value
+      }
+    });
+  }
+  const handleBorderChange = (value: Border) => {
+    if (!feature) return;
+    updateFeature({
+      ...feature,
+      properties: {
+        ...feature.properties,
+        border: value
+      }
+    })
+  }
 
   return {
     handleColorChange,
@@ -130,5 +152,7 @@ export const useMarkerFeature = () => {
     handleMarkerIconClassChange,
     handleRotateChange,
     handleChangeCoords,
+    handleBoxshadowChange,
+    handleBorderChange
   };
 };

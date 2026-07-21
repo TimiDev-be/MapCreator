@@ -1,82 +1,82 @@
 @use "../../shared/styles/v";
 
 .templates-container {
-    width: 100%;
+  width: 100%;
 
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .templates-list {
     display: flex;
+    align-items: flex-start;
     flex-wrap: wrap;
     gap: 1rem;
 
-    .templates-list {
-        display: flex;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        gap: 1rem;
+    list-style: none;
+    padding: 0;
+  }
+  .template {
+    padding: 1rem 0;
+    width: 120px;
 
-        list-style: none;
-        padding: 0;
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    background-color: white;
+    border: 2px dashed v.$blue-light-active;
+    border-radius: 10px;
+
+    svg path {
+      stroke: v.$blue-normal;
+      cursor: pointer;
     }
-    .template {
-        padding: 1rem 0;
-        width: 120px;
 
-        position: relative;
-        overflow: hidden;
+    .delete-template-button {
+      padding: 0.2rem;
 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
+      position: absolute;
+      top: 0;
+      right: 0;
 
-        background-color: white;
-        border: 2px dashed v.$blue-light-active;
-        border-radius: 10px;
+      display: flex;
 
-        svg path {
-            stroke: v.$blue-normal;
-            cursor: pointer;
-        }
+      background-color: v.$blue-light-hover;
+      border: none;
+      outline: none;
+      cursor: pointer;
 
-        .delete-template-button {
-            padding: 0.2rem;
+      svg path {
+        fill: v.$blue-darker;
+      }
 
-            position: absolute;
-            top: 0;
-            right: 0;
-
-            display: flex;
-
-            background-color: v.$blue-light-hover;
-            border: none;
-            outline: none;
-            cursor: pointer;
-
-            svg path {
-                fill: v.$blue-darker;
-            }
-
-            &:hover {
-                background-color: v.$blue-light-active;
-            }
-        }
-
-        .template-name-input {
-            width: 100%;
-            padding: 0.5rem;
-
-            display: flex;
-            align-items: center;
-
-            background-color: v.$blue-light;
-            border: none;
-            outline: none;
-            color: v.$blue-normal;
-            &:hover {
-                background-color: v.$blue-light-hover;
-            }
-            &:focus {
-                background-color: v.$blue-light-active;
-            }
-        }
+      &:hover {
+        background-color: v.$blue-light-active;
+      }
     }
+
+    .template-name-input {
+      width: 100%;
+      padding: 0.5rem;
+
+      display: flex;
+      align-items: center;
+
+      background-color: v.$blue-light;
+      border: none;
+      outline: none;
+      color: v.$blue-normal;
+      &:hover {
+        background-color: v.$blue-light-hover;
+      }
+      &:focus {
+        background-color: v.$blue-light-active;
+      }
+    }
+  }
 }

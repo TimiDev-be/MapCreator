@@ -9,24 +9,15 @@ import MapContainer from "./MapContainer";
 import { useParams } from "react-router-dom";
 import { useMap } from "../../shared/hooks/Map";
 import type { Feature } from "geojson";
-import MarkerPanel from "./navigation/feature-panels/MarkerPanel";
-import LineStringPanel from "./navigation/feature-panels/LineStringPanel";
-import PolygonPanel from "./navigation/feature-panels/PolygonPanel";
 import DrawButtons from "./draw-buttons/DrawButtons";
 import PrintClientPreview from "./PrintAreaPreview";
 import type { StateMap } from "../../shared/types/StateMap";
 import DownloadMapContainer from "./DownloadMapContainer";
 
-const FeaturePanels: Record<string, React.ReactNode> = {
-  Point: <MarkerPanel />,
-  LineString: <LineStringPanel />,
-  Polygon: <PolygonPanel />,
-};
-
 export default function OpenMapPage() {
   const { id } = useParams();
   const { currentMap, openMap } = useMap();
-
+  
   const [areaForPrintFeature, setAreaForPrintFeature] = useState<Feature | undefined>(undefined);
   const [feature, setFeature] = useState<Feature | null>(null);
   const [isReady, setIsReady] = useState<boolean>(false);
@@ -141,7 +132,6 @@ export default function OpenMapPage() {
                 <DownloadMapContainer {...downloadParams} loaded={handleDownloadLoad}/>
               )}
             </div>
-            {feature && FeaturePanels[feature.geometry.type]}
             {areaForPrintClientPreview && <PrintClientPreview />}
           </div>
         )}

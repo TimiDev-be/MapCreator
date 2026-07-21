@@ -1,99 +1,99 @@
 @use "../../shared/styles/_v";
 
 .open-map-nav {
-    grid-area: 2 / 1 / 4 / 2;
-    z-index: 3;
-    display: flex;
+  grid-area: 2 / 1 / 4 / 2;
+  z-index: 3;
+  display: flex;
 
-    border-right: 1px solid v.$blue-light;
+  border-right: 1px solid v.$blue-light;
 
-    .nav-buttons {
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-
-        background-color: white;
-
-        .nav-button {
-            padding: 0.5rem;
-
-            display: flex;
-
-            background-color: white;
-            border: none;
-            outline: none;
-            cursor: pointer;
-
-            &:hover {
-                background-color: rgba(0, 0, 0, 0.1);
-            }
-
-            &.active {
-                background-color: v.$blue-normal;
-                svg path {
-                    fill: white;
-                }
-            }
-
-            svg path {
-                fill: v.$black;
-            }
-
-            &.settings {
-                &.active svg path {
-                    fill: transparent;
-                    stroke: white;
-                }
-                svg path {
-                    fill: transparent;
-                    stroke: v.$black;
-                }
-            }
-            &.connect-drawings {
-                svg path {
-                    fill: transparent;
-                    stroke: v.$black;
-                }
-                &.active svg path {
-                    fill: transparent;
-                    stroke: white;
-                }
-            }
-
-            &.description svg path {
-                stroke-width: 1;
-            }
-        }
-    }
-}
-.panel-field {
-    padding: 0.2rem 0.5rem;
-    width: 100%;
-    max-width: 200px;
-
-    background-color: v.$blue-light-hover;
-    border: 1px solid v.$blue-light-active;
-    outline: none;
-    color: v.$blue-dark;
-}
-
-.panel {
-    grid-area: 2 / 2 / 4 / -1;
+  .nav-buttons {
     padding: 1rem;
-    width: 100%;
-    max-width: 350px;
-    height: 100%;
-
-    z-index: 3;
-
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
     background-color: white;
-    border-right: 1px solid v.$blue-light;
-    color: v.$black;
+
+    .nav-button {
+      padding: 0.5rem;
+
+      display: flex;
+
+      background-color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+
+      &.active {
+        background-color: v.$blue-normal;
+        svg path {
+          fill: white;
+        }
+      }
+
+      svg path {
+        fill: v.$black;
+      }
+
+      &.settings {
+        &.active svg path {
+          fill: transparent;
+          stroke: white;
+        }
+        svg path {
+          fill: transparent;
+          stroke: v.$black;
+        }
+      }
+      &.connect-drawings {
+        svg path {
+          fill: transparent;
+          stroke: v.$black;
+        }
+        &.active svg path {
+          fill: transparent;
+          stroke: white;
+        }
+      }
+
+      &.description svg path {
+        stroke-width: 1;
+      }
+    }
+  }
+}
+.panel-field {
+  padding: 0.2rem 0.5rem;
+  width: 100%;
+  max-width: 200px;
+
+  background-color: v.$blue-light-hover;
+  border: 1px solid v.$blue-light-active;
+  outline: none;
+  color: v.$blue-dark;
+}
+
+.panel {
+  grid-area: 2 / 2 / 4 / -1;
+  padding: 1rem;
+  width: 100%;
+  max-width: 350px;
+  height: 100%;
+
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  background-color: white;
+  border-right: 1px solid v.$blue-light;
+  color: v.$black;
 }
 
 .linked-input-container {
@@ -102,37 +102,70 @@
   gap: 0.5rem;
 
   &.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 
-  .wrapper {
-      display: flex;
-      align-items: center;
-  }
-  .group {
+  .linked-wrapper {
+    display: flex;
+    align-items: center;
+
+    .linked-group {
       padding: 0.2rem;
+
       display: flex;
+      flex-direction: row;
       align-items: center;
+      gap: .5rem; 
+
       background-color: v.$blue-light-hover;
+
+      label {
+        max-width: max-content;
+      }
+    }
   }
 
   .field-bridge {
-      width: 6px;
-      height: 6px;
+    width: 6px;
+    height: 6px;
 
-      background-color: v.$blue-light-hover;
+    background-color: v.$blue-light-hover;
   }
 
   input {
-      max-width: 80px;
-      border: none;
+    max-width: 80px;
+    border: none;
 
-      &::-webkit-inner-spin-button,
-      &::-webkit-outer-spin-button {
-          -webkit-appearance: none;
-          margin: 0;
-      }
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+}
+
+.linked-input-container {
+  &.box-shadow,
+  &.border {
+    .linked-wrapper.without-bridge {
+      gap: 0.5rem;
+    }
+    .linked-group {
+      width: 100%;
+    }
+    .group {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+  }
+  &.border {
+    .linked-wrapper.without-bridge {
+      gap: 0.5rem;
+    }
+    .linked-group {
+      width: max-content;
+    }
   }
 }

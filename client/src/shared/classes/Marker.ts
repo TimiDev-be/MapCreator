@@ -1,5 +1,6 @@
 import type { Feature } from "geojson";
 import type { MarkerProperties } from "../types/MarkerProperties";
+import { BorderStylesRecord } from "../types/BorderStyle";
 
 export class Marker implements Feature {
   public id: string;
@@ -38,10 +39,12 @@ export class Marker implements Feature {
       label: "default label",
       fontSize: 16,
       padding: [0.5, 1, 0.5, 1],
+      border: [0, 0, 0, 0, BorderStylesRecord.SOLID, "#000000", 1],
       borderRadius: [0, 0, 0, 0],
       rotate: 0,
       color: "#000000",
       backgroundColor: "#ffffff",
+      boxShadow: [0, 0, 0, "#000000", 1],
       minZoom: zoom - 3,
       maxZoom: zoom + 3,
     };

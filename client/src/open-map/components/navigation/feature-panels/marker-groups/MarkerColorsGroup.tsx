@@ -10,7 +10,7 @@ export default function MarkerColorsGroup() {
   return(
     <>
       <div className="group colors">
-        <div className="wrapper">
+        <div className="wrapper content-color">
           <label htmlFor="feature-color-input" className="t-panel-small">
             Content Color
           </label>
@@ -23,7 +23,7 @@ export default function MarkerColorsGroup() {
             onBlur={handleColorChange}
           />
         </div>
-        <div className="wrapper">
+        <div className="wrapper background-color">
           <label
             htmlFor="feature-background-color-input"
             className="t-panel-small"

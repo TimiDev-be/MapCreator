@@ -10,8 +10,8 @@
 
   &:hover {
     .delete-group-button {
-        opacity: 1;
-        visibility: visible;
+      opacity: 1;
+      visibility: visible;
     }
   }
 
@@ -36,14 +36,14 @@
     cursor: pointer;
 
     svg path {
-        fill: v.$black;
+      fill: v.$black;
     }
 
     &:hover {
       background-color: v.$black;
 
       svg path {
-          fill: white;
+        fill: white;
       }
     }
   }
@@ -62,7 +62,7 @@
     overflow: hidden;
 
     svg path {
-        fill: v.$black;
+      fill: v.$black;
     }
 
     &.active {
@@ -70,11 +70,11 @@
       color: white;
 
       svg path {
-          fill: white;
+        fill: white;
       }
 
       .name-field {
-          color: white;
+        color: white;
       }
     }
   }
@@ -90,7 +90,7 @@
 
     &.active {
       padding: 0.5rem 0.2rem 1rem 0;
-      margin: .5rem 0;
+      margin: 0.5rem 0;
       max-height: max-content;
       border-left: 2px solid v.$blue-light-active;
     }
@@ -107,7 +107,7 @@
   text-transform: lowercase;
 
   &:focus {
-      background-color: v.$blue-light-active;
-      color: v.$black !important;
+    background-color: v.$blue-light-active;
+    color: v.$black !important;
   }
 }

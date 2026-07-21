@@ -26,7 +26,7 @@
       gap: 1rem;
 
       .warning {
-          color: v.$blue-darker;
+        color: v.$blue-darker;
       }
     }
     .description-for-map-maker-container {
@@ -38,12 +38,12 @@
       gap: 0.5rem;
 
       .description-for-map-maker {
-          padding: 1rem;
-          min-width: 100%;
-          max-width: 100%;
-          min-height: 100px;
-          max-height: 150px;
-          overflow: auto;
+        padding: 1rem;
+        min-width: 100%;
+        max-width: 100%;
+        min-height: 100px;
+        max-height: 150px;
+        overflow: auto;
       }
     }
   }
@@ -62,7 +62,7 @@
     cursor: pointer;
 
     &:hover {
-        background-color: v.$blue-darker;
+      background-color: v.$blue-darker;
     }
   }
   .template-content-wrapper {

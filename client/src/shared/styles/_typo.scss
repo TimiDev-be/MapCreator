@@ -2,117 +2,117 @@
 @use "./v";
 
 .t {
-    &-app-name {
-        @include mixins.typography(
-            clamp(2rem, 1.8848rem + 0.6143vw, 2.625rem),
-            v.$f-roboto-condensed,
-            500
-        );
-    }
-    &-nav-link {
-        @include mixins.typography(
-            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
-            v.$f-roboto-condensed,
-            400
-        );
-        text-transform: uppercase;
-    }
+  &-app-name {
+    @include mixins.typography(
+      clamp(2rem, 1.8848rem + 0.6143vw, 2.625rem),
+      v.$f-roboto-condensed,
+      500
+    );
+  }
+  &-nav-link {
+    @include mixins.typography(
+      clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+      v.$f-roboto-condensed,
+      400
+    );
+    text-transform: uppercase;
+  }
 
-    &-form-title,
-    &-maps-list-empty {
-        @include mixins.typography(
-            clamp(1.5rem, 1.4286rem + 0.3571vw, 1.875rem),
-            v.$f-inter,
-            500
-        );
-    }
+  &-form-title,
+  &-maps-list-empty {
+    @include mixins.typography(
+      clamp(1.5rem, 1.4286rem + 0.3571vw, 1.875rem),
+      v.$f-inter,
+      500
+    );
+  }
 
-    &-form-subtitle {
-        @include mixins.typography(
-            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
-            v.$f-inter,
-            400
-        );
-    }
+  &-form-subtitle {
+    @include mixins.typography(
+      clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+      v.$f-inter,
+      400
+    );
+  }
 
-    &-form-field {
-        @include mixins.typography(
-            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
-            v.$f-inter,
-            400
-        );
-    }
+  &-form-field {
+    @include mixins.typography(
+      clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+      v.$f-inter,
+      400
+    );
+  }
 
-    &-form-about,
-    &-form-error {
-        @include mixins.typography(
-            clamp(0.75rem, 0.7039rem + 0.2457vw, 1rem),
-            v.$f-inter,
-            400
-        );
-    }
-    &-map-element-list-big {
-        @include mixins.typography(
-            clamp(1.25rem, 1.1924rem + 0.3071vw, 1.5625rem),
-            v.$f-inter,
-            500
-        );
-    }
-    &-map-element-list-medium,
-    &-name-of-map,
-    &-result-big,
-    &-panel-name {
-        @include mixins.typography(
-            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
-            v.$f-inter,
-            400
-        );
-    }
-    &-map-element-list-small,
-    &-result-small {
-        @include mixins.typography(
-            clamp(0.875rem, 0.852rem + 0.1229vw, 1rem),
-            v.$f-inter,
-            400
-        );
-    }
-    &-custom-select-content,
-    &-quick-menu-content {
-        @include mixins.typography(
-            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
-            v.$f-inter,
-            400
-        );
-    }
+  &-form-about,
+  &-form-error {
+    @include mixins.typography(
+      clamp(0.75rem, 0.7039rem + 0.2457vw, 1rem),
+      v.$f-inter,
+      400
+    );
+  }
+  &-map-element-list-big {
+    @include mixins.typography(
+      clamp(1.25rem, 1.1924rem + 0.3071vw, 1.5625rem),
+      v.$f-inter,
+      500
+    );
+  }
+  &-map-element-list-medium,
+  &-name-of-map,
+  &-result-big,
+  &-panel-name {
+    @include mixins.typography(
+      clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+      v.$f-inter,
+      400
+    );
+  }
+  &-map-element-list-small,
+  &-result-small {
+    @include mixins.typography(
+      clamp(0.875rem, 0.852rem + 0.1229vw, 1rem),
+      v.$f-inter,
+      400
+    );
+  }
+  &-custom-select-content,
+  &-quick-menu-content {
+    @include mixins.typography(
+      clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+      v.$f-inter,
+      400
+    );
+  }
 
-    &-panel-big {
-        @include mixins.typography(
-            clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
-            v.$f-inter,
-            400
-        );
-    }
-    &-panel-medium {
-        @include mixins.typography(
-            clamp(0.875rem, 0.852rem + 0.1229vw, 1rem),
-            v.$f-inter,
-            400
-        );
-    }
-    &-panel-small {
-        @include mixins.typography(
-            clamp(0.75rem, 0.7039rem + 0.2457vw, 1rem),
-            v.$f-inter,
-            400
-        );
-    }
+  &-panel-big {
+    @include mixins.typography(
+      clamp(1rem, 0.9539rem + 0.2457vw, 1.25rem),
+      v.$f-inter,
+      400
+    );
+  }
+  &-panel-medium {
+    @include mixins.typography(
+      clamp(0.875rem, 0.852rem + 0.1229vw, 1rem),
+      v.$f-inter,
+      400
+    );
+  }
+  &-panel-small {
+    @include mixins.typography(
+      clamp(0.75rem, 0.7039rem + 0.2457vw, 1rem),
+      v.$f-inter,
+      400
+    );
+  }
 
-    &-utils {
-        @include mixins.typography(
-            clamp(0.875rem, 0.875rem + 0vw, 0.875rem),
-            v.$f-roboto-condensed,
-            400
-        );
-        text-transform: uppercase;
-    }
+  &-utils {
+    @include mixins.typography(
+      clamp(0.875rem, 0.875rem + 0vw, 0.875rem),
+      v.$f-roboto-condensed,
+      400
+    );
+    text-transform: uppercase;
+  }
 }

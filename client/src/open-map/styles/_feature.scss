@@ -1,68 +1,68 @@
 @use "../../shared/styles/v";
 
 .feature {
-    padding: 0 0 0 0.5rem;
-    width: 100%;
-    max-width: 230px;
+  padding: 0 0 0 0.5rem;
+  width: 100%;
+  max-width: 230px;
 
-    position: relative;
+  position: relative;
 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  cursor: grab;
+
+  &:hover {
+    background-color: v.$green-light;
+    .delete-feature-button {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  .feature-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    cursor: grab;
+  }
+
+  .delete-feature-button {
+    padding: 0.2rem;
+
+    transition: all 0.2s ease-in-out;
+    position: absolute;
+    top: -0.2rem;
+    right: -0.2rem;
+    opacity: 0;
+    visibility: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: v.$green-light-active;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    cursor: pointer;
+
+    svg path {
+      fill: v.$black;
+    }
 
     &:hover {
-        background-color: v.$green-light;
-        .delete-feature-button {
-            opacity: 1;
-            visibility: visible;
-        }
+      background-color: v.$black;
+
+      svg path {
+        fill: white;
+      }
     }
-
-    .feature-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 0.5rem;
+  }
+  .name-field {
+    &:focus {
+      background-color: v.$green-light-active;
     }
-
-    .delete-feature-button {
-        padding: 0.2rem;
-
-        transition: all 0.2s ease-in-out;
-        position: absolute;
-        top: -0.2rem;
-        right: -0.2rem;
-        opacity: 0;
-        visibility: hidden;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-color: v.$green-light-active;
-        border: none;
-        outline: none;
-        border-radius: 50%;
-        cursor: pointer;
-
-        svg path {
-            fill: v.$black;
-        }
-
-        &:hover {
-            background-color: v.$black;
-
-            svg path {
-                fill: white;
-            }
-        }
-    }
-    .name-field {
-        &:focus {
-            background-color: v.$green-light-active;
-        }
-    }
+  }
 }
