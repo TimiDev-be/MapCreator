@@ -1,5 +1,6 @@
 ﻿using desktop.Classes;
 using desktop.Data;
+using desktop.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace desktop.Services
 {
@@ -69,10 +71,17 @@ namespace desktop.Services
             var builder = WebApplication.CreateBuilder();
             builder.Services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy =>
+                options.AddPolicy("ApplicationPolicy", policy =>
                 {
-                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                    policy.WithOrigins("http://localhost:5173", "http://localhost:5550").AllowAnyHeader().AllowAnyMethod();
                 });
+            });
+
+            builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options =>
+            {
+                options.SerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: true)
+                );
             });
 
             builder.Services.AddSingleton<AppDataContext>(dataContext);
@@ -81,7 +90,7 @@ namespace desktop.Services
 
             var app = builder.Build();
 
-            app.UseCors();
+            app.UseCors("ApplicationPolicy");
 
             app.UseStaticFiles(new StaticFileOptions
             {
@@ -97,46 +106,10 @@ namespace desktop.Services
                 FileProvider = new PhysicalFileProvider(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "wwwroot", "dist"))
             });
 
-            app.MapGet("/api/style", async (StyleService _styleService) =>
-            {
-                try
-                {
-                    var style = _styleService.GetActiveStyle();
-                    return Results.Ok(style);
-                }
-                catch (Exception ex) {
-                    await new Log(LogStatus.Error, "Styles data return error", ex.Message.ToString()).Save();
-                    return Results.Problem("Something went wrong while returning styles data.");
-                }
-            });
-
-            app.MapGet("/api/data", async (DataService _dataService) =>
-            {
-                try
-                {
-                    var data = await _dataService.GetData();
-                    return Results.Ok(data);
-                }
-                catch (Exception ex)
-                {
-                    await new Log(LogStatus.Error, "Data return error", ex.Message.ToString()).Save();
-                    return Results.Problem("Something went wrong while returning maps / templates data.");
-                }
-            });
-
-            app.MapPatch("/api/data", async (DataPatch dataPatch, DataService _dataService) =>
-            {
-                try
-                {
-                    await _dataService.UpdateData(dataPatch.DataPatchValue);
-                    return Results.NoContent();
-                }
-                catch (Exception ex)
-                {
-                    await new Log(LogStatus.Error, "Data update error", ex.Message.ToString()).Save();
-                    return Results.Problem("Something went wrong while updating data.");
-                }
-            });
+            app.StylesEndpoints();
+            app.MapsEndpoints();
+            app.TemplatesEndpoints();
+            app.ImportEndpoints();
 
             return app;
         }
