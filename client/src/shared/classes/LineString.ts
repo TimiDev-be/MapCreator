@@ -36,4 +36,12 @@ export class LineString implements Feature {
       lineWidth: 4,
     };
   }
+  toJson() : Feature {
+    return {
+      id: this.id,
+      type: this.type,
+      geometry: this.geometry,
+      properties: this.properties
+    }
+  }
 }
