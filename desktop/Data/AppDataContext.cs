@@ -41,14 +41,14 @@ namespace desktop.Data
             {
                 StyleData styleData = new StyleData(new List<Style>());
                 Directory.CreateDirectory(Path.GetDirectoryName(ConfigStyleFilePath)!);
-                await File.WriteAllTextAsync(ConfigStyleFilePath, JsonSerializer.Serialize(styleData, AppJsonSerializerOptions));
+                await File.WriteAllTextAsync(ConfigStyleFilePath, JsonSerializer.Serialize(styleData));
 
                 this.StyleData = styleData;
                 return;
             }
 
             var json = await File.ReadAllTextAsync(ConfigStyleFilePath);
-            this.StyleData = JsonSerializer.Deserialize<StyleData>(json, AppJsonSerializerOptions) ?? new StyleData(new List<Style>());
+            this.StyleData = JsonSerializer.Deserialize<StyleData>(json) ?? new StyleData(new List<Style>());
         }
 
         public async Task LoadAppDataAsync()

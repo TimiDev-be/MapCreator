@@ -13,6 +13,7 @@ namespace desktop.Endpoints
 {
     public static class EMaps
     {
+        public record CreateMapRequest(string name);
         public static void MapsEndpoints(this IEndpointRouteBuilder app)
         {
             var group = app.MapGroup("/api/maps");
@@ -29,7 +30,7 @@ namespace desktop.Endpoints
                     return Results.Problem("Something went wrong while returning maps", statusCode: 500);
                 }
             });
-            group.MapGet("/:{id}", async (Guid id, DataService dataService) =>
+            group.MapGet("/{id}", async (Guid id, DataService dataService) =>
             {
                 try
                 {
@@ -39,14 +40,14 @@ namespace desktop.Endpoints
                 catch (Exception ex)
                 {
                     await new Log(LogStatus.Error, "Something went wrong while returning specified map", ex.ToString()).Save();
-                    return Results.Problem("Something went wrong while returning specified map", statusCode: 404);
+                    return Results.Problem("Something went wrong while returning specified map", statusCode: 500);
                 }
             });
-            group.MapPost("/", async (string name, DataService dataService) =>
+            group.MapPost("/", async (CreateMapRequest req, DataService dataService) =>
             {
                 try
                 {
-                    var map = dataService.NewMap(name);
+                    var map = await dataService.NewMap(req.name);
                     return Results.Ok(map);
                 } 
                 catch (AppError er)
@@ -60,7 +61,7 @@ namespace desktop.Endpoints
                     return Results.Problem("Something went wrong while creating map", statusCode: 500);
                 }
             });
-            group.MapPatch("/:{id}", async (Guid id, MMap map, DataService dataService) =>
+            group.MapPatch("/{id}", async (Guid id, MMap map, DataService dataService) =>
             {
                 try
                 {
@@ -78,7 +79,7 @@ namespace desktop.Endpoints
                     return Results.Problem("Something went wrong while updating data", statusCode: 500);
                 }
             });
-            group.MapDelete("/:{id}", async (Guid id, DataService dataService) =>
+            group.MapDelete("/{id}", async (Guid id, DataService dataService) =>
             {
                 try
                 {

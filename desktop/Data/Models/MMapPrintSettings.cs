@@ -23,7 +23,7 @@ namespace desktop.Data.Models
     public class MMapPrintSettings
     {
         public DPI DPI { get; set; } = DPI.D96;
-        public Unit Unit = Unit.Mm;
+        public Unit Unit { get; set; } = Unit.Mm;
         public float Scale { get; set; } = 1.7F;
     }
 }

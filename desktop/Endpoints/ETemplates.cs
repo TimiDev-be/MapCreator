@@ -28,7 +28,7 @@ namespace desktop.Endpoints
                     return Results.Problem("Something went wrong while returning templates", statusCode: 500);
                 }
             });
-            group.MapGet("/:{id}", async (Guid id, DataService dataService) =>
+            group.MapGet("/{id}", async (Guid id, DataService dataService) =>
             {
                 try
                 {
@@ -59,7 +59,7 @@ namespace desktop.Endpoints
                     return Results.Problem("Something went wrong while creating template", statusCode: 500);
                 }
             });
-            group.MapPatch("/:{id}", async (Guid id, MTemplate template, DataService dataService) =>
+            group.MapPatch("/{id}", async (Guid id, MTemplate template, DataService dataService) =>
             {
                 try
                 {
@@ -77,7 +77,7 @@ namespace desktop.Endpoints
                     return Results.Problem("Something went wrong while updating template", statusCode: 500);
                 }
             });
-            group.MapDelete("/:{id}", async (Guid id, DataService dataService) =>
+            group.MapDelete("/{id}", async (Guid id, DataService dataService) =>
             {
                 try
                 {

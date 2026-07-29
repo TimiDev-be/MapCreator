@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace desktop.Data.Models
 {
     public class MMap
     {
+        [JsonInclude]
         public Guid Id { get; private set; } = Guid.NewGuid();
         public string Name { get; set; }
         public List<MGroup> Groups { get; set; } = new List<MGroup>();
@@ -25,6 +27,7 @@ namespace desktop.Data.Models
             this.Name = Name;
         }
 
+        [JsonConstructor]
         public MMap(
             Guid Id,
             string Name, 

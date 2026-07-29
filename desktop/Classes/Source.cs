@@ -15,9 +15,5 @@ namespace desktop.Classes
         public List<JsonElement> Maps { get; set; } = maps;
         [JsonPropertyName("templates")]
         public List<JsonElement> Templates { get; set; } = Templates;
-
-        public AppData GetSource() {
-            return new AppData(JsonSerializer.Serialize(this));
-        }
     }
 }
