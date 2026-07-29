@@ -2,8 +2,8 @@ import "../../styles/_navigation.scss";
 import { useState } from "react";
 import SettingsPanel from "./SettingsPanel";
 import GroupsPanel from "./groups-panel/GroupsPanel";
-import DescriptionPanel from "./DescriptionPanel";
-import ConnectDrawingsPanel from "./connect-drawings-panel/ConnectDrawingsPanel";
+// import DescriptionPanel from "./DescriptionPanel";
+// import ConnectDrawingsPanel from "./connect-drawings-panel/ConnectDrawingsPanel";
 import SettingsLogo from "../../../assets/lucide_settings-2.svg?react";
 import GroupsLogo from "../../../assets/material-symbols_folder-outline.svg?react";
 import DescriptionLogo from "../../../assets/fluent_text-description-24-filled.svg?react";
@@ -58,8 +58,8 @@ export default function Navigation() {
       </nav>
       {activePanel === "settings" && <SettingsPanel />}
       {activePanel === "groups" && <GroupsPanel />}
-      {activePanel === "description" && <DescriptionPanel />}
-      {activePanel === "connect-drawings" && <ConnectDrawingsPanel />}
+      {/* {activePanel === "description" && <DescriptionPanel />}
+      {activePanel === "connect-drawings" && <ConnectDrawingsPanel />} */}
     </>
   );
 }
