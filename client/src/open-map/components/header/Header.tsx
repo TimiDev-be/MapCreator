@@ -2,10 +2,10 @@ import "../../styles/_header.scss";
 import SearchBar from "./SearchBar";
 import CloseLogo from "../../../assets/material-symbols_close.svg?react";
 import { Link } from "react-router-dom";
-import { useMap } from "../../../shared/hooks/Map";
+import { useOpenMapPage } from "../../../shared/new-hooks/useOpenMapPage";
 
 export default function Header() {
-  const { currentMap } = useMap();
+  const { currentMap } = useOpenMapPage();
   const { name } = currentMap ?? {};
 
   return (
