@@ -1,25 +1,21 @@
-import { useEffect, useState } from "react";
-import { useMapContainer } from "../../../../../shared/hooks/MapContainer";
+import { useCallback } from "react";
 import type { LineProperties } from "../../../../../shared/types/LineProperties";
-import { useLineFeature } from "../../../../../shared/hooks/LineFeature";
+import { useFeaturePropertiesPanel } from "../../../../../shared/new-hooks/useFeaturePropertiesPanel";
 
 export default function LineSizesGroup() {
-  const {feature} = useMapContainer();
-  const {handleLineDashChange, handleWidthChange, toggleLineDash} = useLineFeature();
-  const [stateLineDash, setStateLineDash] = useState<number[] | undefined>(undefined);
-  const {lineWidth, lineDash} = feature?.properties ?? {} as LineProperties;
+  const { getProperties, updateFeatureProperties, feature } = useFeaturePropertiesPanel();
+  const properties = getProperties() as LineProperties | null;
 
-  useEffect(() => {
-    const handleLineDash = () => setStateLineDash(lineDash);
-    handleLineDash();
-  }, [lineDash]);
+  const handlePropertiesChange = useCallback(async (values: LineProperties) => {
+    await updateFeatureProperties(values);
+  }, [feature])
 
   return(
     <>
       <div className="group sizes">
         <div className="wrapper">
           <label htmlFor="range-width-input" className="t-panel-small">
-            Width ({lineWidth})
+            Width ({properties?.lineWidth ?? 0})
           </label>
           <input
             type="range"
@@ -27,8 +23,11 @@ export default function LineSizesGroup() {
             name="range-width"
             min="1"
             max="12"
-            defaultValue={lineWidth}
-            onMouseUp={handleWidthChange}
+            defaultValue={properties?.lineWidth ?? 1}
+            onMouseUp={(e) => handlePropertiesChange({
+              ...properties, 
+              lineWidth: Number(e.currentTarget.value)
+            } as LineProperties)}
           />
         </div>
         <div className="wrapper">
@@ -40,18 +39,14 @@ export default function LineSizesGroup() {
             name="dashed"
             id="is-dashed-checkbox"
             className="panel-checkbox"
-            checked={!!stateLineDash}
-            onChange={(e) => {
-              if (e.target.checked) {
-                setStateLineDash([3, 4]);
-              } else {
-                setStateLineDash(undefined);
-              }
-              toggleLineDash(e);
-            }}
+            checked={!!properties?.lineDash}
+            onChange={(e) => handlePropertiesChange({
+              ...properties, 
+              lineDash: e.target.checked ? [3, 4] : undefined
+            } as LineProperties)}
           />
         </div>
-        {lineDash && stateLineDash && (
+        {properties?.lineDash && (
           <div className="wrapper dash-gap">
             <div className="field-container dash">
               <label htmlFor="dash-input" className="t-panel-small">
@@ -63,14 +58,16 @@ export default function LineSizesGroup() {
                 id="dash-input"
                 className="panel-field t-panel-small"
                 min={0}
-                defaultValue={(lineDash && lineDash[0]) ?? 3}
+                defaultValue={properties.lineDash[0] ?? 3}
                 onBlur={(e) => {
                   let value = Number(e.currentTarget.value);
                   if (value < 0) value = 0;
                   e.currentTarget.value = value.toString();
-                  const LineDash: number[] = [value, stateLineDash[1]];
-                  setStateLineDash(LineDash);
-                  handleLineDashChange(LineDash);
+                  const lineDash = [
+                    value,
+                    properties.lineDash ? properties.lineDash[1] : 4
+                  ]
+                  handlePropertiesChange({...properties, lineDash} as LineProperties);
                 }}
               />
             </div>
@@ -85,14 +82,16 @@ export default function LineSizesGroup() {
                 id="gap-input"
                 className="panel-field t-panel-small"
                 min={0}
-                defaultValue={(lineDash && lineDash[1]) ?? 4}
+                defaultValue={properties.lineDash[1] ?? 4}
                 onBlur={(e) => {
                   let value = Number(e.currentTarget.value);
                   if (value < 0) value = 0;
                   e.currentTarget.value = value.toString();
-                  const LineDash: number[] = [stateLineDash[0], value];
-                  setStateLineDash(LineDash);
-                  handleLineDashChange(LineDash);
+                  const lineDash = [
+                    properties.lineDash ? properties.lineDash[0] : 3,
+                    value,
+                  ]
+                  handlePropertiesChange({...properties, lineDash} as LineProperties);
                 }}
               />
             </div>

@@ -1,12 +1,12 @@
 import "../../../styles/_feature.scss";
 import { useState, useRef } from "react";
 import type { Feature } from "geojson";
-import { useFeature } from "../../../../shared/hooks/Feature";
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
+import { useFeature } from "../../../../shared/new-hooks/useFeature";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import LineLogo from "../../../../assets/uil_line-alt.svg?react";
 import PolygonLogo from "../../../../assets/bx_shape-polygon.svg?react";
 import MarkerLogo from "../../../../assets/mdi_map-marker-outline.svg?react";
+import { useOpenMapPage } from "../../../../shared/new-hooks/useOpenMapPage";
 
 type Props = {
   feature: Feature;
@@ -19,8 +19,8 @@ const IconMap: Record<string, React.ReactNode> = {
 };
 
 export default function FeatureComponent({ feature }: Props) {
-  const { toggleFeaturePanel } = useMapContainer();
-  const { updateFeature, deleteFeature } = useFeature();
+  const {setFeature} = useOpenMapPage();
+  const {updateFeature, deleteFeature} = useFeature(feature);
   const [editName, setEditName] = useState<boolean>(false);
   const NameInputRef = useRef<HTMLInputElement | null>(null);
   const { name } = feature.properties ?? {};
@@ -36,7 +36,7 @@ export default function FeatureComponent({ feature }: Props) {
       NameInputRef.current.value = name;
       setEditName(false);
     } else {
-      updateFeature({
+      updateFeature(undefined, {
         ...feature,
         properties: { ...feature.properties, name: e.target.value },
       });
@@ -50,16 +50,16 @@ export default function FeatureComponent({ feature }: Props) {
         className="feature"
         draggable
         onDragStart={(e) =>
-          e.dataTransfer.setData("featureId", feature.id.toString())
+          e.dataTransfer.setData("featureId", feature.id ? feature.id.toString() : "default id")
         }
-        onClick={() => toggleFeaturePanel(feature)}
+        onClick={() => setFeature(feature)}
       >
         <button
           type="button"
           className="delete-feature-button"
           onClick={(e) => {
             e.stopPropagation();
-            deleteFeature(feature.id.toString());
+            deleteFeature();
           }}
         >
           <CloseLogo width={16} height={16} />

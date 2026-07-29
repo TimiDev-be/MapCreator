@@ -1,11 +1,14 @@
-import { useMapContainer } from "../../../../../shared/hooks/MapContainer";
-import { useMarkerFeature } from "../../../../../shared/hooks/MarkerFeature";
+import { useCallback } from "react";
 import type { MarkerProperties } from "../../../../../shared/types/MarkerProperties";
+import { useFeaturePropertiesPanel } from "../../../../../shared/new-hooks/useFeaturePropertiesPanel";
 
 export default function MarkerColorsGroup() {
-  const { feature } = useMapContainer();
-  const { handleColorChange, handleBackgroundColorChange, handleOpacityChange, handleRotateChange } = useMarkerFeature();
-  const {color, backgroundColor, opacity, rotate} = feature?.properties ?? {} as MarkerProperties;
+  const { getProperties, updateFeatureProperties, feature } = useFeaturePropertiesPanel();
+  const properties = getProperties() as MarkerProperties | null;
+
+  const handlePropertiesChange = useCallback(async (values: MarkerProperties) => {
+    await updateFeatureProperties(values);
+  }, [feature]);
 
   return(
     <>
@@ -19,8 +22,8 @@ export default function MarkerColorsGroup() {
             id="feature-color-input"
             name="feature-color"
             className="color-input"
-            defaultValue={color}
-            onBlur={handleColorChange}
+            defaultValue={properties?.color ?? "#000000"}
+            onBlur={(e) => handlePropertiesChange({...properties, color: e.target.value} as MarkerProperties)}
           />
         </div>
         <div className="wrapper background-color">
@@ -35,23 +38,23 @@ export default function MarkerColorsGroup() {
             id="feature-background-color-input"
             name="feature-background-color"
             className="color-input"
-            defaultValue={backgroundColor}
-            onBlur={handleBackgroundColorChange}
+            defaultValue={properties?.backgroundColor ?? "#000000"}
+            onBlur={(e) => handlePropertiesChange({...properties, backgroundColor: e.target.value} as MarkerProperties)}
           />
         </div>
         <div className="wrapper background-opacity">
           <label htmlFor="opacity-input" className="t-panel-small">
-            Opacity
+            Background Opacity
           </label>
           <input
             type="number"
             id="opacity-input"
             name="opacity"
             className="panel-field t-panel-small"
-            defaultValue={opacity}
+            defaultValue={properties?.opacity ?? 1}
             onBlur={(e) => {
               let value = Number(e.currentTarget.value);
-              if (value < 0) {
+              if (value <= 0) {
                 e.currentTarget.value = "0";
                 value = 0;
               }
@@ -59,7 +62,10 @@ export default function MarkerColorsGroup() {
                 e.currentTarget.value = "1";
                 value = 1;
               }
-              handleOpacityChange(value);
+              handlePropertiesChange({
+                ...properties,
+                opacity: value
+              } as MarkerProperties);
             }}
           />
         </div>
@@ -72,10 +78,13 @@ export default function MarkerColorsGroup() {
             id="rotate-input"
             name="rotate"
             className="panel-field t-panel-small"
-            defaultValue={rotate}
+            defaultValue={properties?.rotate ?? 0}
             onBlur={(e) => {
               const value = Number(e.currentTarget.value);
-              handleRotateChange(value);
+              handlePropertiesChange({
+                ...properties,
+                rotate: value,
+              } as MarkerProperties)
             }}
           />
         </div>

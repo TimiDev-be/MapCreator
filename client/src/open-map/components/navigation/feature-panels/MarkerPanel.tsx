@@ -1,4 +1,3 @@
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import type { MarkerProperties } from "../../../../shared/types/MarkerProperties";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import SignsBoard from "../../marker/SignsBoard";
@@ -9,10 +8,11 @@ import MarkerContentGroup from "./marker-groups/MarkerContentGroup";
 import MarkerBoxshadowGroup from "./marker-groups/MarkerBoxshadowGroup";
 import MarkerBorderGroup from "./marker-groups/MarkerBorderGroup";
 import FeaturePanelGroupButton from "../FeaturePanelGroupButton";
+import { useFeaturePropertiesPanel } from "../../../../shared/new-hooks/useFeaturePropertiesPanel";
 
 export default function MarkerPanel() {
-  const { feature, toggleFeaturePanel } = useMapContainer();
-  const {name} = feature?.properties ?? {} as MarkerProperties;
+  const { getProperties, feature, closePanel } = useFeaturePropertiesPanel();
+  const { name } = getProperties() ?? {} as MarkerProperties;
 
   return (
     <>
@@ -20,7 +20,7 @@ export default function MarkerPanel() {
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"
-          onClick={() => toggleFeaturePanel(null)}
+          onClick={closePanel}
         >
           <CloseLogo width={20} height={20} />
         </button>
