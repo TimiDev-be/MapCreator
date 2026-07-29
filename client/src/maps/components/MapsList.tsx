@@ -1,16 +1,17 @@
 import "../styles/_mapsList.scss";
 import MapsListElement from "./MapsListElement";
-import { useMaps } from "../../shared/hooks/Maps";
-import { useMap } from "../../shared/hooks/Map";
 import { useEffect } from "react";
+import { useMap } from "../../shared/new-hooks/useMap";
+import { useSource } from "../../shared/new-hooks/useSource";
 
 export default function MapsList() {
-  const { maps } = useMaps();
-  const { closeMap } = useMap();
+  const { maps, config } = useSource();
+  const { getMaps } = useMap();
 
   useEffect(() => {
-    closeMap();
-  }, [closeMap]);
+    if (!config) return;
+    getMaps();
+  }, [config])
 
   return (
     <>

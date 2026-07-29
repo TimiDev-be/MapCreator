@@ -1,4 +1,4 @@
-import { useSource } from "../../../shared/hooks/Source";
+import { useSource } from "../../../shared/new-hooks/useSource";
 import TemplateListElement from "./TemplateListElement";
 
 export default function TemplatesList() {

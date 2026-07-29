@@ -1,4 +1,4 @@
-import { useSource } from "./Source";
+import { useSource } from "../new-hooks/useSource";
 import type { DescriptionTemplate } from "../types/DescriptionTemplate";
 import html2canvas from "html2canvas";
 import type { UserSource } from "../types/UserSource";
@@ -31,39 +31,6 @@ export const useFile = () => {
     },
     [currentSource, config],
   );
-
-  const importFile = async (file: File) => {
-    const text = await file.text();
-    const importedData = JSON.parse(text);
-
-    if (!importedData.maps) return;
-    const isNewFormat = importedData.maps.every((map: any) =>
-      Array.isArray(map.features),
-    );
-    if (!isNewFormat || !currentSource) return;
-
-    const currentMaps = currentSource?.maps ?? [];
-    const currentTemplates = currentSource?.templates ?? [];
-
-    const mergedMaps = new Map(currentMaps.map((m) => [m.id, m]));
-    importedData.maps.forEach((newMap : any) => {
-      mergedMaps.set(newMap.id, newMap);
-    });
-
-    const mergedTemplates = new Map(currentTemplates.map((t) => [t.id, t]));
-    (importedData.templates ?? []).forEach((newTemp : any) => {
-      mergedTemplates.set(newTemp.id, newTemp);
-    });
-
-    const NewSource: UserSource = {
-      id: "source-of-user-data",
-      maps: Array.from(mergedMaps.values()),
-      templates: Array.from(mergedTemplates.values()),
-    };
-
-    updateData(NewSource);
-    setCurrentSource(NewSource);
-  };
 
   const importTemplate = async (file: File) => {
     const Text = await file.text();
@@ -196,7 +163,6 @@ export const useFile = () => {
   };
 
   return {
-    importFile,
     downloadFile,
     importTemplate,
     deleteTemplate,

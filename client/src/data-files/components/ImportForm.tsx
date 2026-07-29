@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useFile } from "../../shared/hooks/File";
 import Line from "../../shared/components/Line";
-import { toast } from "react-toastify";
+import { useImport } from "../../shared/new-hooks/useImport";
 
 const ValidationSchema = Yup.object().shape({
   file: Yup.mixed<File>()
@@ -18,22 +17,17 @@ const ValidationSchema = Yup.object().shape({
 });
 
 export default function ImportForm() {
-  const { importFile } = useFile();
+  const { handleImport } = useImport();
   const [file, setFile] = useState<File | undefined>(undefined);
 
-  const handleSubmit = async (
-    values: { file: File },
-    { setSubmitting, resetForm },
-  ) => {
+  const handleSubmit = async (values: { file: File }, { setSubmitting, resetForm } : any) => {
+    if (!file) return;
     try {
       setSubmitting(true);
-      await importFile(values.file);
-      toast.success("Data imported successfully");
+      await handleImport(values.file);
       setSubmitting(false);
-    } catch (error) {
-      setSubmitting(false);
-      toast.error("Something went wrong");
-    } finally {
+    }
+    finally {
       resetForm();
       setFile(undefined);
     }
