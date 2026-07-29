@@ -5,6 +5,10 @@ import type { Config } from "../types/Config";
 import type { StateMap } from "../types/StateMap";
 
 type Context = {
+  maps: StateMap[],
+  setMaps: Dispatch<SetStateAction<StateMap[]>>;
+  mapsLoading: boolean;
+  setMapsLoading: Dispatch<SetStateAction<boolean>>;
   currentSource: UserSource | undefined;
   setCurrentSource: Dispatch<SetStateAction<UserSource | undefined>>;
   currentMap: StateMap | null;

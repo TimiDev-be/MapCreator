@@ -6,38 +6,15 @@ import { SOURCE_CONTEXT } from "../contexts/SourceContext";
 import type { Config } from "../types/Config";
 import { ToastContainer } from 'react-toastify';
 import type { StateMap } from "../types/StateMap";
+import LoadingScreen from "../components/LoadingScreen";
 
 export default function SourceProvider() {
-  const [currentSource, setCurrentSource] = useState<UserSource | undefined>(
-    undefined,
-  );
+  const [maps, setMaps] = useState<StateMap[]>([]);
   const [currentMap, setCurrentMap] = useState<StateMap | null>(null);
-  const [currentGroup, setCurrentGroup] = useState<Group | undefined>(
-    undefined,
-  );
+  const [currentSource, setCurrentSource] = useState<UserSource | undefined>(undefined);
+  const [currentGroup, setCurrentGroup] = useState<Group | undefined>(undefined);
   const [config, setConfig] = useState<Config | undefined>(undefined);
-
-  //load data
-  const loadSourceDataToState = async () => {
-    if (!config) return;
-
-    const response = await fetch(`${config.api.link}/data`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      const responseJson = await response.json();
-      const parsedData = JSON.parse(responseJson.data);
-      setCurrentSource(
-        parsedData ?? { id: "source-of-user-data", maps: [], templates: [] },
-      );
-    } else {
-      setCurrentSource({ id: "source-of-user-data", maps: [], templates: [] });
-    }
-  };
+  const [mapsLoading, setMapsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch("config.json")
@@ -45,18 +22,16 @@ export default function SourceProvider() {
       .then(setConfig);
   }, []);
 
-  useEffect(() => {
-    if (!config) return;
-    const handleLoad = async () => {
-      await loadSourceDataToState();
-    };
-    handleLoad();
-  }, [config]);
+  if (!config) return <LoadingScreen/>;
 
   return (
     <>
       <SOURCE_CONTEXT.Provider
         value={{
+          maps,
+          setMaps,
+          mapsLoading,
+          setMapsLoading,
           currentSource,
           setCurrentSource,
           currentMap,
