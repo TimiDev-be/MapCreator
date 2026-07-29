@@ -1,5 +1,5 @@
 export interface AttractionPoint {
-  coords: number[];
+  coords: [number, number];
   zoom: number;
   minZoom: number;
   maxZoom: number;
