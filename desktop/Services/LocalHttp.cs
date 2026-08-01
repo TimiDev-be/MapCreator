@@ -87,6 +87,7 @@ namespace desktop.Services
             builder.Services.AddSingleton<AppDataContext>(dataContext);
             builder.Services.AddScoped<DataService>();
             builder.Services.AddScoped<StyleService>();
+            builder.Services.AddScoped<FilesService>();
 
             var app = builder.Build();
 
@@ -110,6 +111,7 @@ namespace desktop.Services
             app.MapsEndpoints();
             app.TemplatesEndpoints();
             app.ImportEndpoints();
+            app.FilesEndpoints();
 
             return app;
         }

@@ -12,13 +12,13 @@ export default function NewMapForm() {
   const {createMap} = useMap();
 
   const handleSubmit = async (values: { name: string }, { setSubmitting, resetForm } : any) => {
-    setSubmitting(true);
     try {
+      setSubmitting(true);
       await createMap(values.name);
-      resetForm();
     } 
     finally {
       setSubmitting(false);
+      resetForm();
     }
   };
 

@@ -1,9 +1,9 @@
 import "../styles/_downloadContent.scss";
-import { useFile } from "../../shared/hooks/File";
 import Line from "../../shared/components/Line";
+import { useDownloading } from "../../shared/new-hooks/useDownloading";
 
 export default function DownloadContent() {
-  const { downloadFile } = useFile();
+  const {downloadDataFile} = useDownloading();
 
   return (
     <>
@@ -16,7 +16,7 @@ export default function DownloadContent() {
         <button
           type="button"
           className="download-data-button t-form-field"
-          onClick={downloadFile}
+          onClick={downloadDataFile}
         >
           download
         </button>
