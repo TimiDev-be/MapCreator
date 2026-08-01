@@ -3,15 +3,19 @@ import MapsListElement from "./MapsListElement";
 import { useEffect } from "react";
 import { useMap } from "../../shared/new-hooks/useMap";
 import { useSource } from "../../shared/new-hooks/useSource";
+import LoadingScreen from "../../shared/components/LoadingScreen";
 
 export default function MapsList() {
-  const { maps, config } = useSource();
+  const { maps, config, mapsLoading } = useSource();
   const { getMaps } = useMap();
 
   useEffect(() => {
     if (!config) return;
     getMaps();
   }, [config])
+
+  if (!config || mapsLoading)
+    return <LoadingScreen/>
 
   return (
     <>

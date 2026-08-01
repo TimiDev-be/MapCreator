@@ -17,7 +17,7 @@ export const useStyle = () => {
 
       if (!response.ok) {
         const message = await response.json().then(
-          res => res.title ?? "Something went wrong while fetching map styles"
+          res => res.detail ?? "Something went wrong while fetching map styles"
         );
         toast.error(message);
         return [];

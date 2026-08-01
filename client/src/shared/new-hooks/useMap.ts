@@ -18,7 +18,7 @@ export const useMap = () => {
 
       if (!response.ok) {
         const message = await response.json().then(
-          res => res.title ?? "Something went wrong while fetching maps"
+          res => res.detail ?? "Something went wrong while fetching maps"
         );
         toast.error(message);
         return null;
@@ -48,7 +48,7 @@ export const useMap = () => {
 
       if (!response.ok) {
         const message = await response.json().then(
-          res => res.title ?? "Something went wrong while fetching map"
+          res => res.detail ?? "Something went wrong while fetching map"
         );
         toast.error(message)
         return null;
@@ -75,7 +75,7 @@ export const useMap = () => {
 
       if (!response.ok) {
         const message = await response.json().then(
-          res => res.title ?? "Something went wrong while creating map"
+          res => res.detail ?? "Something went wrong while creating map"
         );
         toast.error(message);
         return null;
@@ -102,7 +102,7 @@ export const useMap = () => {
 
       if (!response.ok) {
         const message = await response.json().then(
-          res => res.title ?? "Something went wrong while updating map"
+          res => res.detail ?? "Something went wrong while updating map"
         );
         toast.error(message);
         return;
@@ -124,7 +124,7 @@ export const useMap = () => {
 
       if (!respose.ok) {
         const message = await respose.json().then(
-          res => res.title ?? "Something went wrong while deleting map"
+          res => res.detail ?? "Something went wrong while deleting map"
         );
         toast.error(message);
         return;
@@ -150,7 +150,7 @@ export const useMap = () => {
 
       if (!response.ok) {
         const message = await response.json().then(
-          res => res.title ?? "Something went wrong while deleting a bunch of maps"
+          res => res.detail ?? "Something went wrong while deleting a bunch of maps"
         );
         toast.error(message);
         return;

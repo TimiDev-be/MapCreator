@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { useFile } from "../../../shared/hooks/File";
 import Line from "../../../shared/components/Line";
-import { toast } from "react-toastify";
+import { useTemplate } from "../../../shared/new-hooks/useTemplate";
 
 const ValidationSchema = Yup.object().shape({
   file: Yup.mixed<File>()
@@ -18,26 +17,19 @@ const ValidationSchema = Yup.object().shape({
 });
 
 export default function ImportTemplateForm() {
-  const { importTemplate } = useFile();
+  const {newTemplate} = useTemplate();
   const [file, setFile] = useState<File | undefined>(undefined);
   const [fileKey, setFileKey] = useState<number>(0);
 
-  const handleSubmit = async (
-    values: { file: File },
-    { setSubmitting, resetForm },
-  ) => {
+  const handleSubmit = async (values: { file: File }, { setSubmitting, resetForm }: any) => {
     try {
       setSubmitting(true);
-      await importTemplate(values.file);
-      toast.success("Template imported with success");
-      setSubmitting(false);
-    } catch (error) {
-      setSubmitting(false);
-      toast.error("Something went wrong");
+      await newTemplate(values.file);
     } finally {
       resetForm();
       setFile(undefined);
       setFileKey(fileKey + 1);
+      setSubmitting(false);
     }
   };
 
@@ -56,9 +48,9 @@ export default function ImportTemplateForm() {
         {({ setFieldValue, errors }) => (
           <Form id="import-template-form">
             <div className="group">
-              <p className="form-title t-form-title">Import Template</p>
+              <p className="form-title t-form-title">Add Template</p>
               <p className="form-subtitle t-form-subtitle">
-                Import a template file to use it for filling in details and
+                Add a HTML template file to use it for filling in details and
                 exporting a ready-to-print PDF document.
               </p>
             </div>

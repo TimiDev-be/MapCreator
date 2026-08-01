@@ -93,6 +93,9 @@ namespace desktop.Services
             var template = this.GetTemplate(id);
             if (template is null) return;
 
+            if (_dataContext.AppData.Source.Maps.Any(m => m.Description.TemplateId == id))
+                throw new AETemplateInUse();
+
             _dataContext.AppData.Source.Templates.Remove(template);
             await this.Save();
 

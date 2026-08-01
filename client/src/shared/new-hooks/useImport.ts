@@ -1,9 +1,16 @@
 import { toast } from "react-toastify";
 import { useSource } from "../new-hooks/useSource"
 import type { UserSource } from "../types/UserSource"
+import { useTemplate } from "./useTemplate";
 
 export const useImport = () => {
   const {config} = useSource();
+ /**
+  * need to get templates after import
+  * reason: templates and import form are on the same page
+  * if request isn't done there will be no templates after import, even if templates were imported
+  */
+  const {getTemplates} = useTemplate();
 
   const mergeSources = async (file: File, currentSource: UserSource) => {
     const text = await file.text();
@@ -49,7 +56,7 @@ export const useImport = () => {
       
       if (!response1.ok) {
         const message : string = await response1.json().then(
-          res => res.title ?? "Something went wrong while returning data to merge"
+          res => res.detail ?? "Something went wrong while returning data to merge"
         );
         return toast.error(message);
       }
@@ -67,11 +74,12 @@ export const useImport = () => {
 
       if (!response2.ok) {
         const message : string = await response2.json().then(
-          res => res.title ?? "Something went wrong while importing data"
+          res => res.detail ?? "Something went wrong while importing data"
         );
         return toast.error(message);
       }
       
+      await getTemplates();
       toast.success("Data imported successfully");
     } catch {
       toast.error("Something went wrong while importing data");

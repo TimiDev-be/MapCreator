@@ -1,16 +1,16 @@
 import type { DescriptionTemplate } from "../../../shared/types/DescriptionTemplate";
 import FileLogo from "../../../assets/line-md_file.svg?react";
 import CloseLogo from "../../../assets/material-symbols_close.svg?react";
-import { useFile } from "../../../shared/hooks/File";
 import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useTemplate } from "../../../shared/new-hooks/useTemplate";
 
 type Props = {
   template: DescriptionTemplate;
 };
 
 export default function TemplateListElement({ template }: Props) {
-  const { updateTemplateName, deleteTemplate } = useFile();
+  const {deleteTemplate, updateTemplate} = useTemplate();
   const [editName, setEditName] = useState<boolean>(false);
   const NameInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -19,13 +19,13 @@ export default function TemplateListElement({ template }: Props) {
     setTimeout(() => NameInputRef.current?.focus(), 0);
   };
 
-  const handleBlur = (e) => {
+  const handleBlur = async (e: React.FocusEvent<HTMLInputElement, Element>) => {
     if (!NameInputRef.current) return;
     if (e.target.value.trim().length === 0) {
       NameInputRef.current.value = template.name;
       setEditName(false);
     } else {
-      updateTemplateName(template.id, e.target.value);
+      await updateTemplate({...template, name: e.target.value});
     }
   };
 

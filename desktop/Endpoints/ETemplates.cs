@@ -13,6 +13,7 @@ namespace desktop.Endpoints
 {
     public static class ETemplates
     {
+        public record CreateTemplateRequest(string htmlContent);
         public static void TemplatesEndpoints(this IEndpointRouteBuilder app)
         {
             var group = app.MapGroup("/api/templates");
@@ -41,11 +42,11 @@ namespace desktop.Endpoints
                     return Results.Problem("Something went wrong while returning template", statusCode: 500);
                 }
             });
-            group.MapPost("/", async (string htmlContent, DataService dataService) =>
+            group.MapPost("/", async (CreateTemplateRequest request, DataService dataService) =>
             {
                 try
                 {
-                    var template = dataService.NewTemplate(htmlContent);
+                    var template = await dataService.NewTemplate(request.htmlContent);
                     return Results.Ok(template);
                 }
                 catch (AppError er)
@@ -83,6 +84,11 @@ namespace desktop.Endpoints
                 {
                     await dataService.DeleteTemplate(id);
                     return Results.NoContent();
+                }
+                catch (AppError er)
+                {
+                    await new Log(LogStatus.Error, er.Title, er.Description).Save();
+                    return Results.Problem(er.Description, statusCode: er.StatusCode);
                 }
                 catch (Exception ex)
                 {
