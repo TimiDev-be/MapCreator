@@ -5,6 +5,7 @@ import type { Map } from "../types/Map";
 import type { MapPrintSettings } from "../types/MapPrintSettings";
 import { useMap } from "./useMap";
 import { useOpenMapPage } from "./useOpenMapPage"
+import { useNavigate } from "react-router-dom";
 
 export type SettingsPanelProperties = {
   name: string;
@@ -21,6 +22,7 @@ const getSettings = (map: Map) : SettingsPanelProperties => {
 export const useMapSettings = () => {
   const {currentMap, currentMapLoading, setCurrentMap} = useOpenMapPage();
   const {updateMap, deleteMap} = useMap();
+  const navigate = useNavigate();
   const [settings, setSettings] = useState<SettingsPanelProperties | null>(null);
 
   const updateSettings = async (settings: SettingsPanelProperties) => {
@@ -43,6 +45,9 @@ export const useMapSettings = () => {
   return {
     settings,
     updateSettings, 
-    deleteMap: () => deleteMap(currentMap?.id ?? "")
+    deleteMap: async () => {
+      await deleteMap(currentMap?.id ?? "");
+      navigate("/");
+    }
   };
 }

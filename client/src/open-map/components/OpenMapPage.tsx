@@ -16,12 +16,15 @@ import { toast } from "react-toastify";
 import type { Group } from "../../shared/types/Group";
 import { useDrawings } from "../../shared/new-hooks/useDrawings";
 import type { Feature } from "geojson";
+import DownloadMapContainer from "./DownloadMapContainer";
+import { useDownloadMap } from "../../shared/new-hooks/useDownloadMap";
 
 export default function OpenMapPage() {
   const {id} = useParams();
   // initialize hooks to create only one instantion for all components
   const maplibreMapHook = useMaplibreMap();
   const drawingsHook = useDrawings();
+  const {downloadParams, handleDownloadLoad, downloadURIData} = useDownloadMap();
 
   // current map data
   const {getMap} = useMap();
@@ -72,6 +75,7 @@ export default function OpenMapPage() {
           setCurrentGroup,
           feature,
           setFeature,
+          downloadURIData,
           ...maplibreMapHook,
           ...drawingsHook
         }}
@@ -81,11 +85,11 @@ export default function OpenMapPage() {
           <Navigation />
           <MapContainer/>
           <DrawButtons />
-          {/* <div id="dowload-map-container-wrapper">
+          <div id="dowload-map-container-wrapper">
             {downloadParams && (
               <DownloadMapContainer {...downloadParams} loaded={handleDownloadLoad}/>
             )}
-          </div> */}
+          </div>
           {maplibreMapHook.areaForPrintClientVisible && <PrintAreaPreview />}
         </div>
       </OpenMapContext.Provider>

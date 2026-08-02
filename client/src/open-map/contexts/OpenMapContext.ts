@@ -1,6 +1,6 @@
 import { createContext, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { Map } from "../../shared/types/Map";
-import { Map as MaplibreMap, MapMouseEvent } from "maplibre-gl";
+import { Map as MaplibreMap, MapMouseEvent, type StyleSpecification } from "maplibre-gl";
 import type { Feature } from "geojson";
 import type { MapStyle } from "../../shared/types/MapStyle";
 import type { Group } from "../../shared/types/Group";
@@ -37,7 +37,8 @@ type Context = {
   currentGroup: Group | null,
   setCurrentGroup: Dispatch<SetStateAction<Group | null>>,
   feature: Feature | null,
-  setFeature: Dispatch<SetStateAction<Feature | null>>
+  setFeature: Dispatch<SetStateAction<Feature | null>>,
+  downloadURIData: (map: Map, style: string | StyleSpecification) => Promise<string | undefined>
 } 
 & MaplibreMapHook
 & DrawingsHook;

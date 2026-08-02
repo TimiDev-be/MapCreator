@@ -1,5 +1,5 @@
 import "../styles/_customSelect.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NextLogo from "../../assets/ooui_next-ltr.svg?react";
 import type { CustomSelectOption } from "../types/CustomSelectOption";
 
@@ -30,6 +30,10 @@ export default function CustomSelect({
     selectOption(SelectedOption);
     setActive(false);
   };
+
+  useEffect(() => {
+    setSelectedOption(defaultOption);
+  }, [defaultOption]);
 
   return (
     <>

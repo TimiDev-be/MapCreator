@@ -1,38 +1,36 @@
 import { useEffect, useRef } from "react";
-import type { StateMap } from "../../../../shared/types/StateMap";
-import { useMap } from "../../../../shared/hooks/Map";
-import { useMapDescription } from "../../../../shared/hooks/MapDescription";
 import QRCode from "qrcode";
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import { createRoot } from "react-dom/client";
 import MySvg from "../../../../shared/components/MySvg";
 import { UnitToPx } from "../../../../shared/utils/UnitToPx";
+import { useOpenMapPage } from "../../../../shared/new-hooks/useOpenMapPage";
+import type { Map } from "../../../../shared/types/Map";
+import { useTemplate } from "../../../../shared/new-hooks/useTemplate";
+import { useMapDescription } from "../../../../shared/new-hooks/useMapDescription";
+import type { MapDescription } from "../../../../shared/types/MapDescription";
 
 type Props = {
   templateId: string
 }
 
 export default function TemplateGroup({templateId} : Props) {
-  const {map, downloadURIData} = useMapContainer();
-  const {currentMap, updateMap} = useMap();
-  const {getTemplate} = useMapDescription();
-
-  if (!currentMap) return null;
+  const {currentMap, downloadURIData, maplibreMap} = useOpenMapPage();
+  const {getTemplate} = useTemplate();
+  const {updateDescriptionValues} = useMapDescription();
 
   const TemplateWrappeRef = useRef<HTMLDivElement | null>(null);
   const TemplateRef = useRef<HTMLDivElement | null>(null);
-  const CurrentMapRef = useRef<StateMap | null>(null);
-  const {attractionPoint, description} = currentMap;
+  const CurrentMapRef = useRef<Map | null>(null);
+  const TemplateMapRootRef = useRef<ReturnType<typeof createRoot> | null>(null);
+  const {attractionPoint, description} = currentMap ?? {};
 
-  const updateDescriptionValue = (key: string, value: string) => {
+  const updateDescriptionValue = async (key: string, value: string) => {
     if (!CurrentMapRef.current) return;
-    return updateMap({
-      ...CurrentMapRef.current,
-      description: {
-        ...CurrentMapRef.current.description,
-        values: { ...CurrentMapRef.current.description.values, [key]: value },
-      },
-    });
+    const NewDescription : MapDescription = {
+      ...CurrentMapRef.current.description,
+      values: { ...CurrentMapRef.current.description.values, [key]: value },
+    }
+    await updateDescriptionValues(NewDescription);
   }
 
   const handleLoadQrCode = async () => {
@@ -56,8 +54,8 @@ export default function TemplateGroup({templateId} : Props) {
     }
   };
 
-  const handleLoadMap = async () => {
-    if (!TemplateWrappeRef.current || !currentMap || !map.current) return;
+  const handleLoadMap = async (): Promise<(() => void) | undefined> => {
+    if (!TemplateWrappeRef.current || !currentMap || !maplibreMap.current) return;
 
     const DownloadMapContainerWrapper = document.querySelector("#dowload-map-container-wrapper");
     const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
@@ -69,26 +67,24 @@ export default function TemplateGroup({templateId} : Props) {
 
     if (!currentMap.attractionPoint || TemplateMapContainer instanceof HTMLDivElement == false) return;
     const {printSettings, areaForPrint} = currentMap;
-    const dataUrl = await downloadURIData(currentMap, map.current.getStyle());
+    const dataUrl = await downloadURIData(currentMap, maplibreMap.current.getStyle());
 
-    const templateMapContainerRoot = createRoot(TemplateMapContainer);
     const width = UnitToPx(printSettings, areaForPrint.width);
     const height = UnitToPx(printSettings, areaForPrint.height);
 
-    templateMapContainerRoot.render(
+    if (!TemplateMapRootRef.current) {
+      TemplateMapRootRef.current = createRoot(TemplateMapContainer);
+    }
+    TemplateMapRootRef.current.render(
       <MySvg Width={width} Height={height} UriData={dataUrl ?? ""}/>
     );
-
-    return () => {
-      templateMapContainerRoot.unmount();
-    }
   };
 
-  const handleLoadTemplate = () => {
+  const handleLoadTemplate = async () => {
     if (!TemplateWrappeRef.current || !TemplateRef.current) return;
-    const Template = getTemplate(templateId ?? "");
-    if (!Template) return;
-    TemplateRef.current.innerHTML = Template.htmlContent;
+    const template = await getTemplate(templateId ?? "");
+    if (!template) return;
+    TemplateRef.current.innerHTML = template.htmlContent;
   };
 
   const handleLoadData = () => {
@@ -105,19 +101,20 @@ export default function TemplateGroup({templateId} : Props) {
     });
   };
 
-  const handleLoadListeners = () => {
-    if (!currentMap || getTemplate(templateId ?? "") == undefined ||
-      !TemplateWrappeRef.current) return;
+  const handleLoadListeners = async () => {
+    const template = await getTemplate(templateId ?? "");
+    if (!currentMap || !template || !TemplateWrappeRef.current) return;
+
     const TemplateDom = TemplateWrappeRef.current.querySelector(".template");
     if (!TemplateDom) return;
 
     const Handlers = new Map<Element, (e: Event) => void>([]);
     TemplateDom.querySelectorAll("textarea, input").forEach((el) => {
-      const handler = (e: Event) => {
+      const handler = async (e: Event) => {
         const Target = e.currentTarget as
           | HTMLInputElement
           | HTMLTextAreaElement;
-        updateDescriptionValue(Target.name, Target.value);
+        await updateDescriptionValue(Target.name, Target.value);
       };
       el.addEventListener("blur", handler);
       Handlers.set(el, handler);
@@ -131,17 +128,36 @@ export default function TemplateGroup({templateId} : Props) {
   };
 
   useEffect(() => {
-    handleLoadTemplate();
-    handleLoadData();
-    handleLoadMap();
-    handleLoadQrCode(); 
-    handleLoadListeners();
+    let cleanupMap: (() => void) | undefined;
+    let cleanupListeners: (() => void) | undefined;
+
+    const load = async () => {
+      await handleLoadTemplate();
+      handleLoadData();
+      cleanupMap = await handleLoadMap();
+      await handleLoadQrCode();
+      cleanupListeners = await handleLoadListeners();
+    };
+
+    load();
+
+    return () => {
+      cleanupMap?.();
+      cleanupListeners?.();
+    };
   }, [templateId]);
 
   useEffect(() => {
     handleLoadData();
     CurrentMapRef.current = currentMap;
   }, [currentMap]);
+
+  useEffect(() => {
+    return () => {
+      TemplateMapRootRef.current?.unmount();
+      TemplateMapRootRef.current = null;
+    };
+  }, [])
 
   return(
     <>

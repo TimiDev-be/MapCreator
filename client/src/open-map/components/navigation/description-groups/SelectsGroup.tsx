@@ -1,32 +1,45 @@
+import { useEffect, useState } from "react";
 import CustomSelect from "../../../../shared/components/CustomSelect";
-import { useMapDescription } from "../../../../shared/hooks/MapDescription";
+import { useTFormatSelect, type FormatsSelectValues } from "../../../../shared/new-hooks/templates-selects/useTFormatSelect";
+import { useTNameSelect, type TemplatesSelectValues } from "../../../../shared/new-hooks/templates-selects/useTNameSelect";
+import { useTOrientationSelect, type OrientationSelectValues } from "../../../../shared/new-hooks/templates-selects/useTOrientationSelect";
+import { useOpenMapPage } from "../../../../shared/new-hooks/useOpenMapPage";
+import LoadingScreen from "../../../../shared/components/LoadingScreen";
 
-/**
- * There is no need to use units in that version of app becasue while creating pdf sizes are from
- * size of template pages.
- * Maybe in the future it will be usefull for some cases.
- */
 export default function SelectsGroup() {
-  const { 
-    getTemplatesSelectValues, 
-    getFormatsSelectValues,
-    getOrientationsSelectValues,
-    // getUnitSelectValues
-  } = useMapDescription();
+  const {currentMap} = useOpenMapPage();
+  const {getTemplatesSelectValues} = useTNameSelect();
+  const {getFormatsSelectValues} = useTFormatSelect();
+  const {getOrientationsSelectValues} = useTOrientationSelect();
 
-  const TemplateSelectValues = getTemplatesSelectValues();
-  const FormatSelectValues = getFormatsSelectValues();
-  const OrientationSelectValues = getOrientationsSelectValues();
-  // const UnitSelectValues = getUnitSelectValues();
+  const [templateSelectValues, setTemplateSelectValues] = useState<TemplatesSelectValues | null>(null);
+  const [formatSelectValues, setFormatSelectValues] = useState<FormatsSelectValues | null>(null);
+  const [orientationSelectValues, setOrientationSelectValues] = useState<OrientationSelectValues | null>(null);
 
-  const {TemplatesOptions, DefaultTemplateOption, selectTemplateOption} = TemplateSelectValues ?? {};
-  const {FormatsOptions, DefaultFormatOption, selectFormatOption} = FormatSelectValues ?? {};
-  const {OrientationsOptions, DefaultOrientationOption, selectOrientationOption} = OrientationSelectValues ?? {};
-  // const {UnitsOptions, DefaultUnitOption, selectUnitOption} = UnitSelectValues ?? {};
+  const {TemplatesOptions, DefaultTemplateOption, selectTemplateOption} = templateSelectValues ?? {};
+  const {FormatsOptions, DefaultFormatOption, selectFormatOption} = formatSelectValues ?? {};
+  const {OrientationsOptions, DefaultOrientationOption, selectOrientationOption} = orientationSelectValues ?? {};
+
+  useEffect(() => {
+    const handleLoad = async () => {
+      const [templates, formats, orientations] = await Promise.all([
+        getTemplatesSelectValues(),
+        getFormatsSelectValues(),
+        getOrientationsSelectValues()
+      ]);
+      setTemplateSelectValues(templates);
+      setFormatSelectValues(formats);
+      setOrientationSelectValues(orientations);
+    }
+    handleLoad();
+  }, [currentMap]);
+
+  if (!templateSelectValues && !formatSelectValues && !orientationSelectValues)
+    return <LoadingScreen/>
 
   return(
     <>
-      {TemplateSelectValues && (
+      {templateSelectValues && (
         <CustomSelect
           type="default"
           selectName="Choose Template"
@@ -35,7 +48,7 @@ export default function SelectsGroup() {
           selectOption={selectTemplateOption!}
         />
       )}
-      {FormatSelectValues && (
+      {formatSelectValues && (
         <CustomSelect
           type="default"
           selectName="Choose Format"
@@ -44,7 +57,7 @@ export default function SelectsGroup() {
           selectOption={selectFormatOption!}
         />
       )}
-      {OrientationSelectValues && (
+      {orientationSelectValues && (
         <CustomSelect
           type="default"
           selectName="Choose Orientation"
@@ -53,15 +66,6 @@ export default function SelectsGroup() {
           selectOption={selectOrientationOption!}
         />
       )}
-      {/* {UnitSelectValues && (
-        <CustomSelect
-          type="default"
-          selectName="Choose Unit"
-          defaultOption={DefaultUnitOption!}
-          options={UnitsOptions!}
-          selectOption={selectUnitOption!}
-        />
-      )} */}
     </>
   )
 }
