@@ -46,7 +46,7 @@ export default function ZoomGroup() {
     await updateSettings({
       ...settings,
       attractionPoint: newAttractionPoint
-    })
+    }, true)
   }
 
   return(

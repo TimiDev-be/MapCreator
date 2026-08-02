@@ -37,7 +37,7 @@ export default function AnchorPrintGroup() {
     await updateSettings({
       ...settings,
       attractionPoint: newAttractionPoint
-    })
+    }, true)
   }
 
   return(

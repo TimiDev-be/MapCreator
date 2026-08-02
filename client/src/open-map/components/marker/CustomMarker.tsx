@@ -7,13 +7,14 @@ import { MarkerIcons } from "./MarkerIcons";
 import { useOpenMapPage } from "../../../shared/new-hooks/useOpenMapPage";
 
 type Props = {
-  feature: Feature
+  feature: Feature,
+  isDownload: boolean
 }
 
 /**
  *  To do: add border radius property to getContainerStyle in styleGetters
  */
-export default function CustomMarker({feature} : Props) {
+export default function CustomMarker({feature, isDownload} : Props) {
   const {maplibreMapZoom} = useOpenMapPage();
   const {getProperties, handleChangeCoordinates, markerCoords, styleGetters} = useMarker(feature);
   const Properties : MarkerProperties = getProperties();
@@ -26,7 +27,7 @@ export default function CustomMarker({feature} : Props) {
     onDragEnd: handleChangeCoordinates
   }
 
-  const VisibleContainerClass : string = (maplibreMapZoom >= minZoom && maplibreMapZoom <= maxZoom) ? "" : "hidden";
+  const VisibleContainerClass : string = isDownload || (maplibreMapZoom >= minZoom && maplibreMapZoom <= maxZoom) ? "" : "hidden";
   const MarkerIcon = markerIconClass ? MarkerIcons[markerIconClass] : null;
   const MarkerIconClass = markerIconClass ? `icon ${markerIconClass}` : "icon";
 

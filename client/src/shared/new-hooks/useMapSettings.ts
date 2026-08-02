@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { AreaForPrint } from "../types/AreaForPrint";
 import type { AttractionPoint } from "../types/AttractionPoint";
 import type { Map } from "../types/Map";
@@ -25,17 +25,27 @@ export const useMapSettings = () => {
   const navigate = useNavigate();
   const [settings, setSettings] = useState<SettingsPanelProperties | null>(null);
 
-  const updateSettings = async (settings: SettingsPanelProperties) => {
+  const updateSettings = useCallback(async (settings: SettingsPanelProperties, minMaxZoom: boolean = false) => {
     if (!currentMap) return;
 
     const UpdatedMap : Map = {
       ...currentMap,
+      features: !minMaxZoom ? 
+        [...currentMap.features] 
+        : [...currentMap.features].map(f => ({
+          ...f,
+          properties: {
+            ...f.properties,
+            minZoom: settings.attractionPoint?.minZoom ?? 0,
+            maxZoom: settings.attractionPoint?.maxZoom ?? 22
+          }
+        })), 
       ...settings,
     }
     
     await updateMap(UpdatedMap);
     setCurrentMap(UpdatedMap);
-  }
+  }, [currentMap])
 
   useEffect(() => {
     if (currentMap && !currentMapLoading)

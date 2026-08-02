@@ -13,7 +13,7 @@ export default function MarkersList({isDownload} : Props) {
       {currentMap && 
         [...currentMap.features,]
           .filter(f => f.properties?.markerId != undefined)
-          .map(f => <CustomMarker key={f.id} feature={f}/>) 
+          .map(f => <CustomMarker key={f.id} feature={f} isDownload={isDownload}/>) 
       }
       {currentMap && !isDownload && 
         [
@@ -22,7 +22,7 @@ export default function MarkersList({isDownload} : Props) {
             .flatMap(m => m.features)
         ]
         .filter(f => f.properties?.markerId != undefined)
-        .map(f => <CustomMarker key={f.id} feature={f}/>) 
+        .map(f => <CustomMarker key={f.id} feature={f} isDownload={isDownload}/>) 
       }
     </>
   )
