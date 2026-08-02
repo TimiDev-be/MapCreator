@@ -13,7 +13,7 @@ export default function LinesLayer() {
           "all",
           ["==", ["geometry-type"], "LineString"],
           ["==", ["get", "lineDash"], null],
-          ...ZoomVisibilityFilter.slice(1),
+          ...ZoomVisibilityFilter,
         ]}
         paint={{
           "line-color": ["get", "color"],

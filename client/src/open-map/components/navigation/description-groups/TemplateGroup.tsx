@@ -154,10 +154,11 @@ export default function TemplateGroup({templateId} : Props) {
 
   useEffect(() => {
     return () => {
-      TemplateMapRootRef.current?.unmount();
+      const root = TemplateMapRootRef.current;
       TemplateMapRootRef.current = null;
+      setTimeout(() => root?.unmount(), 0);
     };
-  }, [])
+  }, []);
 
   return(
     <>

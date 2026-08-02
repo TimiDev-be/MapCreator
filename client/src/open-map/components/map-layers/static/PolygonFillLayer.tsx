@@ -16,7 +16,7 @@ export default function PolygonFillLayer() {
             ["==", ["geometry-type"], "Polygon"],
             ["==", ["geometry-type"], "MultiPolygon"],
           ],
-          ...ZoomVisibilityFilter.slice(1)
+          ...ZoomVisibilityFilter
         ]}
         paint={{
           "fill-color": ["get", "color"],

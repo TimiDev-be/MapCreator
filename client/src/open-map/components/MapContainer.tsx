@@ -23,7 +23,8 @@ export default function MapContainer() {
     currentStyle, 
     areaForPrintFeature,
     setMaplibreMapZoom,
-    drawPreviewFeatures
+    drawPreviewFeatures,
+    connectedDrawings
   } = useOpenMapPage();
   const {id, attractionPoint} = currentMap ?? {};
 
@@ -50,7 +51,12 @@ export default function MapContainer() {
 
   const UserSourceData : GeoJSON<Geometry, GeoJsonProperties> = {
     type: "FeatureCollection",
-    features: currentMap ? [...currentMap.features] : []
+    features: currentMap ? [
+      ...currentMap.features, 
+      ...connectedDrawings.filter(m => m.id !== currentMap.id)
+      .flatMap(m => m.features)
+    ] 
+    : []
   }
 
   const UserSourceDrawPreviewData : GeoJSON<Geometry, GeoJsonProperties> = {
@@ -84,7 +90,7 @@ export default function MapContainer() {
             setMaplibreMapZoom(e.target.getZoom());
           }}>
 
-          <MarkersList/>
+          <MarkersList isDownload={false}/>
           <RSource
             id={UserSourceId}
             type="geojson"

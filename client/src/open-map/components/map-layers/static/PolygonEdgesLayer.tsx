@@ -16,7 +16,7 @@ export default function PolygonEdgesLayer() {
             ["==", ["geometry-type"], "Polygon"],
             ["==", ["geometry-type"], "MultiPolygon"]
           ],
-          ...ZoomVisibilityFilter.slice(1)
+          ...ZoomVisibilityFilter
         ]}
         paint={{
           "line-color": ["get", "borderColor"],

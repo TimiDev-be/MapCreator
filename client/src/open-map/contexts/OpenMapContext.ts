@@ -14,7 +14,9 @@ export type MaplibreMapHook = {
   areaForPrintClientVisible: boolean,
   setAreaForPrintClientVisible: Dispatch<SetStateAction<boolean>>,
   maplibreMapZoom: number,
-  setMaplibreMapZoom: Dispatch<SetStateAction<number>>
+  setMaplibreMapZoom: Dispatch<SetStateAction<number>>,
+  connectedDrawings: Map[],
+  setConnectedDrawings: Dispatch<SetStateAction<Map[]>>
 }
 
 export type DrawingsHook = {

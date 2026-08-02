@@ -1,16 +1,14 @@
 import "../../../styles/_drawingsList.scss";
 import { useEffect } from "react";
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import ConnectDrawingsElement from "./ConnectDrawingsElement";
-import { useMap } from "../../../../shared/hooks/Map";
+import { useOpenMapPage } from "../../../../shared/new-hooks/useOpenMapPage";
 
 export default function ConnectedDrawingsList() {
-  const { currentMap } = useMap();
-  const { connectedMaps, setConnectedMaps } = useMapContainer();
+  const {currentMap, setConnectedDrawings, connectedDrawings} = useOpenMapPage();
 
   useEffect(() => {
     if (currentMap)
-      setConnectedMaps((prev) => [
+      setConnectedDrawings((prev) => [
         currentMap,
         ...prev.filter((m) => m.id !== currentMap.id),
       ]);
@@ -20,7 +18,7 @@ export default function ConnectedDrawingsList() {
     <>
       <div className="connected-drawings-list-container">
         <ul className="connected-drawings-list">
-          {connectedMaps.map((map, i) => (
+          {connectedDrawings.map((map, i) => (
             <ConnectDrawingsElement key={map.id} map={map} isCurrentMap={i == 0} isConnected={true}/>
           ))}
         </ul>

@@ -1,15 +1,28 @@
 import { useOpenMapPage } from "../../shared/new-hooks/useOpenMapPage";
 import CustomMarker from "./marker/CustomMarker";
 
-export default function MarkersList() {
-  const {currentMap} = useOpenMapPage();
+type Props = {
+  isDownload: boolean
+}
+
+export default function MarkersList({isDownload} : Props) {
+  const {currentMap, connectedDrawings} = useOpenMapPage();
 
   return(
     <>
       {currentMap && 
-        [...currentMap.features]
+        [...currentMap.features,]
           .filter(f => f.properties?.markerId != undefined)
           .map(f => <CustomMarker key={f.id} feature={f}/>) 
+      }
+      {currentMap && !isDownload && 
+        [
+          ...connectedDrawings
+            .filter(m => m.id !== currentMap.id)
+            .flatMap(m => m.features)
+        ]
+        .filter(f => f.properties?.markerId != undefined)
+        .map(f => <CustomMarker key={f.id} feature={f}/>) 
       }
     </>
   )

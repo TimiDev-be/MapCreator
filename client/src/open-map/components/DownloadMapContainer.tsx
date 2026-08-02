@@ -5,13 +5,13 @@ import type { MapLibreMap } from "maplibre-gl";
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import type { Map } from "../../shared/types/Map";
-import CustomMarker from "./marker/CustomMarker";
 import { useOpenMapPage } from "../../shared/new-hooks/useOpenMapPage";
 import type { AttractionPoint } from "../../shared/types/AttractionPoint";
 import type { GeoJSON, Geometry, GeoJsonProperties } from "geojson";
 import LoadingScreen from "../../shared/components/LoadingScreen";
 import { UserSourceId } from "../../shared/types/UserSource";
 import { PolygonEdgesLayer, PolygonFillLayer, LinesLayer, DashedLinesLayer } from "./map-layers";
+import MarkersList from "./MarkersList";
 
 type Props = {
   map: Map,
@@ -59,6 +59,8 @@ export default function DownloadMapContainer({map, loaded} : Props) {
     instace.resize();
 
     instace.once("idle", async () => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
       const MapCanvas = await html2canvas(ContainerRef.current!, {
         useCORS: true,
         backgroundColor: null,
@@ -97,14 +99,7 @@ export default function DownloadMapContainer({map, loaded} : Props) {
               setMapError(true);
             }}
             onLoad={handleLoad}>
-              {!mapError &&
-                [...map.features]
-                  .filter((f) => f.properties?.markerId !== undefined)
-                  .map((f) => {
-                    return <CustomMarker key={f.id} feature={f} />;
-                  })
-              }
-
+              <MarkersList isDownload/>
               <RSource
                 id={UserSourceId}
                 type="geojson"
