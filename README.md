@@ -21,6 +21,12 @@
 
 ### Drawings panel
 ![MapDrawings](assets/screenshots/mapDrawings.png)
+> Drawings shortcuts:
+> - **Escape** equals to *close drawing*, 
+> - **Enter or double click on the map** equals to *finish drawing*, 
+> - **Backspace** equals to *remove last draw point*
+
+> Polygon with two points or line with one point won't create a new drawing.
 
 ### Description panel
 ![MapDescription1](assets/screenshots/mapDescription.png)
@@ -28,11 +34,15 @@
 
 ### Combine drawings panel
 ![MapCombineDrawings](assets/screenshots/mapCombineDrawings.png)
+> Combined drawings are not included on the map in template.
 
 ### Final product 
 > Images of pdf pages
 ![FinalProduct1](assets/screenshots/FinalProduct1.png)
 ![FinalProduct2](assets/screenshots/FinalProduct2.png)
+
+### Architecture diagram
+![ArchitectureDiagram](assets/architectureDiagram.png)
 
 ## Installation
 
@@ -104,3 +114,5 @@ dotnet run
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
+<br>
+This project was made possible thanks to the open-source packages listed in [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md).
