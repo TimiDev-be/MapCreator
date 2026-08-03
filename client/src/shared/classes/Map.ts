@@ -26,7 +26,7 @@ export class Map implements StateMap {
     this.groups = [];
     this.features = [];
     this.description = { 
-      templateId: "", 
+      templateId: null, 
       values: {}, 
       descriptionForMapMaker: "", 
       templatePrintSettings: {
@@ -39,7 +39,7 @@ export class Map implements StateMap {
     this.attractionPoint = undefined;
     this.areaForPrint = { width: 150, height: 95 };
     this.printSettings = {
-      dpi: 96,
+      dpi: "d96",
       unit: "mm",
       scale: 1.7,
     }

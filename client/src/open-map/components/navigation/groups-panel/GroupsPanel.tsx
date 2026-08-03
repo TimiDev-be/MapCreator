@@ -1,14 +1,13 @@
 import "../../../styles/_groupsPanel.scss";
 import Line from "../../../../shared/components/Line";
 import PlusLogo from "../../../../assets/ic_baseline-plus.svg?react";
-import { useMap } from "../../../../shared/hooks/Map";
 import Group from "./Group";
 import FeatureComponent from "./Feature";
-import { useGroup } from "../../../../shared/hooks/Group";
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import MarkerPanel from "../feature-panels/MarkerPanel";
 import LineStringPanel from "../feature-panels/LineStringPanel";
 import PolygonPanel from "../feature-panels/PolygonPanel";
+import { useOpenMapPage } from "../../../../shared/new-hooks/useOpenMapPage";
+import { useGroup } from "../../../../shared/new-hooks/useGroup";
 
 const FeaturePanels: Record<string, React.ReactNode> = {
   Point: <MarkerPanel />,
@@ -17,10 +16,15 @@ const FeaturePanels: Record<string, React.ReactNode> = {
 };
 
 export default function GroupsPanel() {
-  const { feature } = useMapContainer();
-  const { currentMap } = useMap();
+  const { currentMap, feature } = useOpenMapPage();
   const { newGroup, assignFeatureToGroup } = useGroup();
   const { groups, features } = currentMap ?? {};
+
+  const handleOnFeatureDrop = async (e: React.DragEvent<HTMLUListElement>) => {
+    e.preventDefault();
+    const featureId = e.dataTransfer.getData("featureId");
+    await assignFeatureToGroup(featureId, undefined);
+  }
 
   return (
     <>
@@ -42,11 +46,7 @@ export default function GroupsPanel() {
             <ul
               className="groups-features-list"
               onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                const featureId = e.dataTransfer.getData("featureId");
-                assignFeatureToGroup(featureId, undefined);
-              }}
+              onDrop={handleOnFeatureDrop}
             >
               {groups && groups.map((g) => {
                 return <Group key={g.id} group={g} />;

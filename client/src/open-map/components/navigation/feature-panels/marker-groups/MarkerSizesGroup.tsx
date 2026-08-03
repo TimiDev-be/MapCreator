@@ -2,21 +2,27 @@ import PaddingLeft from "../../../../../assets/boxicons_dock-left.svg?react";
 import PaddingRight from "../../../../../assets/boxicons_dock-right.svg?react";
 import PaddingTop from "../../../../../assets/boxicons_dock-top.svg?react";
 import PaddingBottom from "../../../../../assets/boxicons_dock-bottom.svg?react";
-import { useMapContainer } from "../../../../../shared/hooks/MapContainer";
 import type { MarkerProperties } from "../../../../../shared/types/MarkerProperties";
-import { useMarkerFeature } from "../../../../../shared/hooks/MarkerFeature";
+import { useFeaturePropertiesPanel } from "../../../../../shared/new-hooks/useFeaturePropertiesPanel";
 
 export default function MarkerSizesGroup() {
-  const {feature} = useMapContainer();
-  const {handleFontSizeChange, handlePaddingChange} = useMarkerFeature();
-  const {fontSize, padding} = feature?.properties ?? {} as MarkerProperties;
+  const { getProperties, updateFeatureProperties } = useFeaturePropertiesPanel();
+  const properties = getProperties() as MarkerProperties | null;
+
+  const handlePropertiesChange = async (values: MarkerProperties) => {
+    await updateFeatureProperties(values);
+  }
+
+  const handlePaddingChange = async (padding: [number, number, number, number]) => {
+    await handlePropertiesChange({...properties, padding} as MarkerProperties);
+  }
 
   return(
     <>
       <div className="group sizes">
         <div className="wrapper">
           <label htmlFor="range-width-input" className="t-panel-small">
-            Content Size ({fontSize})
+            Content Size ({properties?.fontSize ?? 16})
           </label>
           <input
             type="range"
@@ -24,8 +30,8 @@ export default function MarkerSizesGroup() {
             name="range-width"
             min="1"
             max="30"
-            defaultValue={fontSize}
-            onMouseUp={handleFontSizeChange}
+            defaultValue={properties?.fontSize ?? 16}
+            onMouseUp={(e) => handlePropertiesChange({...properties, fontSize: Number(e.currentTarget.value)} as MarkerProperties)}
           />
         </div>
         <p className="t-panel-small">Padding (em)</p>
@@ -43,17 +49,17 @@ export default function MarkerSizesGroup() {
               id="padding-left-input"
               className="panel-field t-panel-small"
               min={0}
-              defaultValue={padding[3]}
+              defaultValue={properties?.padding[3] ?? 1}
               onBlur={(e) => {
                 let value = Number(e.currentTarget.value);
                 if (value < 0) value = 0;
                 e.currentTarget.value = value.toString();
                 handlePaddingChange([
-                  padding[0],
-                  padding[1],
-                  padding[2],
-                  value,
-                ]);
+                  properties?.padding[0] ?? 0,
+                  properties?.padding[1] ?? 0,
+                  properties?.padding[2] ?? 0,
+                  value
+                ])
               }}
             />
           </div>
@@ -71,17 +77,17 @@ export default function MarkerSizesGroup() {
               id="padding-right-input"
               className="panel-field t-panel-small"
               min={0}
-              defaultValue={padding[1]}
+              defaultValue={properties?.padding[1] ?? 1}
               onBlur={(e) => {
                 let value = Number(e.currentTarget.value);
                 if (value < 0) value = 0;
                 e.currentTarget.value = value.toString();
                 handlePaddingChange([
-                  padding[0],
+                  properties?.padding[0] ?? 0,
                   value,
-                  padding[2],
-                  padding[3],
-                ]);
+                  properties?.padding[2] ?? 0,
+                  properties?.padding[3] ?? 0,
+                ])
               }}
             />
           </div>
@@ -100,17 +106,17 @@ export default function MarkerSizesGroup() {
               id="padding-top-input"
               className="panel-field t-panel-small"
               min={0}
-              defaultValue={padding[0]}
+              defaultValue={properties?.padding[0] ?? 0.5}
               onBlur={(e) => {
                 let value = Number(e.currentTarget.value);
                 if (value < 0) value = 0;
                 e.currentTarget.value = value.toString();
                 handlePaddingChange([
                   value,
-                  padding[1],
-                  padding[2],
-                  padding[3],
-                ]);
+                  properties?.padding[1] ?? 0,
+                  properties?.padding[2] ?? 0,
+                  properties?.padding[3] ?? 0,
+                ])
               }}
             />
           </div>
@@ -128,17 +134,17 @@ export default function MarkerSizesGroup() {
               id="padding-bottom-input"
               className="panel-field t-panel-small"
               min={0}
-              defaultValue={padding[2]}
+              defaultValue={properties?.padding[2] ?? 0.5}
               onBlur={(e) => {
                 let value = Number(e.currentTarget.value);
                 if (value < 0) value = 0;
                 e.currentTarget.value = value.toString();
                 handlePaddingChange([
-                  padding[0],
-                  padding[1],
+                  properties?.padding[0] ?? 0,
+                  properties?.padding[1] ?? 0,
                   value,
-                  padding[3],
-                ]);
+                  properties?.padding[3] ?? 0,
+                ])
               }}
             />
           </div>

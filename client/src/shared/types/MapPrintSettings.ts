@@ -1,5 +1,22 @@
+export const DPIRecord = {
+  d72: 72,
+  d96: 96,
+  d100: 100,
+  d200: 200,
+  d300: 300,
+  d400: 400,
+  d500: 500,
+  d600: 600,
+  d700: 700,
+  d800: 800,
+  d900: 900,
+  d1000: 1000,
+} as const;
+
+export type DPI = keyof typeof DPIRecord;
+
 export interface MapPrintSettings {
-  dpi: 72 | 96 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 1000;
-  unit: "mm" | "cm" | "m";
+  dpi: DPI;
+  unit: "mm" | "cm" | "in" | "px";
   scale: number
 }

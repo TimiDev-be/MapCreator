@@ -1,45 +1,46 @@
 import "../../styles/_descriptionPanel.scss";
 import Line from "../../../shared/components/Line.tsx";
-import { useMapDescription } from "../../../shared/hooks/MapDescription.ts";
-import { useMap } from "../../../shared/hooks/Map.ts";
 import { useEffect, useRef } from "react";
-import { useFile } from "../../../shared/hooks/File.ts";
-import type { StateMap } from "../../../shared/types/StateMap.ts";
 import TemplateGroup from "./description-groups/TemplateGroup.tsx";
 import SelectsGroup from "./description-groups/SelectsGroup.tsx";
+import { useDownloading } from "../../../shared/new-hooks/useDownloading.ts";
+import { useOpenMapPage } from "../../../shared/new-hooks/useOpenMapPage.ts";
+import type { Map } from "../../../shared/types/Map.ts";
+import { useMapDescription } from "../../../shared/new-hooks/useMapDescription.ts";
+import type { MapDescription } from "../../../shared/types/MapDescription.ts";
+import { useTemplate } from "../../../shared/new-hooks/useTemplate.ts";
 
 export default function DescriptionPanel() {
-  const { getTemplate } = useMapDescription();
-  const { downloadPdfFromTemplate } = useFile();
-  const { currentMap, updateMap } = useMap();
+  const { downloadTemplateFile } = useDownloading();
+  const { currentMap } = useOpenMapPage();
+  const { updateDescriptionValues } = useMapDescription();
+  const { getTemplate } = useTemplate();
+  const {templateId, descriptionForMapMaker} = currentMap?.description ?? {};
+  const CurrentMapRef = useRef<Map | null>(null);
 
-  const { description } = currentMap ?? {};
-  const { templateId, descriptionForMapMaker } = description ?? {};
-  const CurrentMapRef = useRef<StateMap | null>(null);
-
-
-  const updateMapDescriptionForMapMaker = (description: string) => {
+  const updateMapDescriptionForMapMaker = async (description: string) => {
     if (!CurrentMapRef.current) return;
-    return updateMap({
-      ...CurrentMapRef.current,
-      description: {
-        ...CurrentMapRef.current.description,
-        descriptionForMapMaker: description,
-      },
-    });
+
+    const NewDescription : MapDescription = {
+      ...CurrentMapRef.current.description,
+      descriptionForMapMaker: description,
+    }
+    await updateDescriptionValues(NewDescription);
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const templateWrapper = document.querySelector(".template-content-wrapper");
     if (!templateWrapper || !currentMap) return;
 
     const Template = templateWrapper.querySelector<HTMLElement>(".template");
     if (!Template) return;
 
-    downloadPdfFromTemplate(
+    const TemplateObj = await getTemplate(templateId ?? "something");
+
+    await downloadTemplateFile(
       Template,
       currentMap.name,
-      getTemplate(templateId ?? "")?.name ?? "none",
+      TemplateObj?.name ?? "none",
       currentMap.description.templatePrintSettings
     );
   };

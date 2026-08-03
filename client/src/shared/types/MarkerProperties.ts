@@ -1,5 +1,5 @@
 import type { FeatureProperties } from "./FeatureProperties.ts";
-import type { BoxShadow } from "./Boxshadow.ts";
+import type { BoxShadow } from "./BoxShadow.ts";
 import type { Border } from "./Border.ts";
 
 export interface MarkerProperties extends FeatureProperties {

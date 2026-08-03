@@ -3,10 +3,10 @@ import BorderRight from "../../../../../assets/boxicons_dock-right.svg?react";
 import BorderTop from "../../../../../assets/boxicons_dock-top.svg?react";
 import BorderBottom from "../../../../../assets/boxicons_dock-bottom.svg?react";
 import type { BorderStyle } from "../../../../../shared/types/BorderStyle";
-import { useEffect, useState } from "react";
-import { useMapContainer } from "../../../../../shared/hooks/MapContainer";
+import { useCallback, useState } from "react";
 import type { MarkerProperties } from "../../../../../shared/types/MarkerProperties";
-import { useMarkerFeature } from "../../../../../shared/hooks/MarkerFeature";
+import { useFeaturePropertiesPanel } from "../../../../../shared/new-hooks/useFeaturePropertiesPanel";
+import type { Border } from "../../../../../shared/types/Border";
 
 type Values = {
   top: number,
@@ -19,11 +19,8 @@ type Values = {
 }
 
 export default function MarkerBorderGroup() {
-  const {feature} = useMapContainer();
-  const {handleBorderChange} = useMarkerFeature();
-  const {properties} = feature ?? {};
-  const {border} = properties ?? {} as MarkerProperties;
-
+  const { getProperties, updateFeatureProperties, feature } = useFeaturePropertiesPanel();
+  const {border} = getProperties() as MarkerProperties ?? {};
   const [borderValues, setBorderValues] = useState<Values>({
     top: border[0] ?? 0,
     right: border[1] ?? 0,
@@ -34,10 +31,15 @@ export default function MarkerBorderGroup() {
     colorOpacity: border[6] ?? 1
   }); 
 
-  useEffect(() => {
-    const {top, right, bottom, left, style, color, colorOpacity} = borderValues;
-    handleBorderChange([top, right, bottom, left, style, color, colorOpacity]);
-  }, [borderValues]);
+  const handlePropertiesChange = useCallback(async (values: Values) => {
+    const {top, right, bottom, left, style, color, colorOpacity} = values;
+    const newProps : MarkerProperties = {
+      ...getProperties(),
+      border: [top, right, bottom, left, style, color, colorOpacity] as Border
+    } as MarkerProperties;
+    await updateFeatureProperties(newProps);
+    setBorderValues(prev => ({...prev, ...values}));
+  }, [feature]);
 
   return(
     <>
@@ -56,7 +58,7 @@ export default function MarkerBorderGroup() {
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = borderValues.left.toString();
-                setBorderValues(prev => ({...prev, left: Number(e.target.value)}))
+                handlePropertiesChange({...borderValues, left: Number(e.target.value)});
               }}/>
           </div>
           <div className="field-bridge"></div>
@@ -72,7 +74,7 @@ export default function MarkerBorderGroup() {
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = borderValues.right.toString();
-                setBorderValues(prev => ({...prev, right: Number(e.target.value)}))
+                handlePropertiesChange({...borderValues, right: Number(e.target.value)});
               }}/>
           </div>
         </div>
@@ -85,11 +87,11 @@ export default function MarkerBorderGroup() {
               name="border-top"
               id="border-top-input"
               className="panel-field t-panel-small"
-              defaultValue={0}
+              defaultValue={borderValues.top}
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = borderValues.top.toString();
-                setBorderValues(prev => ({...prev, top: Number(e.target.value)}))
+                handlePropertiesChange({...borderValues, top: Number(e.target.value)});
               }}/>
           </div>
           <div className="field-bridge"></div>
@@ -101,11 +103,11 @@ export default function MarkerBorderGroup() {
               name="border-bottom"
               id="border-bottom-input"
               className="panel-field t-panel-small"
-              defaultValue={0}
+              defaultValue={borderValues.bottom}
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = borderValues.bottom.toString();
-                setBorderValues(prev => ({...prev, bottom: Number(e.target.value)}))
+                handlePropertiesChange({...borderValues, bottom: Number(e.target.value)});
               }}/>
           </div>
         </div>
@@ -119,8 +121,9 @@ export default function MarkerBorderGroup() {
               name="border-color"
               id="border-color-input"
               className="color-input"
+              defaultValue={borderValues.color}
               onBlur={(e) => {
-                setBorderValues(prev => ({...prev, color: e.target.value}))
+                handlePropertiesChange({...borderValues, color: e.target.value});
               }}/>
           </div>
           <div className="linked-wrapper without-bridge">
@@ -132,11 +135,11 @@ export default function MarkerBorderGroup() {
               name="border-opacity"
               id="border-opacity-input"
               className="panel-field t-panel-small"
-              defaultValue={1}
+              defaultValue={borderValues.colorOpacity}
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = borderValues.colorOpacity.toString();
-                setBorderValues(prev => ({...prev, colorOpacity: Number(e.target.value)}))
+                handlePropertiesChange({...borderValues, colorOpacity: Number(e.target.value)});
               }}/>
           </div>
         </div>

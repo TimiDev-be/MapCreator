@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import SearchLogo from "../../../assets/material-symbols_search.svg?react";
 import type { Feature } from "geojson";
 import SearchResultElement from "./SearchResultElement";
-import { useMapContainer } from "../../../shared/hooks/MapContainer";
+import { useOpenMapPage } from "../../../shared/new-hooks/useOpenMapPage";
 
 export default function SearchBar() {
-  const { map } = useMapContainer();
+  const {maplibreMap} = useOpenMapPage();
   const [searchValue, setSearchValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [notFound, setNotFound] = useState<boolean>(false);
@@ -43,8 +43,8 @@ export default function SearchBar() {
   };
 
   const handleJump = (feature: Feature) => {
-    if (!map.current) return;
-    map.current.fitBounds(feature.bbox as [number, number, number, number], {
+    if (!maplibreMap.current) return;
+    maplibreMap.current.fitBounds(feature.bbox as [number, number, number, number], {
       padding: 50,
       duration: 1000,
       essential: true,

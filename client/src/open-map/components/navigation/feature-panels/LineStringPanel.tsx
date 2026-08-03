@@ -1,13 +1,13 @@
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
 import type { LineProperties } from "../../../../shared/types/LineProperties";
 import LineColorsGroup from "./line-groups/LineColorsGroup";
 import LineSizesGroup from "./line-groups/LineSizesGroup";
 import FeaturePanelGroupButton from "../FeaturePanelGroupButton";
+import { useFeaturePropertiesPanel } from "../../../../shared/new-hooks/useFeaturePropertiesPanel";
 
 export default function LineStringPanel() {
-  const { feature, toggleFeaturePanel } = useMapContainer();
-  const { name } = feature?.properties ?? {} as LineProperties;
+  const { getProperties, feature, closePanel } = useFeaturePropertiesPanel();
+  const { name } = getProperties() ?? {} as LineProperties;
 
   return (
     <>
@@ -15,7 +15,7 @@ export default function LineStringPanel() {
         <button
           type="button"
           className="close-feature-panel-button t-panel-medium"
-          onClick={() => toggleFeaturePanel(null)}
+          onClick={closePanel}
         >
           <CloseLogo width={20} height={20} />
         </button>

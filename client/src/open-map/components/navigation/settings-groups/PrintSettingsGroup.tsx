@@ -1,8 +1,7 @@
 import CustomSelect from "../../../../shared/components/CustomSelect";
-import { useMap } from "../../../../shared/hooks/Map";
-import { useMapSettings } from "../../../../shared/hooks/MapSettings";
+import { useMapSettings, type SettingsPanelProperties } from "../../../../shared/new-hooks/useMapSettings";
 import type { CustomSelectOption } from "../../../../shared/types/CustomSelectOption";
-import type { MapPrintSettings } from "../../../../shared/types/MapPrintSettings";
+import { DPIRecord, type MapPrintSettings } from "../../../../shared/types/MapPrintSettings";
 
 const DPI : CustomSelectOption[] = [
   {id: crypto.randomUUID(), value: "72"},
@@ -26,23 +25,30 @@ const UNITS : CustomSelectOption[] = [
 ]
 
 export default function PrintSettingGroup() {
-  const {currentMap} = useMap();
-  const {handlePrintSettingsChange} = useMapSettings();
-  if (!currentMap) return null;
+  const {settings, updateSettings} = useMapSettings();
+  const values = settings ?? {} as SettingsPanelProperties;
+  const {printSettings} = values;
 
-  const {printSettings} = currentMap;
-
-  const handleSelectDpiOption = (option: CustomSelectOption) => {
-    handlePrintSettingsChange({
-      ...printSettings,
-      dpi: Number(option.value) as MapPrintSettings['dpi'] ?? 96
+  const handleSelectDpiOption = async (option: CustomSelectOption) => {
+    const dpiKey = `d${option.value}` as MapPrintSettings['dpi'];
+    const dpi = dpiKey in DPIRecord ? dpiKey : "d96";
+    await updateSettings({
+      ...values,
+      printSettings: {
+        ...printSettings,
+        dpi
+      }
     })
   }
 
-  const handleSelectUnitOption = (option: CustomSelectOption) => {
-    handlePrintSettingsChange({
-      ...printSettings,
-      unit: option.value as MapPrintSettings['unit'] ?? "mm"
+  const handleSelectUnitOption = async (option: CustomSelectOption) => {
+    const unit = option.value as MapPrintSettings['unit'] ?? "mm";
+    await updateSettings({
+      ...values,
+      printSettings: {
+        ...printSettings,
+        unit
+      }
     })
   }
 

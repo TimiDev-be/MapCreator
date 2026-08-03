@@ -1,22 +1,21 @@
 import { useEffect } from "react";
 import PolygonLogo from "../../../assets/bx_shape-polygon.svg?react";
-import { useDraw } from "../../../shared/hooks/Draw";
-import { useMapContainer } from "../../../shared/hooks/MapContainer";
+import { useDrawPolygon } from "../../../shared/new-hooks/useDrawPolygon";
 
 export default function PolygonButton() {
-  const { map } = useMapContainer();
   const {
-    toggleDrawButton,
-    FinishPolygon,
     activeButton,
-    handleRemoveLastPoint,
-    handleClick,
+    maplibreMap,
+    handleToggleActive,
+    handleFinishPolygonDrawing,
     handleMouseMove,
-  } = useDraw();
+    handleClick,
+    handleRemoveLastPolygonPoint
+  } = useDrawPolygon();
 
   useEffect(() => {
     if (
-      !map.current ||
+      !maplibreMap.current ||
       !activeButton ||
       !activeButton.classList.contains("polygon")
     )
@@ -24,32 +23,32 @@ export default function PolygonButton() {
 
     const handleKeys = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        toggleDrawButton(undefined);
+        handleToggleActive(null);
       } else if (e.key === "Enter") {
-        FinishPolygon(undefined);
+        handleFinishPolygonDrawing();
       } else if (e.key === "Backspace") {
-        handleRemoveLastPoint();
+        handleRemoveLastPolygonPoint();
       }
     };
-    map.current.on("dblclick", FinishPolygon);
-    map.current.on("mousemove", handleMouseMove);
-    map.current.on("click", handleClick);
+    maplibreMap.current.on("dblclick", handleFinishPolygonDrawing);
+    maplibreMap.current.on("mousemove", handleMouseMove);
+    maplibreMap.current.on("click", handleClick);
     window.addEventListener("keydown", handleKeys);
 
     return () => {
-      map.current!.off("dblclick", FinishPolygon);
-      map.current!.off("mousemove", handleMouseMove);
-      map.current!.off("click", handleClick);
+      maplibreMap.current!.off("dblclick", handleFinishPolygonDrawing);
+      maplibreMap.current!.off("mousemove", handleMouseMove);
+      maplibreMap.current!.off("click", handleClick);
       window.removeEventListener("keydown", handleKeys);
     };
-  }, [activeButton, FinishPolygon, map]);
+  }, [activeButton, handleFinishPolygonDrawing, maplibreMap]);
 
   return (
     <>
       <button
         type="button"
         className="draw-button polygon"
-        onClick={toggleDrawButton}
+        onClick={(e) => handleToggleActive(e.currentTarget)}
       >
         <PolygonLogo width={32} height={32} />
       </button>

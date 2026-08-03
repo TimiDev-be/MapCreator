@@ -1,15 +1,13 @@
 import { useEffect } from "react";
 import MarkerLogo from "../../../assets/mdi_map-marker-outline.svg?react";
-import { useDraw } from "../../../shared/hooks/Draw";
-import { useMapContainer } from "../../../shared/hooks/MapContainer";
+import { useDrawMarker } from "../../../shared/new-hooks/useDrawMarker";
 
 export default function MarkerButton() {
-  const { map } = useMapContainer();
-  const { toggleDrawButton, FinishMarker, activeButton } = useDraw();
+  const {activeButton, maplibreMap, handleToggleActive, handleFinishMarkerDrawing} = useDrawMarker();
 
   useEffect(() => {
     if (
-      !map.current ||
+      !maplibreMap.current ||
       !activeButton ||
       !activeButton.classList.contains("marker")
     )
@@ -17,23 +15,23 @@ export default function MarkerButton() {
 
     window.onkeydown = (e) => {
       if (e.key === "Escape") {
-        toggleDrawButton(undefined);
+        handleToggleActive(null);
       }
     };
-    map.current.on("click", FinishMarker);
+    maplibreMap.current.on("click", handleFinishMarkerDrawing);
 
     return () => {
-      map.current!.off("click", FinishMarker);
+      maplibreMap.current!.off("click", handleFinishMarkerDrawing);
       window.onkeydown = null;
     };
-  }, [activeButton, FinishMarker, map]);
+  }, [activeButton, handleFinishMarkerDrawing, maplibreMap]);
 
   return (
     <>
       <button
         type="button"
         className="draw-button marker"
-        onClick={toggleDrawButton}
+        onClick={(e) => handleToggleActive(e.currentTarget)}
       >
         <MarkerLogo width={32} height={32} />
       </button>

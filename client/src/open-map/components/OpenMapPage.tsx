@@ -1,141 +1,98 @@
 import "../styles/_openMapPage.scss";
-import Header from "./header/Header";
-import { useState, useRef, useEffect } from "react";
-import Navigation from "./navigation/Navigation";
-import { MAP_CONTAINER_CONTEXT } from "../contexts/MapContainerContext";
-import type { Map as MaplibreMap, StyleSpecification } from "maplibre-gl";
+import { useEffect, useState } from "react";
+import { Navigate, useParams } from "react-router-dom";
 import type { Map } from "../../shared/types/Map";
-import MapContainer from "./MapContainer";
-import { useParams } from "react-router-dom";
-import { useMap } from "../../shared/hooks/Map";
-import type { Feature } from "geojson";
+import { useMap } from "../../shared/new-hooks/useMap";
+import { OpenMapContext } from "../contexts/OpenMapContext";
+import Header from "./header/Header";
+import { useMaplibreMap } from "../../shared/new-hooks/useMaplibreMap";
 import DrawButtons from "./draw-buttons/DrawButtons";
-import PrintClientPreview from "./PrintAreaPreview";
-import type { StateMap } from "../../shared/types/StateMap";
+import Navigation from "./navigation/Navigation";
+import PrintAreaPreview from "./PrintAreaPreview";
+import MapContainer from "./MapContainer";
+import type { MapStyle } from "../../shared/types/MapStyle";
+import { useStyle } from "../../shared/new-hooks/useStyle";
+import { toast } from "react-toastify";
+import type { Group } from "../../shared/types/Group";
+import { useDrawings } from "../../shared/new-hooks/useDrawings";
+import type { Feature } from "geojson";
 import DownloadMapContainer from "./DownloadMapContainer";
+import { useDownloadMap } from "../../shared/new-hooks/useDownloadMap";
 
 export default function OpenMapPage() {
-  const { id } = useParams();
-  const { currentMap, openMap } = useMap();
+  const {id} = useParams();
+  // initialize hooks to create only one instantion for all components
+  const maplibreMapHook = useMaplibreMap();
+  const drawingsHook = useDrawings();
+  const {downloadParams, handleDownloadLoad, downloadURIData} = useDownloadMap();
+
+  // current map data
+  const {getMap} = useMap();
+  const {getStyles} = useStyle();
+  const [currentMap, setCurrentMap] = useState<Map | null>(null);
+  const [currentMapLoading, setCurrentMapLoading] = useState<boolean>(true);
   
-  const [areaForPrintFeature, setAreaForPrintFeature] = useState<Feature | undefined>(undefined);
+  const [currentStyle, setCurrentStyle] = useState<MapStyle | null>(null);
+  const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [feature, setFeature] = useState<Feature | null>(null);
-  const [isReady, setIsReady] = useState<boolean>(false);
-  const [mapZoom, setMapZoom] = useState<number>((currentMap && currentMap.attractionPoint?.zoom) ?? 1);
-  const [activeButton, setActiveButton] = useState<HTMLButtonElement | null>(null);
-  const [drawFeatures, setDrawFeatures] = useState<Feature[]>([]);
-  const [areaForPrintClientPreview, setAreaForPrintClientPreview] = useState(false);
-  const [connectedMaps, setConnectedMaps] = useState<Map[]>([]);
-  const [downloadParams, setDownloadParams] = useState<{map: StateMap, style: string | StyleSpecification} | null>(null);
 
-  const MapRef = useRef<MaplibreMap | null>(null);
-  const DownlaodPromiseRef = useRef<((value: string) => void) | null>(null);
+  const loadCurrentMap = async () => {
+    if (!id) return;
+    setCurrentMapLoading(true);
 
-  const setMapRef = (m: MaplibreMap | null) => {
-    MapRef.current = m;
-    setIsReady(!!m);
-  };
+    const map : Map | null = await getMap(id);
+    const styles : MapStyle[] = await getStyles();
+    const activeStyle : MapStyle | undefined = styles.find(s => s.isActive);
 
-  const toggleActiveButton = (button: HTMLButtonElement | null) => {
-    if (activeButton === button || !button) {
-      if (activeButton) {
-        activeButton.classList.remove("active");
-      }
-      setActiveButton(null);
-    } else {
-      button.classList.add("active");
-      if (activeButton) {
-        activeButton.classList.remove("active");
-      }
-      setActiveButton(button);
+    if (!activeStyle)
+      toast.warning("No map style has been activated. Go to workspace and activate one.");
+    else 
+      setCurrentStyle(activeStyle);
+
+    if (map) {
+      setCurrentMap(map);
+      maplibreMapHook.setMaplibreMapZoom(map.attractionPoint?.zoom ?? 0);
     }
-  };
 
-  const toggleFeaturePanel = (newFeature: Feature | null) => {
-    if (!newFeature) return setFeature(null);
-    if (!currentMap?.features.find((f) => f.id === newFeature?.id)) return;
-    setFeature((prev) => {
-      return prev === newFeature ? null : newFeature;
-    });
-  };
-
-  const downloadURIData = async (map: StateMap, style: string | StyleSpecification) : Promise<string | undefined> => {
-    if (DownlaodPromiseRef.current != null) return undefined; 
-    return new Promise<string>((resolve) => {
-      DownlaodPromiseRef.current = resolve;
-      setDownloadParams({map, style});
-    });
-  }
-
-  const handleDownloadLoad = (dataUrl: string) => {
-    if (DownlaodPromiseRef.current) {
-      DownlaodPromiseRef.current(dataUrl);
-    }
-    setDownloadParams(null);
-    DownlaodPromiseRef.current = null;
+    setCurrentMapLoading(false);
   }
 
   useEffect(() => {
-    if (!currentMap || !feature) return;
+    loadCurrentMap();
+  }, [id])
 
-    const handleFeatureDeleteAndPanelIfActive = () => {
-      if (!currentMap.features.find((f) => f.id == feature.id)) {
-        setFeature(null);
-      }
-    };
-    handleFeatureDeleteAndPanelIfActive();
-  }, [currentMap, feature]);
+  if (!id) return <Navigate to={"/"}/>
 
-  useEffect(() => {
-    openMap(id as string);
-    const handleFeatureChange = () => {
-      setFeature((prev) => {
-        return currentMap?.features.find((f) => f.id === prev?.id) ?? prev;
-      });
-    };
-    handleFeatureChange();
-  }, [id, currentMap, openMap]);
-
-  return (
+  return(
     <>
-      <MAP_CONTAINER_CONTEXT.Provider
+      <OpenMapContext.Provider 
         value={{
-          map: MapRef,
-          isReady,
-          setIsReady,
-          setMapRef,
-          areaForPrintFeature,
-          setAreaForPrintFeature,
+          currentMap,
+          setCurrentMap,
+          currentMapLoading,
+          currentStyle,
+          currentGroup,
+          setCurrentGroup,
           feature,
-          toggleFeaturePanel,
-          mapZoom,
-          setMapZoom,
-          activeButton,
-          toggleActiveButton,
-          drawFeatures,
-          setDrawFeatures,
-          areaForPrintClientPreview,
-          setAreaForPrintClientPreview,
-          connectedMaps,
-          setConnectedMaps,
-          downloadURIData
+          setFeature,
+          downloadURIData,
+          ...maplibreMapHook,
+          ...drawingsHook
         }}
       >
-        {currentMap && (
-          <div className="open-map page">
-            <Header />
-            <Navigation />
-            <MapContainer />
-            <DrawButtons />
-            <div id="dowload-map-container-wrapper">
-              {downloadParams && (
-                <DownloadMapContainer {...downloadParams} loaded={handleDownloadLoad}/>
-              )}
-            </div>
-            {areaForPrintClientPreview && <PrintClientPreview />}
+        <div className="open-map page">
+          <Header />
+          <Navigation />
+          <MapContainer/>
+          <DrawButtons />
+          <div id="dowload-map-container-wrapper">
+            {downloadParams && (
+              <DownloadMapContainer {...downloadParams} loaded={handleDownloadLoad}/>
+            )}
           </div>
-        )}
-      </MAP_CONTAINER_CONTEXT.Provider>
+          {maplibreMapHook.areaForPrintClientVisible && <PrintAreaPreview />}
+        </div>
+      </OpenMapContext.Provider>
     </>
-  );
+  )
 }

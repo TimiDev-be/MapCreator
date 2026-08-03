@@ -1,24 +1,56 @@
 import "../styles/_downloadMapContainer.scss";
-import { RMap } from "maplibre-react-components";
-import type { StateMap } from "../../shared/types/StateMap"
+import { RMap, RSource } from "maplibre-react-components";
 import { UnitToPx } from "../../shared/utils/UnitToPx";
-import type { MapLibreMap, StyleSpecification } from "maplibre-gl";
+import type { MapLibreMap } from "maplibre-gl";
 import { useRef, useState } from "react";
 import html2canvas from "html2canvas";
-import MarkerComponent from "./marker/Marker";
+import type { Map } from "../../shared/types/Map";
+import { useOpenMapPage } from "../../shared/new-hooks/useOpenMapPage";
+import type { AttractionPoint } from "../../shared/types/AttractionPoint";
+import type { GeoJSON, Geometry, GeoJsonProperties } from "geojson";
+import LoadingScreen from "../../shared/components/LoadingScreen";
+import { UserSourceId } from "../../shared/types/UserSource";
+import { PolygonEdgesLayer, PolygonFillLayer, LinesLayer, DashedLinesLayer } from "./map-layers";
+import MarkersList from "./MarkersList";
 
 type Props = {
-  map: StateMap,
-  style: string | StyleSpecification,
+  map: Map,
   loaded: (url: string) => void
 }
 
-export default function DownloadMapContainer({map, style, loaded} : Props) {
+export default function DownloadMapContainer({map, loaded} : Props) {
+  const {currentMap, currentStyle} = useOpenMapPage();
   const {areaForPrint, attractionPoint, printSettings} = map;
   const [mapError, setMapError] = useState<boolean>(false);
   const ContainerRef = useRef<HTMLDivElement | null>(null);
   const width = UnitToPx(printSettings, areaForPrint.width).toString() + "px";
   const height = UnitToPx(printSettings, areaForPrint.height).toString() + "px";
+
+ let Initials : AttractionPoint = {
+    coords: [0, 0], 
+    zoom: 0,
+    minZoom: 0,
+    maxZoom: 0,
+    pitch: 0,
+    bearing: 0
+  }
+
+  if (attractionPoint)
+    Initials = {...Initials, ...attractionPoint};
+
+  const {coords, zoom, pitch, bearing} = Initials;
+
+  const MapInitials = {
+    initialCenter: coords,
+    initialZoom: zoom,
+    initialPitch: pitch,
+    initialBearing: bearing
+  }
+
+  const UserSourceData : GeoJSON<Geometry, GeoJsonProperties> = {
+    type: "FeatureCollection",
+    features: currentMap ? [...currentMap.features] : []
+  }
 
   const handleLoad = async (e: {target: MapLibreMap}) => {
     if (!ContainerRef.current) return;
@@ -27,6 +59,8 @@ export default function DownloadMapContainer({map, style, loaded} : Props) {
     instace.resize();
 
     instace.once("idle", async () => {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
       const MapCanvas = await html2canvas(ContainerRef.current!, {
         useCORS: true,
         backgroundColor: null,
@@ -37,6 +71,9 @@ export default function DownloadMapContainer({map, style, loaded} : Props) {
       loaded(dataURL);
     })
   }
+
+  if (!currentStyle)
+    return <LoadingScreen/>
 
   return(
     <>
@@ -55,26 +92,24 @@ export default function DownloadMapContainer({map, style, loaded} : Props) {
           )}
           <RMap
             style={{ width: "100%", height: "100%" }}
-            mapStyle={style}
+            mapStyle={currentStyle.url}
             initialCanvasContextAttributes={{preserveDrawingBuffer: true}}
-            initialCenter={{
-              lng: attractionPoint.coords[0],
-              lat: attractionPoint.coords[1]
-            }}
-            initialZoom={attractionPoint.zoom}
-            initialBearing={attractionPoint.bearing}
-            initialPitch={attractionPoint.pitch}
+            {...MapInitials}
             onError={() => {
               setMapError(true);
             }}
             onLoad={handleLoad}>
-              {!mapError &&
-                [...map.features]
-                  .filter((f) => f.properties?.markerId !== undefined)
-                  .map((f) => {
-                    return <MarkerComponent key={f.id} feature={f} />;
-                  })
-              }
+              <MarkersList isDownload/>
+              <RSource
+                id={UserSourceId}
+                type="geojson"
+                data={{...UserSourceData}}/>
+
+              {/*static map layers*/}
+              <PolygonEdgesLayer/>
+              <PolygonFillLayer/>
+              <LinesLayer/>
+              <DashedLinesLayer/>
           </RMap>
         </div>
         )

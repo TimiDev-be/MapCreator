@@ -1,11 +1,14 @@
-import { useMapContainer } from "../../../../../shared/hooks/MapContainer";
-import { usePolygonFeature } from "../../../../../shared/hooks/PolygonFeature";
+import { useCallback } from "react";
+import { useFeaturePropertiesPanel } from "../../../../../shared/new-hooks/useFeaturePropertiesPanel";
 import type { PolygonProperties } from "../../../../../shared/types/PolygonProperties";
 
 export default function PolygonColorsGroup() {
-  const {feature} = useMapContainer();
-  const {handleColorChange, handleBorderColorChange, handleOpacityChange} = usePolygonFeature();
-  const {color, opacity, borderColor} = feature?.properties ?? {} as PolygonProperties;
+  const { getProperties, updateFeatureProperties, feature } = useFeaturePropertiesPanel();
+  const properties = getProperties() as PolygonProperties | null;
+
+  const handlePropertiesChange = useCallback(async (values: PolygonProperties) => {
+    await updateFeatureProperties(values);
+  }, [feature])
 
   return(
     <>
@@ -19,8 +22,8 @@ export default function PolygonColorsGroup() {
             id="feature-color-input"
             name="feature-color"
             className="color-input"
-            defaultValue={color}
-            onBlur={handleColorChange}
+            defaultValue={properties?.color ?? "#ff0000"}
+            onBlur={(e) => handlePropertiesChange({...properties, color: e.target.value} as PolygonProperties)}
           />
         </div>
         <div className="wrapper">
@@ -35,23 +38,23 @@ export default function PolygonColorsGroup() {
             id="feature-border-color-input"
             name="feature-border-color"
             className="color-input"
-            defaultValue={borderColor}
-            onBlur={handleBorderColorChange}
+            defaultValue={properties?.borderColor ?? "#ff0000"}
+            onBlur={(e) => handlePropertiesChange({...properties, borderColor: e.target.value} as PolygonProperties)}
           />
         </div>
         <div className="wrapper background-opacity">
           <label htmlFor="opacity-input" className="t-panel-small">
-            Opacity
+            Fill Opacity
           </label>
           <input
             type="number"
             id="opacity-input"
             name="opacity"
             className="panel-field t-panel-small"
-            defaultValue={opacity}
+            defaultValue={properties?.opacity ?? 1}
             onBlur={(e) => {
               let value = Number(e.currentTarget.value);
-              if (value < 0) {
+              if (value <= 0) {
                 e.currentTarget.value = "0";
                 value = 0;
               }
@@ -59,7 +62,7 @@ export default function PolygonColorsGroup() {
                 e.currentTarget.value = "1";
                 value = 1;
               }
-              handleOpacityChange(value);
+              handlePropertiesChange({...properties, opacity: value} as PolygonProperties)
             }}
           />
         </div>

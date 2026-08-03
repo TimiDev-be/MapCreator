@@ -1,17 +1,27 @@
-import { useSource } from "../../../shared/hooks/Source";
+import { useEffect } from "react";
+import { useSource } from "../../../shared/new-hooks/useSource";
 import TemplateListElement from "./TemplateListElement";
+import { useTemplate } from "../../../shared/new-hooks/useTemplate";
+import LoadingScreen from "../../../shared/components/LoadingScreen";
 
 export default function TemplatesList() {
-  const { currentSource } = useSource();
+  const { config, templates, templatesLoading } = useSource();
+  const { getTemplates } = useTemplate();
+
+  useEffect(() => {
+    if (!config) return;
+    getTemplates();
+  }, [config]);
+
+  if (!config || templatesLoading)
+    return <LoadingScreen/>;
 
   return (
     <>
       <ul className="templates-list">
-        {currentSource &&
-          currentSource.templates &&
-          currentSource.templates.map((template) => (
-            <TemplateListElement key={template.id} template={template} />
-          ))}
+        {templates.map(t => (
+          <TemplateListElement key={t.id} template={t}/>
+        ))}
       </ul>
     </>
   );

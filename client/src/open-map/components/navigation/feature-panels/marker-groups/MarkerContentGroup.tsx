@@ -1,11 +1,16 @@
-import { useMapContainer } from "../../../../../shared/hooks/MapContainer";
-import { useMarkerFeature } from "../../../../../shared/hooks/MarkerFeature";
+import { useCallback } from "react";
+import { useFeaturePropertiesPanel } from "../../../../../shared/new-hooks/useFeaturePropertiesPanel";
 import type { MarkerProperties } from "../../../../../shared/types/MarkerProperties";
 
+
+
 export default function MarkerContentGroup() {
-  const {feature} = useMapContainer();
-  const {toggleLabel, handleLabelChange} = useMarkerFeature();
-  const {label} = feature?.properties ?? {} as MarkerProperties;
+  const {getProperties, updateFeatureProperties, feature} = useFeaturePropertiesPanel();
+  const properties = getProperties() as MarkerProperties | null;
+
+  const handlePropertiesChange = useCallback(async (values: MarkerProperties) => {
+    await updateFeatureProperties(values);
+  }, [feature])
 
   return(
     <>
@@ -19,11 +24,16 @@ export default function MarkerContentGroup() {
             name="label"
             id="is-label-checkbox"
             className="panel-checkbox"
-            defaultChecked={label ? true : false}
-            onChange={toggleLabel}
+            defaultChecked={properties?.label ? true : false}
+            onChange={(e) => {
+              let label : string | undefined = undefined;
+              if (e.currentTarget.checked)
+                label = properties?.label ?? "default label";
+              handlePropertiesChange({...properties, label} as MarkerProperties)
+            }}
           />
         </div>
-        {label && (
+        {properties?.label && (
           <div className="wrapper label">
             <label htmlFor="content-input" className="t-panel-small">
               Text Content
@@ -31,12 +41,12 @@ export default function MarkerContentGroup() {
             <textarea
               id="content-input"
               className="panel-field t-panel-small"
-              defaultValue={label}
+              defaultValue={properties.label}
               onBlur={(e) => {
                 const value = e.currentTarget.value;
                 if (value.trim().length <= 0)
-                  return (e.currentTarget.value = label);
-                handleLabelChange(value);
+                  return (e.currentTarget.value = properties.label ?? "default label");
+                handlePropertiesChange({...properties, label: value})
               }}
             />
           </div>

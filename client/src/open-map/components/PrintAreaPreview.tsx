@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
-import { useMap } from "../../shared/hooks/Map";
 import { UnitToPx } from "../../shared/utils/UnitToPx";
 import { toast } from "react-toastify";
+import { useOpenMapPage } from "../../shared/new-hooks/useOpenMapPage";
 
 export default function PrintAreaPreview() {
-  const { currentMap } = useMap();
+  const { currentMap, currentMapLoading } = useOpenMapPage();
   const { areaForPrint, printSettings } = currentMap ?? {};
-  if (!printSettings) return null;
   const [sizeValues, setSizeValues] = useState<{width: string, height: string}>({width: "0px", height: "0px"});
 
   const handleLoadSize = useCallback(() => {
     const mapContainer = document.querySelector("#map-container");
-    if (!mapContainer) return;
+    if (!mapContainer || !printSettings) return;
 
     const width = UnitToPx(printSettings, areaForPrint?.width ?? 0);
     const height = UnitToPx(printSettings, areaForPrint?.height ?? 0);
@@ -37,7 +36,7 @@ export default function PrintAreaPreview() {
 
   useEffect(() => {
     const mapContainer = document.querySelector("#map-container");
-    if (!mapContainer) return;
+    if (!mapContainer || currentMapLoading) return;
 
     const observer = new ResizeObserver(() => {
       handleLoadSize();
@@ -45,7 +44,7 @@ export default function PrintAreaPreview() {
 
     observer.observe(mapContainer);
     return () => observer.disconnect();
-  }, [areaForPrint, printSettings]);
+  }, [areaForPrint, printSettings, currentMapLoading, handleLoadSize]);
 
   return (
     <>

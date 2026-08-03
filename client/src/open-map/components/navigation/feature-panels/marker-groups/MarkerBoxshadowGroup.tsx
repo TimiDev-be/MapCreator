@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
-import { useMapContainer } from "../../../../../shared/hooks/MapContainer";
+import { useCallback, useState } from "react";
 import type { MarkerProperties } from "../../../../../shared/types/MarkerProperties";
-import { useMarkerFeature } from "../../../../../shared/hooks/MarkerFeature";
+import { useFeaturePropertiesPanel } from "../../../../../shared/new-hooks/useFeaturePropertiesPanel";
 
 type Values = {
   x: number,
@@ -12,10 +11,9 @@ type Values = {
 }
 
 export default function MarkerBoxshadowGroup() {
-  const {feature} = useMapContainer();
-  const {handleBoxshadowChange} = useMarkerFeature();
-  const {properties} = feature ?? {};
-  const {boxShadow} = properties ?? {} as MarkerProperties;
+  const { getProperties, updateFeatureProperties, feature } = useFeaturePropertiesPanel();
+  const {boxShadow} = getProperties() as MarkerProperties ?? {};
+
   const [boxShadowValues, setBoxShadowValues] = useState<Values>({
     x: boxShadow[0] ?? 0, 
     y: boxShadow[1] ?? 0, 
@@ -24,10 +22,15 @@ export default function MarkerBoxshadowGroup() {
     colorOpacity: boxShadow[4] ?? 1
   });
 
-  useEffect(() => {
-    const {x, y, blur, color, colorOpacity} = boxShadowValues;
-    handleBoxshadowChange([x, y, blur, color, colorOpacity]);
-  }, [boxShadowValues])
+  const handlePropertiesChange = useCallback(async (values: Values) => {
+    const {x, y, blur, color, colorOpacity} = values;
+    const newProps : MarkerProperties = {
+      ...getProperties(),
+      boxShadow: [x, y, blur, color, colorOpacity]
+    } as MarkerProperties;
+    await updateFeatureProperties(newProps);
+    setBoxShadowValues(prev => ({...prev, ...values}));
+  }, [feature]);
 
   return(
     <>
@@ -45,7 +48,7 @@ export default function MarkerBoxshadowGroup() {
               onBlur={(e) => {
                 if (e.target.value.trim() == "") 
                   return e.target.value = boxShadowValues.x.toString();
-                setBoxShadowValues(prev => ({...prev, x: Number(e.target.value)}))
+                handlePropertiesChange({...boxShadowValues, x: Number(e.target.value)});
               }}
             />
           </div>
@@ -60,7 +63,7 @@ export default function MarkerBoxshadowGroup() {
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = boxShadowValues.y.toString();
-                setBoxShadowValues(prev => ({...prev, y: Number(e.target.value)}))
+                handlePropertiesChange({...boxShadowValues, y: Number(e.target.value)});
               }}
             />
           </div>
@@ -77,7 +80,7 @@ export default function MarkerBoxshadowGroup() {
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = boxShadowValues.blur.toString();
-                setBoxShadowValues(prev => ({...prev, blur: Number(e.target.value)}))
+                handlePropertiesChange({...boxShadowValues, blur: Number(e.target.value)});
               }}
             />
           </div>
@@ -94,7 +97,7 @@ export default function MarkerBoxshadowGroup() {
               className="color-input"
               defaultValue={boxShadowValues.color}
               onBlur={(e) => {
-                setBoxShadowValues(prev => ({...prev, color: e.target.value}))
+                handlePropertiesChange({...boxShadowValues, color: e.target.value});
               }}
             />
           </div>
@@ -111,7 +114,7 @@ export default function MarkerBoxshadowGroup() {
               onBlur={(e) => {
                 if (e.target.value.trim() == "")
                   return e.target.value = boxShadowValues.colorOpacity.toString();
-                setBoxShadowValues(prev => ({...prev, colorOpacity: Number(e.target.value)}))
+                handlePropertiesChange({...boxShadowValues, colorOpacity: Number(e.target.value)});
               }}
             />
           </div>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Text.Json;
 using desktop.Services;
 using System.Collections.ObjectModel;
+using desktop.Data.Models;
 
 namespace desktop.Data
 {
@@ -26,6 +27,10 @@ namespace desktop.Data
             "MapCreator",
             "logs"
         );
+        public JsonSerializerOptions AppJsonSerializerOptions = new JsonSerializerOptions()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
         public StyleData StyleData { get; set; } = new StyleData();
         public AppData AppData { get; set; } = new AppData();
         public LogData LogData { get; set; } = new LogData();
@@ -50,16 +55,17 @@ namespace desktop.Data
         {
             if (!File.Exists(ConfigAppDataFilePath))
             {
-                AppData appData = new AppData(null);
+                AppData appData = new AppData();
                 Directory.CreateDirectory(Path.GetDirectoryName(ConfigAppDataFilePath)!);
-                await File.WriteAllTextAsync(ConfigAppDataFilePath, JsonSerializer.Serialize(appData));
+                var jsonToWrite = JsonSerializer.Serialize(appData.Source, AppJsonSerializerOptions);
+                await File.WriteAllTextAsync(ConfigAppDataFilePath, jsonToWrite);
 
                 this.AppData = appData;
                 return;
             }
 
             var json = await File.ReadAllTextAsync(ConfigAppDataFilePath);
-            this.AppData = JsonSerializer.Deserialize<AppData>(json) ?? new AppData(null);
+            this.AppData.Source = JsonSerializer.Deserialize<MSource>(json, AppJsonSerializerOptions) ?? new MSource();
         }
 
         public async Task LoadLogDataAsync()

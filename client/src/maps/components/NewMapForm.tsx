@@ -1,30 +1,24 @@
 import "../styles/_newMapForm.scss";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-import { useMap } from "../../shared/hooks/Map";
 import Line from "../../shared/components/Line";
-import {toast} from "react-toastify";
+import { useMap } from "../../shared/new-hooks/useMap";
 
 const ValidationSchema = yup.object({
   name: yup.string().required("Name is required"),
 });
 
 export default function NewMapForm() {
-  const { newMap } = useMap();
+  const {createMap} = useMap();
 
-  const handleSubmit = async (
-    values: { name: string },
-    { setSubmitting, resetForm },
-  ) => {
-    setSubmitting(true);
+  const handleSubmit = async (values: { name: string }, { setSubmitting, resetForm } : any) => {
     try {
-      newMap(values.name);
-      toast.success(`"${values.name}" map was created`);
-      resetForm();
-    } catch (error) {
-      toast.error(`Something went wrong`);
-    } finally {
+      setSubmitting(true);
+      await createMap(values.name);
+    } 
+    finally {
       setSubmitting(false);
+      resetForm();
     }
   };
 

@@ -1,13 +1,44 @@
-import { useMap } from "../../../../shared/hooks/Map";
-import { useMapSettings } from "../../../../shared/hooks/MapSettings";
 import AnchorLogo from "../../../../assets/material-symbols_anchor-rounded.svg?react";
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
+import { useMapSettings, type SettingsPanelProperties } from "../../../../shared/new-hooks/useMapSettings";
+import { useOpenMapPage } from "../../../../shared/new-hooks/useOpenMapPage";
+import type { AttractionPoint } from "../../../../shared/types/AttractionPoint";
 
 export default function AnchorPrintGroup() {
-  const {map} = useMapContainer();
-  const {currentMap} = useMap();
-  const {toggleAttractionPoint} = useMapSettings();
-  const { attractionPoint } = currentMap ?? {};
+  const {maplibreMap} = useOpenMapPage();
+  const {settings, updateSettings} = useMapSettings();
+
+  const handleToggleAttractionPointClick = async () => {  
+    if (!maplibreMap.current || !settings) return;
+
+    const map = maplibreMap.current;
+    const {lng, lat} = map.getCenter();
+    const zoom = map.getZoom();
+    const {attractionPoint} = settings ?? {} as SettingsPanelProperties;
+    
+    let newAttractionPoint : AttractionPoint | undefined = {
+      coords: [0, 0],
+      zoom: 0,
+      minZoom: attractionPoint?.minZoom ?? 0,
+      maxZoom: attractionPoint?.maxZoom ?? 22,
+      pitch: 0,
+      bearing: 0
+    };
+
+    if (!attractionPoint || attractionPoint.zoom == 0)
+      newAttractionPoint = {
+        coords: [lng, lat],
+        zoom: map.getZoom(),
+        minZoom: zoom - 3,
+        maxZoom: zoom + 3,
+        pitch: map.getPitch(),
+        bearing: map.getBearing()
+      }
+
+    await updateSettings({
+      ...settings,
+      attractionPoint: newAttractionPoint
+    }, true)
+  }
 
   return(
     <>
@@ -18,8 +49,8 @@ export default function AnchorPrintGroup() {
           </p>
           <button
             type="button"
-            className={`anchor-print-position-button ${attractionPoint ? "active" : ""}`}
-            onClick={toggleAttractionPoint}
+            className={`anchor-print-position-button ${settings?.attractionPoint?.zoom != 0 ? "active" : ""}`}
+            onClick={handleToggleAttractionPointClick}
           >
             <AnchorLogo width={24} height={24} />
           </button>
@@ -27,24 +58,24 @@ export default function AnchorPrintGroup() {
         <button
           type="button"
           className="jump-to-anchor-button t-panel-small"
-          disabled={!attractionPoint}
+          disabled={settings?.attractionPoint?.zoom == 0}
           onClick={() => {
-            if (attractionPoint && map.current) {
-              map.current.jumpTo({
+            if (settings?.attractionPoint && maplibreMap.current) {
+              maplibreMap.current.jumpTo({
                 center: [
-                  attractionPoint.coords[0],
-                  attractionPoint.coords[1],
+                  settings?.attractionPoint.coords[0],
+                  settings?.attractionPoint.coords[1],
                 ],
-                zoom: attractionPoint.zoom,
-                pitch: attractionPoint.pitch,
-                bearing: attractionPoint.bearing,
+                zoom: settings?.attractionPoint.zoom,
+                pitch: settings?.attractionPoint.pitch,
+                bearing: settings?.attractionPoint.bearing,
               });
             }
           }}
         >
           Jump to anchor
         </button>
-        {!attractionPoint && (
+        {settings?.attractionPoint?.zoom == 0 && (
           <p className="about attraction-point t-panel-small">
             Need to add an attraction to access jump to anchor and show print
             area.

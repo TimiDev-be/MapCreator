@@ -1,16 +1,23 @@
 import "../../styles/_settingsPanel.scss";
 import Line from "../../../shared/components/Line";
-import { useMap } from "../../../shared/hooks/Map";
-import { useMapSettings } from "../../../shared/hooks/MapSettings";
 import ZoomGroup from "./settings-groups/ZoomGroup";
 import AreaForPrintGroup from "./settings-groups/AreaForPrintGroup";
 import AnchorPrintGroup from "./settings-groups/AnchorPrintGroup";
+import { useMapSettings, type SettingsPanelProperties } from "../../../shared/new-hooks/useMapSettings";
 // import PrintSettingGroup from "./settings-groups/PrintSettingsGroup";
 
 export default function SettingsPanel() {
-  const { currentMap, deleteMap } = useMap();
-  const {handleNameChange} = useMapSettings();
-  const { id, name } = currentMap ?? {};
+  const {settings, updateSettings, deleteMap} = useMapSettings();
+  const values = settings ?? {} as SettingsPanelProperties;
+
+  const handleNameBlur = async (e : React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.trim().length == 0)
+      return (e.target.value = values.name ?? "");
+    await updateSettings({
+      ...values,
+      name: e.target.value
+    });
+  }  
 
   return (
     <>
@@ -26,12 +33,8 @@ export default function SettingsPanel() {
             name="name"
             id="name-input"
             className="panel-field t-panel-medium"
-            defaultValue={name}
-            onBlur={(e) => {
-              if (e.target.value.trim().length == 0)
-                return (e.target.value = name ?? "");
-              handleNameChange(e);
-            }}
+            defaultValue={values.name}
+            onBlur={handleNameBlur}
           />
         </div>
         <ZoomGroup/>
@@ -45,7 +48,7 @@ export default function SettingsPanel() {
         <button
           type="button"
           className="delete-map-button t-panel-medium"
-          onClick={() => deleteMap(id ?? "")}
+          onClick={deleteMap}
         >
           Delete map
         </button>

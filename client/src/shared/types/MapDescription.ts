@@ -1,7 +1,7 @@
 import type { TemplatePrintSettings } from "./TemplatePrintSettings";
 
 export interface MapDescription {
-  templateId: string;
+  templateId: string | null;
   values: Record<string, string>;
   qrCodeUrl?: string;
   descriptionForMapMaker: string;

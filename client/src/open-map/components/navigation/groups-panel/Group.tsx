@@ -1,81 +1,62 @@
 import "../../../styles/_group.scss";
 import type { Group } from "../../../../shared/types/Group";
-import type { Feature } from "geojson";
-import { useState, useRef, useEffect } from "react";
-import { useMap } from "../../../../shared/hooks/Map";
-import { useGroup } from "../../../../shared/hooks/Group";
+import { useState, useRef } from "react";
+import { useGroup } from "../../../../shared/new-hooks/useGroup";
 import FeatureComponent from "./Feature";
 import FolderLogo from "../../../../assets/material-symbols_folder-outline.svg?react";
 import CloseLogo from "../../../../assets/material-symbols_close.svg?react";
+import { useOpenMapPage } from "../../../../shared/new-hooks/useOpenMapPage";
 
 type Props = {
   group: Group;
 };
 
 export default function Group({ group }: Props) {
-  const { currentMap } = useMap();
-  const {
-    updateGroupName,
-    deleteGroup,
-    currentGroup,
-    toggleActive,
-    assignFeatureToGroup,
-  } = useGroup();
-  const { id, name } = group;
+  const {currentGroup, setCurrentGroup} = useOpenMapPage();
+  const {updateGroup, getGroupFeatures, deleteGroup, assignFeatureToGroup} = useGroup(group.id);
   const [editName, setEditName] = useState<boolean>(false);
-  const [features, setFeatures] = useState<Feature[]>(
-    (currentMap && currentMap.features.filter((f) => f.properties?.groupId === id)) ?? [],
-  );
   const NameInputRef = useRef<HTMLInputElement | null>(null);
+  const { id, name } = group;
 
   const handleDoubleClick = () => {
     setEditName(true);
     setTimeout(() => NameInputRef.current?.focus(), 0);
   };
 
-  const handleBlur = (e : any) => {
+  const handleNameBlur = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     if (!NameInputRef.current) return;
-
     if (e.target.value.trim().length === 0) {
       NameInputRef.current.value = name;
       setEditName(false);
     } else {
-      updateGroupName({ id, name: e.target.value });
+      updateGroup(e.target.value);
     }
   };
 
-  useEffect(() => {
-    const handleMapUpdate = () => {
-      if (!currentMap) return;
-      setFeatures(
-        currentMap.features.filter((f) => f.properties?.groupId === id),
-      );
-    };
-    handleMapUpdate();
-  }, [currentMap]);
+  const handleOnFeatureDrop = (e: React.DragEvent<HTMLLIElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const featureId = e.dataTransfer.getData("featureId");
+    assignFeatureToGroup(featureId, id);   
+  }
 
   return (
     <>
       <li
         className={`map-group-element ${currentGroup?.id === id ? "active" : ""}`}
         onDragOver={(e) => e.preventDefault()}
-        onDrop={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const featureId = e.dataTransfer.getData("featureId");
-          assignFeatureToGroup(featureId, id);
-        }}
+        onDrop={handleOnFeatureDrop}
       >
         <button
           type="button"
           className="delete-group-button"
-          onClick={() => deleteGroup(id)}
+          onClick={deleteGroup}
         >
           <CloseLogo width={16} height={16} />
         </button>
         <div
           className={`group-wrapper ${currentGroup?.id === id ? "active" : ""}`}
-          onClick={() => toggleActive(group)}
+          onClick={() => setCurrentGroup(prev => prev && prev.id == group.id ? null : group)}
         >
           <FolderLogo width={20} height={20} />
           <input
@@ -87,12 +68,12 @@ export default function Group({ group }: Props) {
             defaultValue={name}
             ref={NameInputRef}
             onDoubleClick={handleDoubleClick}
-            onBlur={handleBlur}
+            onBlur={handleNameBlur}
             onClick={(e) => e.stopPropagation()}
           />
         </div>
         <ul className={`features ${currentGroup?.id === id ? "active" : ""}`}>
-          {features.map((f) => {
+          {[...getGroupFeatures()].map((f) => {
             return <FeatureComponent key={f.id} feature={f} />;
           })}
         </ul>

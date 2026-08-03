@@ -1,38 +1,31 @@
 import "../styles/_mapsListElement.scss";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import type { StateMap } from "../../shared/types/StateMap";
-import { useMap } from "../../shared/hooks/Map";
 import { TimeAgo } from "../../shared/utils/TimeAgo";
 import { Link } from "react-router-dom";
 import DotsLogo from "../../assets/bi_three-dots-vertical.svg?react";
 import ClockLogo from "../../assets/mdi_clock-outline.svg?react";
+import { useMapsListElement } from "../../shared/new-hooks/useMapsListElement";
 
 type Props = {
   map: StateMap;
 };
 
 export default function MapsListElement({ map }: Props) {
-  const { toggleCheckMap, deleteMap } = useMap();
-  const [settingsActive, setSettingsActive] = useState<boolean>(false);
+  const {
+    handleToggleMapChecked, 
+    handleToggleSettings,
+    deleteMap,
+    settingsActive
+  } = useMapsListElement(map.id);
   const CheckBoxRef = useRef<HTMLInputElement>(null);
   const { id, name, checked, updatedAt, createdAt } = map;
-
-  const handleSettingsActive = (e: React.MouseEvent, value?: boolean) => {
-    e.stopPropagation();
-    if (value != undefined) setSettingsActive(value);
-    else setSettingsActive((prev) => !prev);
-  };
 
   const handleWrapperClick = () => {
     if (!CheckBoxRef.current) return;
     const newValue = !CheckBoxRef.current.checked;
     CheckBoxRef.current.checked = newValue;
-    toggleCheckMap(id, newValue);
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    toggleCheckMap(id, e.target.checked);
+    handleToggleMapChecked(newValue);
   };
 
   useEffect(() => {
@@ -43,7 +36,7 @@ export default function MapsListElement({ map }: Props) {
     <>
       <div
         className="maps-list-element"
-        onMouseLeave={(e) => handleSettingsActive(e, false)}
+        onMouseLeave={(e) => handleToggleSettings(e, false)}
       >
         <div className="top-block">
           <div className="wrapper" onClick={handleWrapperClick}>
@@ -55,13 +48,13 @@ export default function MapsListElement({ map }: Props) {
                 className="map-checkbox"
                 ref={CheckBoxRef}
                 defaultChecked={checked}
-                onChange={handleCheckboxChange}
+                onChange={handleToggleMapChecked}
                 onClick={(e) => e.stopPropagation()}
               />
               <button
                 type="button"
                 className={`open-map-menu-button ${settingsActive && "active"}`}
-                onClick={handleSettingsActive}
+                onClick={handleToggleSettings}
               >
                 <DotsLogo width={24} height={24} />
               </button>
@@ -94,7 +87,7 @@ export default function MapsListElement({ map }: Props) {
               <button
                 type="button"
                 className="remove-map-button t-map-element-list-medium"
-                onClick={() => deleteMap(id)}
+                onClick={deleteMap}
               >
                 delete
               </button>

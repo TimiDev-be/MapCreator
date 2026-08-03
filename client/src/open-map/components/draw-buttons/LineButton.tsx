@@ -1,22 +1,21 @@
 import LineLogo from "../../../assets/uil_line-alt.svg?react";
-import { useDraw } from "../../../shared/hooks/Draw";
-import { useMapContainer } from "../../../shared/hooks/MapContainer";
 import { useEffect } from "react";
+import { useDrawLine } from "../../../shared/new-hooks/useDrawLine";
 
 export default function LineButton() {
-  const { map } = useMapContainer();
   const {
-    toggleDrawButton,
-    activeButton,
-    FinishLine,
-    handleRemoveLastPoint,
-    handleClick,
+    activeButton, 
+    handleToggleActive,
+    maplibreMap, 
+    handleFinishLineDrawing,
     handleMouseMove,
-  } = useDraw();
+    handleClick,
+    handleRemoveLastLinePoint
+  } = useDrawLine();
 
   useEffect(() => {
     if (
-      !map.current ||
+      !maplibreMap.current ||
       !activeButton ||
       !activeButton.classList.contains("line")
     )
@@ -24,33 +23,33 @@ export default function LineButton() {
 
     const handleKeys = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        toggleDrawButton(undefined);
+        handleToggleActive(null);
       } else if (e.key === "Enter") {
-        FinishLine(undefined);
+        handleFinishLineDrawing();
       } else if (e.key === "Backspace") {
-        handleRemoveLastPoint();
+        handleRemoveLastLinePoint();
       }
     };
 
     window.addEventListener("keydown", handleKeys);
-    map.current.on("dblclick", FinishLine);
-    map.current.on("mousemove", handleMouseMove);
-    map.current.on("click", handleClick);
+    maplibreMap.current.on("dblclick", handleFinishLineDrawing);
+    maplibreMap.current.on("mousemove", handleMouseMove);
+    maplibreMap.current.on("click", handleClick);
 
     return () => {
-      map.current?.off("dblclick", FinishLine);
-      map.current?.off("mousemove", handleMouseMove);
-      map.current?.off("click", handleClick);
+      maplibreMap.current?.off("dblclick", handleFinishLineDrawing);
+      maplibreMap.current?.off("mousemove", handleMouseMove);
+      maplibreMap.current?.off("click", handleClick);
       window.removeEventListener("keydown", handleKeys);
     };
-  }, [activeButton, FinishLine, map]);
+  }, [activeButton, handleFinishLineDrawing, maplibreMap]);
 
   return (
     <>
       <button
         type="button"
         className="draw-button line"
-        onClick={toggleDrawButton}
+        onClick={(e) => handleToggleActive(e.currentTarget)}
       >
         <LineLogo width={32} height={32} />
       </button>

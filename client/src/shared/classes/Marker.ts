@@ -49,4 +49,12 @@ export class Marker implements Feature {
       maxZoom: zoom + 3,
     };
   }
+  toJson() : Feature {
+    return {
+      id: this.id,
+      type: this.type,
+      geometry: this.geometry,
+      properties: this.properties
+    }
+  }
 }

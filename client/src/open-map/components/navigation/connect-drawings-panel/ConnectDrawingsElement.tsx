@@ -2,7 +2,7 @@ import NextLogo from "../../../../assets/ooui_next-ltr.svg?react";
 import ArrorLogo from "../../../../assets/carbon_arrow-right.svg?react";
 import type { Map } from "../../../../shared/types/Map";
 import { useState } from "react";
-import { useConnectDrawings } from "../../../../shared/hooks/ConnnectDrawings";
+import { useConnectDrawings } from "../../../../shared/new-hooks/useConnnectDrawings";
 
 type Props = {
   map: Map;
@@ -13,9 +13,21 @@ type Props = {
 export default function ConnectDrawingsElement({ map, isCurrentMap, isConnected }: Props) {
   const {toggleConnectedMap, updateMinMaxZoom} = useConnectDrawings();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [isToggling, setIsToggling] = useState<boolean>(false);
   const {id, name, attractionPoint} = map;
   const {minZoom, maxZoom} = attractionPoint ?? {};
   const [minMaxZoom, setMinMaxZoom] = useState<number[]>([minZoom ?? 0, maxZoom ?? 22]);
+
+  const handleToggle = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isToggling) return;
+    setIsToggling(true);
+    try {
+      await toggleConnectedMap(id);
+    } finally {
+      setIsToggling(false);
+    }
+  };
 
   return (
     <>
@@ -23,10 +35,7 @@ export default function ConnectDrawingsElement({ map, isCurrentMap, isConnected 
         <div className="top-block">
           <div className="wrapper">
             {!isCurrentMap && (
-              <button type="button" className="switch-connect-status-button" onClick={(e) => {
-                e.stopPropagation();
-                toggleConnectedMap(id);
-              }}>
+              <button type="button" className="switch-connect-status-button" disabled={isToggling} onClick={handleToggle}>
                 <ArrorLogo width={20} height={20} className={`arrow-logo ${isConnected ? "connected" : ""}`}/>
               </button>
             )}

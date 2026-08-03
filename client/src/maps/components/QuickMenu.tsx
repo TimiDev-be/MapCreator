@@ -1,51 +1,23 @@
 import "../styles/_quickMenu.scss";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import CustomSelect from "../../shared/components/CustomSelect.tsx";
 import type { CustomSelectOption } from "../../shared/types/CustomSelectOption.ts";
-import { SORT_ORDER } from "../../shared/types/SortOrder.ts";
 import TrashLogo from "../../assets/tabler_trash-filled.svg?react";
-import { useMaps } from "../../shared/hooks/Maps.ts";
-import { useSource } from "../../shared/hooks/Source.ts";
+import { useSesstionSortOption } from "../../shared/new-hooks/useSessionSortOption.ts";
+import { useQuickMenu } from "../../shared/new-hooks/useQuickMenu.ts";
 
-const SELECT_OPTIONS: CustomSelectOption[] = [
-  { id: crypto.randomUUID(), value: SORT_ORDER.DF },
-  { id: crypto.randomUUID(), value: SORT_ORDER.AZ },
-  { id: crypto.randomUUID(), value: SORT_ORDER.ZA },
-];
-
-const useSessionSortOption = () : CustomSelectOption => {
-  const sessionStorageSortValue = sessionStorage.getItem("mapsSort");
-  if (sessionStorageSortValue) {
-    try {
-      const sessionStorageData = JSON.parse(sessionStorageSortValue);
-      if (sessionStorageData.id && sessionStorageData.value) {
-        return sessionStorageData;
-      }
-    } catch (error) {
-      return SELECT_OPTIONS[0];
-    }
-  }
-  return SELECT_OPTIONS[0];
-}
+const {getOption} = useSesstionSortOption();
 
 export default function QuickMenu() {
-  const { currentSource } = useSource();
-  const { toggleSort, toggleAll, deleteChecked } = useMaps();
-  const [selectValue, setSelectValue] = useState<CustomSelectOption>(useSessionSortOption);
-  const InitialSortAppliedRef = useRef<boolean>(false);
+  const {toggleAll, toggleSort, deleteChecked, SELECT_OPTIONS} = useQuickMenu()
+  const [selectValue, setSelectValue] = useState<CustomSelectOption>(getOption);
 
   const selectOption = (option: CustomSelectOption) => {
     setSelectValue(option);
     toggleSort(option.value);
     sessionStorage.setItem("mapsSort", JSON.stringify(option));
   };
-
-  useEffect(() => {
-    if (!currentSource || InitialSortAppliedRef.current) return;
-    InitialSortAppliedRef.current = true;
-    toggleSort(useSessionSortOption().value);
-  }, [currentSource])
 
   return (
     <>

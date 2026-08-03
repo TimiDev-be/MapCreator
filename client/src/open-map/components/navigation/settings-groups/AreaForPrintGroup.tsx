@@ -1,12 +1,41 @@
-import { useMap } from "../../../../shared/hooks/Map";
-import { useMapContainer } from "../../../../shared/hooks/MapContainer";
-import { useMapSettings } from "../../../../shared/hooks/MapSettings";
+import type React from "react";
+import { useMapSettings, type SettingsPanelProperties } from "../../../../shared/new-hooks/useMapSettings";
+import type { AreaForPrint } from "../../../../shared/types/AreaForPrint";
+import { useAreaForPrint } from "../../../../shared/new-hooks/useAreaForPrint";
 
 export default function AreaForPrintGroup() {
-  const {areaForPrintFeature, setAreaForPrintClientPreview, areaForPrintClientPreview} = useMapContainer();
-  const {currentMap} = useMap();
-  const {handleAreaForPrintChange, toggleAreaForPrint} = useMapSettings();
-  const { attractionPoint, areaForPrint } = currentMap ?? {};
+  const {settings, updateSettings} = useMapSettings();
+  const {areaForPrintFeature, areaForPrintClientVisible, setAreaForPrintClientVisible, toggleAreaForPrint} = useAreaForPrint();
+  const {attractionPoint, areaForPrint} = settings ?? {} as SettingsPanelProperties;
+
+  const handleAreaForPrintBlur = async (e: React.ChangeEvent<HTMLInputElement>, size: "width" | "height") => {
+    if (!settings) return;
+    const value = e.target.value;
+
+    let newAreaForPrint : AreaForPrint = {
+      ...areaForPrint
+    }
+    
+    switch(size) {
+      case "width":
+        if (value.trim() === "" || Number(value) < 0)
+          return e.target.value = (newAreaForPrint.width ?? 150).toString();
+        else 
+          newAreaForPrint.width = Number(value);
+        break;
+      case "height":
+        if (value.trim() === "" || Number(value) < 0)
+          return e.target.value = (newAreaForPrint.height ?? 95).toString();
+        else 
+          newAreaForPrint.height = Number(value);
+        break;
+    }
+
+    await updateSettings({
+      ...settings,
+      areaForPrint: newAreaForPrint
+    })
+  }
 
   return(
     <>
@@ -25,15 +54,8 @@ export default function AreaForPrintGroup() {
               id="width-input"
               className="panel-field t-panel-small"
               min={0}
-              defaultValue={areaForPrint?.width ?? 150}
-              onBlur={(e) => {
-                if (Number(e.target.value) < 0 || e.target.value === "")
-                  return (e.target.value = "150");
-                handleAreaForPrintChange({
-                  height: areaForPrint?.height ?? 95,
-                  width: Number(e.target.value),
-                });
-              }}
+              defaultValue={settings?.areaForPrint.width}
+              onBlur={(e) => handleAreaForPrintBlur(e, "width")}
             />
           </div>
           <span className="field-bridge" />
@@ -47,15 +69,8 @@ export default function AreaForPrintGroup() {
               id="height-input"
               className="panel-field t-panel-small"
               min={0}
-              defaultValue={areaForPrint?.height ?? 95}
-              onBlur={(e) => {
-                if (Number(e.target.value) < 0 || e.target.value === "")
-                  return (e.target.value = "95");
-                handleAreaForPrintChange({
-                  width: areaForPrint?.width ?? 150,
-                  height: Number(e.target.value),
-                });
-              }}
+              defaultValue={settings?.areaForPrint.height}
+              onBlur={(e) => handleAreaForPrintBlur(e, "height")}
             />
           </div>
         </div>
@@ -63,16 +78,16 @@ export default function AreaForPrintGroup() {
           type="button"
           className={`show-print-area-button t-panel-small ${areaForPrintFeature ? "active" : ""}`}
           onClick={toggleAreaForPrint}
-          disabled={!attractionPoint}
+          disabled={attractionPoint?.zoom == 0}
         >
           Show print area
         </button>
         <button
           type="button"
-          className={`show-print-area-client-preview-button t-panel-small ${areaForPrintClientPreview ? "active" : ""}`}
-          onClick={() => setAreaForPrintClientPreview((prev) => !prev)}
+          className={`show-print-area-client-preview-button t-panel-small ${areaForPrintClientVisible ? "active" : ""}`}
+          onClick={() => setAreaForPrintClientVisible((prev) => !prev)}
         >
-          {areaForPrintClientPreview ? "Hide" : "Show"} print area client
+          {areaForPrintClientVisible ? "Hide" : "Show"} print area client
           preview
         </button>
       </div>
