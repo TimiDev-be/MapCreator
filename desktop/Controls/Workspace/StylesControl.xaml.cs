@@ -31,11 +31,6 @@ namespace desktop.Controls.Workspace
             add => AddHandler(AppEvents.OpenChangeStylePopupEvent, value);
             remove => RemoveHandler(AppEvents.OpenChangeStylePopupEvent, value);
         }
-        public event RoutedEventHandler ReloadWebView
-        {
-            add => AddHandler(AppEvents.ReloadWebViewEvent, value);
-            remove => RemoveHandler(AppEvents.ReloadWebViewEvent, value);
-        }
         public StylesControl()
         {
             InitializeComponent();
@@ -66,8 +61,7 @@ namespace desktop.Controls.Workspace
             var listBox = (ListBox)sender;
             if (listBox.SelectedItem is desktop.Classes.Style style)
             {
-                var isReload = await App.StyleService.ToggleActiveStyle(style.Id);
-                if (isReload) RaiseEvent(new RoutedEventArgs(AppEvents.ReloadWebViewEvent));
+                await App.StyleService.ToggleActiveStyle(style.Id);
             }
         }
         private async void DeleteItem_Click(object sender, RoutedEventArgs e)
@@ -77,7 +71,6 @@ namespace desktop.Controls.Workspace
             if (App.AppDataContext.StyleData.Styles.FirstOrDefault(s => s.Id == id)?.IsActive == true)
             {
                 await App.StyleService.DeleteStyle(id);
-                RaiseEvent(new RoutedEventArgs(AppEvents.ReloadWebViewEvent));
                 return;
             }
             await App.StyleService.DeleteStyle(id);

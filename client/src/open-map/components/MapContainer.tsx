@@ -14,18 +14,21 @@ import {
   PolygonFillPreviewLayer, LinesPreviewLayer, 
   PointsPreviewLayer, AreaForPrintLinePreviewLayer
 } from "./map-layers"
+import { useSource } from "../../shared/new-hooks/useSource";
+import { useEffect, useState } from "react";
 
 export default function MapContainer() {
+  const {currentStyle} = useSource();
   const {
     currentMap, 
     currentMapLoading, 
     setMaplibreMap, 
-    currentStyle, 
     areaForPrintFeature,
     setMaplibreMapZoom,
     drawPreviewFeatures,
     connectedDrawings
   } = useOpenMapPage();
+  const [mapError, setMapError] = useState<boolean>(false);
   const {id, attractionPoint} = currentMap ?? {};
 
   let Initials : AttractionPoint = {
@@ -64,6 +67,11 @@ export default function MapContainer() {
     features: areaForPrintFeature ? [...drawPreviewFeatures, areaForPrintFeature] : [...drawPreviewFeatures]
   }
 
+  useEffect(() => {
+    if (currentStyle)
+      setMapError(false);
+  }, [currentStyle])
+
   if (currentMapLoading)
     return <LoadingScreen/>;
 
@@ -75,7 +83,13 @@ export default function MapContainer() {
   return(
     <>
       <div id="map-container">
-        <RMap
+        {mapError && (
+            <div className="map-error t-panel-big">
+              Something went wrong while loading the map. Check your internet
+              connection and correctness of map style url and try again.
+            </div>
+        )}
+        {!mapError && <RMap
           key={id}
           style={{ width: "100%", height: "100%" }}
           mapStyle={currentStyle?.url ?? "default style"}
@@ -85,6 +99,9 @@ export default function MapContainer() {
           {...MapInitials}
           onMounted={(m) => {
             setMaplibreMap(m);
+          }}
+          onError={() => {
+            setMapError(true);
           }}
           onZoom={(e) => {
             setMaplibreMapZoom(e.target.getZoom());
@@ -114,7 +131,7 @@ export default function MapContainer() {
           <PointsPreviewLayer/>
           <AreaForPrintLinePreviewLayer/>
 
-        </RMap>
+        </RMap>}
       </div>
     </>
   )

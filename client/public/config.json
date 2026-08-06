@@ -2,5 +2,8 @@
   "api": {
     "link": "http://localhost:5550/api",
     "port": 5550
-  }
+  },
+  "websockets": {
+    "link": "ws:localhost:5550"
+  } 
 }

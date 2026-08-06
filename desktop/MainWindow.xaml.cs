@@ -46,7 +46,6 @@ namespace desktop
                 ChangeStylePopup.OldStyle = e.Style;
                 this.ChangeStylePopup.Visibility = Visibility.Visible;
             }));
-            this.AddHandler(AppEvents.ReloadWebViewEvent, new RoutedEventHandler(OnReloadWebView));
 
             Header.PageChangeInvoked += async (s, e) =>
             {
@@ -119,10 +118,6 @@ namespace desktop
         private void SetupStylePopup_Open(object sender, RoutedEventArgs e)
         {
             this.SetupStylePopup.Visibility = Visibility.Visible;
-        }
-        private void OnReloadWebView(object sender, RoutedEventArgs e)
-        {
-            this.WebViewAppPage.WebView.Reload();
         }
     }
 }

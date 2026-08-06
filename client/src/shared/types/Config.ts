@@ -3,4 +3,7 @@ export interface Config {
     link: string;
     port: number;
   };
+  websockets: {
+    link: string
+  }
 }

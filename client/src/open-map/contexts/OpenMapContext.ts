@@ -2,7 +2,6 @@ import { createContext, type Dispatch, type RefObject, type SetStateAction } fro
 import type { Map } from "../../shared/types/Map";
 import { Map as MaplibreMap, MapMouseEvent, type StyleSpecification } from "maplibre-gl";
 import type { Feature } from "geojson";
-import type { MapStyle } from "../../shared/types/MapStyle";
 import type { Group } from "../../shared/types/Group";
 
 export type MaplibreMapHook = {
@@ -35,7 +34,6 @@ type Context = {
   currentMap: Map | null,
   setCurrentMap: React.Dispatch<SetStateAction<Map | null>>,
   currentMapLoading: boolean,
-  currentStyle: MapStyle | null,
   currentGroup: Group | null,
   setCurrentGroup: Dispatch<SetStateAction<Group | null>>,
   feature: Feature | null,

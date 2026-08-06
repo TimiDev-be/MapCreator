@@ -2,6 +2,9 @@ import { toast } from "react-toastify"
 import type { MapStyle } from "../types/MapStyle"
 import { useSource } from "../new-hooks/useSource"
 
+/**
+ * currently unused becasue of newly added web socket communication about active styles
+ */
 export const useStyle = () => {
   const {config} = useSource();
   const apiUrl : string = config ? config.api.link + "/styles" : "/styles";
