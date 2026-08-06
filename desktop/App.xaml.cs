@@ -1,6 +1,7 @@
 ﻿using desktop.Classes;
 using desktop.Data;
 using desktop.Services;
+using desktop.WebSockets;
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -16,6 +17,7 @@ namespace desktop
         public static StyleService StyleService { get; private set; }
         public static DataService DataService { get; private set; }
         public static LogService LogService { get; private set; }
+        public static IWsStyleManager WsStyleManager { get; private set; }
         public LocalHttp Server { get; set; }
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -28,11 +30,12 @@ namespace desktop
             await AppDataContext.LoadAppDataAsync();
             await AppDataContext.LoadLogDataAsync();
 
-            StyleService = new StyleService(AppDataContext);
+            WsStyleManager = new WsStyleManager();
+            StyleService = new StyleService(AppDataContext, WsStyleManager);
             DataService = new DataService(AppDataContext);
             LogService = new LogService(AppDataContext);
 
-            Server = new LocalHttp(AppDataContext);
+            Server = new LocalHttp(AppDataContext, WsStyleManager);
             await Server.Start();
 
             MainWindow mainWindow = new MainWindow();

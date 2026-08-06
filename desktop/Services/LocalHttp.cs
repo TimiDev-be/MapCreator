@@ -1,6 +1,7 @@
 ﻿using desktop.Classes;
 using desktop.Data;
 using desktop.Endpoints;
+using desktop.WebSockets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ using System.Text.Json.Serialization;
 
 namespace desktop.Services
 {
-    public class LocalHttp(AppDataContext dataContext)
+    public class LocalHttp(AppDataContext dataContext, IWsStyleManager wsStyleManager)
     {
         private WebApplication? _httpServer;
         public int Port { get; set; }
@@ -85,6 +86,7 @@ namespace desktop.Services
             });
 
             builder.Services.AddSingleton<AppDataContext>(dataContext);
+            builder.Services.AddSingleton<IWsStyleManager>(wsStyleManager);
             builder.Services.AddScoped<DataService>();
             builder.Services.AddScoped<StyleService>();
             builder.Services.AddScoped<FilesService>();
@@ -112,6 +114,9 @@ namespace desktop.Services
             app.TemplatesEndpoints();
             app.ImportEndpoints();
             app.FilesEndpoints();
+            
+            app.UseWebSockets();
+            app.UseWsEndpoints();
 
             return app;
         }
