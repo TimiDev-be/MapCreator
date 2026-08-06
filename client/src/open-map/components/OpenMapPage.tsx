@@ -10,9 +10,6 @@ import DrawButtons from "./draw-buttons/DrawButtons";
 import Navigation from "./navigation/Navigation";
 import PrintAreaPreview from "./PrintAreaPreview";
 import MapContainer from "./MapContainer";
-import type { MapStyle } from "../../shared/types/MapStyle";
-import { useStyle } from "../../shared/new-hooks/useStyle";
-import { toast } from "react-toastify";
 import type { Group } from "../../shared/types/Group";
 import { useDrawings } from "../../shared/new-hooks/useDrawings";
 import type { Feature } from "geojson";
@@ -28,11 +25,9 @@ export default function OpenMapPage() {
 
   // current map data
   const {getMap} = useMap();
-  const {getStyles} = useStyle();
   const [currentMap, setCurrentMap] = useState<Map | null>(null);
   const [currentMapLoading, setCurrentMapLoading] = useState<boolean>(true);
   
-  const [currentStyle, setCurrentStyle] = useState<MapStyle | null>(null);
   const [currentGroup, setCurrentGroup] = useState<Group | null>(null);
   const [feature, setFeature] = useState<Feature | null>(null);
 
@@ -41,13 +36,6 @@ export default function OpenMapPage() {
     setCurrentMapLoading(true);
 
     const map : Map | null = await getMap(id);
-    const styles : MapStyle[] = await getStyles();
-    const activeStyle : MapStyle | undefined = styles.find(s => s.isActive);
-
-    if (!activeStyle)
-      toast.warning("No map style has been activated. Go to workspace and activate one.");
-    else 
-      setCurrentStyle(activeStyle);
 
     if (map) {
       setCurrentMap(map);
@@ -70,7 +58,6 @@ export default function OpenMapPage() {
           currentMap,
           setCurrentMap,
           currentMapLoading,
-          currentStyle,
           currentGroup,
           setCurrentGroup,
           feature,

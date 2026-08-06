@@ -2,7 +2,7 @@ import "../styles/_downloadMapContainer.scss";
 import { RMap, RSource } from "maplibre-react-components";
 import { UnitToPx } from "../../shared/utils/UnitToPx";
 import type { MapLibreMap } from "maplibre-gl";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import type { Map } from "../../shared/types/Map";
 import { useOpenMapPage } from "../../shared/new-hooks/useOpenMapPage";
@@ -12,6 +12,8 @@ import LoadingScreen from "../../shared/components/LoadingScreen";
 import { UserSourceId } from "../../shared/types/UserSource";
 import { PolygonEdgesLayer, PolygonFillLayer, LinesLayer, DashedLinesLayer } from "./map-layers";
 import MarkersList from "./MarkersList";
+import { useSource } from "../../shared/new-hooks/useSource";
+import { toast } from "react-toastify";
 
 type Props = {
   map: Map,
@@ -19,7 +21,8 @@ type Props = {
 }
 
 export default function DownloadMapContainer({map, loaded} : Props) {
-  const {currentMap, currentStyle} = useOpenMapPage();
+  const {currentStyle} = useSource();
+  const {currentMap} = useOpenMapPage();
   const {areaForPrint, attractionPoint, printSettings} = map;
   const [mapError, setMapError] = useState<boolean>(false);
   const ContainerRef = useRef<HTMLDivElement | null>(null);
@@ -72,6 +75,16 @@ export default function DownloadMapContainer({map, loaded} : Props) {
     })
   }
 
+  useEffect(() => {
+    if (currentStyle)
+      setMapError(false);
+  }, [currentStyle])
+
+  useEffect(() => {
+    if (mapError)
+      toast.error("Something went wrong while loading the map. Check your internet connection and correctness of map style url and try again.")
+  }, [mapError])
+
   if (!currentStyle)
     return <LoadingScreen/>
 
@@ -84,13 +97,7 @@ export default function DownloadMapContainer({map, loaded} : Props) {
             width,
             height
           }}>
-          {mapError && (
-            <div className="map-error t-panel-big">
-              Something went wrong while loading the map. Check your internet
-              connection and map style url and try again.
-            </div>
-          )}
-          <RMap
+          {!mapError && currentStyle && <RMap
             style={{ width: "100%", height: "100%" }}
             mapStyle={currentStyle.url}
             initialCanvasContextAttributes={{preserveDrawingBuffer: true}}
@@ -110,7 +117,7 @@ export default function DownloadMapContainer({map, loaded} : Props) {
               <PolygonFillLayer/>
               <LinesLayer/>
               <DashedLinesLayer/>
-          </RMap>
+          </RMap>}
         </div>
         )
       }

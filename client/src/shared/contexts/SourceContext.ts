@@ -3,6 +3,7 @@ import { createContext, type Dispatch, type SetStateAction } from "react";
 import type { Config } from "../types/Config";
 import type { StateMap } from "../types/StateMap";
 import type { DescriptionTemplate } from "../types/DescriptionTemplate";
+import type { MapStyle } from "../types/MapStyle";
 
 type Context = {
   maps: StateMap[],
@@ -17,6 +18,7 @@ type Context = {
   setCurrentMap: Dispatch<SetStateAction<StateMap | null>>;
   currentGroup: Group | undefined;
   setCurrentGroup: Dispatch<SetStateAction<Group | undefined>>;
+  currentStyle: MapStyle | null;
   config: Config | undefined;
 };
 
