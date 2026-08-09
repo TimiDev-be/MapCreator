@@ -84,6 +84,7 @@ namespace desktop.Services
             existingMap.AttractionPoint = map.AttractionPoint;
             existingMap.AreaForPrint = map.AreaForPrint;
             existingMap.PrintSettings = map.PrintSettings;
+            existingMap.DisabledLayers = map.DisabledLayers;
             existingMap.UpdatedAt = DateTime.UtcNow;
 
             await this.Save();
