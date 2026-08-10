@@ -23,6 +23,11 @@
 ### Settings panel
 ![MapSettings](assets/screenshots/mapSettings.png)
 
+### Layers panel
+![MapLayers1](assets/screenshots/mapLayers1.png)
+![MapLayers2](assets/screenshots/mapLayers2.png)
+> Disabled layers are scoped to a map style. Each map style a user adds to the workspace can have its own set of disabled layers, independent of other styles.
+
 ### Drawings panel
 ![MapDrawings](assets/screenshots/mapDrawings.png)
 > Drawings shortcuts:
@@ -33,7 +38,7 @@
 > Polygon with two points or line with one point won't create a new drawing.
 
 ### Description panel
-![MapDescription1](assets/screenshots/mapDescription.png)
+![MapDescription1](assets/screenshots/mapDescription1.png)
 ![MapDescription2](assets/screenshots/mapDescription2.png)
 
 ### Combine drawings panel
@@ -80,6 +85,8 @@ dotnet run
 - Fill textarea and input fields directly within templates
 - Export templates to PDF
 - Add and edit your own map style URL
+- Disable map layers; attached to map style id
+- Work with many map styles
 
 ## Templates
 ### You can build your own *HTML* templates here is some example code:
