@@ -16,6 +16,7 @@ namespace desktop.Data.Models
         public MAttractionPoint? AttractionPoint { get; set; } = null;
         public MAreaForPrint AreaForPrint { get; set; } = new MAreaForPrint(150, 95);
         public MMapPrintSettings PrintSettings { get; set; } = new MMapPrintSettings();
+        public List<MDisabledLayer> DisabledLayers { get; set; } = new List<MDisabledLayer>();
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
@@ -38,7 +39,8 @@ namespace desktop.Data.Models
             DateTime CreatedAt,
             DateTime UpdatedAt,
             List<MGroup>? Groups = null,
-            List<object>? Features = null
+            List<object>? Features = null,
+            List<MDisabledLayer>? DisabledLayers = null
         )
         {
             this.Id = Id;
@@ -51,6 +53,7 @@ namespace desktop.Data.Models
             this.UpdatedAt = UpdatedAt;
             this.Groups = Groups ?? new List<MGroup>();
             this.Features = Features ?? new List<object>();
+            this.DisabledLayers = DisabledLayers ?? new List<MDisabledLayer>();
         }
     }
 }

@@ -15,19 +15,24 @@ import {
   PointsPreviewLayer, AreaForPrintLinePreviewLayer
 } from "./map-layers"
 import { useSource } from "../../shared/new-hooks/useSource";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useDisabledLayers } from "../../shared/new-hooks/useDisabledLayers";
+import RPopupLayerInfo from "./navigation/rpopup-layers-info/RPopupLayerInfo";
 
 export default function MapContainer() {
   const {currentStyle} = useSource();
   const {
     currentMap, 
-    currentMapLoading, 
+    currentMapLoading,
+    maplibreMap, 
     setMaplibreMap, 
+    setLayers,
     areaForPrintFeature,
     setMaplibreMapZoom,
     drawPreviewFeatures,
-    connectedDrawings
+    connectedDrawings,
   } = useOpenMapPage();
+  const {disabledLayerIds, toggleDisabledLayer} = useDisabledLayers();
   const [mapError, setMapError] = useState<boolean>(false);
   const {id, attractionPoint} = currentMap ?? {};
 
@@ -67,10 +72,19 @@ export default function MapContainer() {
     features: areaForPrintFeature ? [...drawPreviewFeatures, areaForPrintFeature] : [...drawPreviewFeatures]
   }
 
+  const handleLoadDisabledLayers = useCallback(() => {
+    if (!currentMap || !currentStyle) return;
+    disabledLayerIds.forEach((dl) => toggleDisabledLayer(dl, "none"));
+  }, [currentMap?.disabledLayers, currentStyle, disabledLayerIds]); 
+
   useEffect(() => {
-    if (currentStyle)
-      setMapError(false);
-  }, [currentStyle])
+    if (!currentStyle) return;
+    setMapError(false);
+  }, [currentStyle?.id])
+
+  useEffect(() =>{
+    handleLoadDisabledLayers();
+  }, [disabledLayerIds])
 
   if (currentMapLoading)
     return <LoadingScreen/>;
@@ -100,13 +114,25 @@ export default function MapContainer() {
           onMounted={(m) => {
             setMaplibreMap(m);
           }}
+          onStyleData={(e) => {
+            e.target.once("idle", () => {
+              setLayers(e.target.getStyle().layers);
+            })
+          }}
           onError={() => {
             setMapError(true);
           }}
           onZoom={(e) => {
             setMaplibreMapZoom(e.target.getZoom());
-          }}>
+          }}
+          onLoad={() => {
+            if (maplibreMap.current && maplibreMap.current.isStyleLoaded()) {
+              setLayers(maplibreMap.current.getStyle().layers);
+            }
+          }}
+          >
 
+          <RPopupLayerInfo/>
           <MarkersList isDownload={false}/>
           <RSource
             id={UserSourceId}

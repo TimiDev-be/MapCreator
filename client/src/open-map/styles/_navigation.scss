@@ -50,7 +50,7 @@
           stroke: v.$black;
         }
       }
-      &.connect-drawings {
+      &.connect-drawings, &.layers {
         svg path {
           fill: transparent;
           stroke: v.$black;

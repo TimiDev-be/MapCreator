@@ -40,5 +40,12 @@
     &:hover {
       background-color: v.$blue-light-hover;
     }
+
+    &.layers-info {
+      svg path {
+        fill: transparent;
+        stroke: v.$blue-dark;
+      }
+    }
   }
 }

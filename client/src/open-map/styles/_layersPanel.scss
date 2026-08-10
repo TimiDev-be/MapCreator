@@ -1,0 +1,85 @@
+@use "../../shared/styles/v";
+
+.nav.panel.layers {
+  height: 100%;
+  
+  .layers-list {
+    overflow-y: scroll;
+    
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  .layer-list-element {
+    width: 100%;
+    padding: .3rem .5rem;
+
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+
+    .layer-toggle-checkbox {
+      pointer-events: none;
+    }
+
+    &:hover {
+      background-color: v.$blue-light;
+    }
+  }
+}
+
+.maplibregl-popup-content {
+  padding: .5rem .6rem;
+}
+.rpopup-layer-info-wrapper {
+  width: 100%;
+  height: max-content;
+
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+
+  .close-rpopup-layer-info {
+    padding: .2rem;
+    margin: .2rem;
+
+
+    display: flex;
+
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+  .rpopup-layers-list {  
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .rpopup-layer-list-element {
+      height: max-content;
+      
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      svg {
+        flex-shrink: 0;
+      }
+      
+      .layer-id {
+        min-width: 0; 
+        overflow-wrap: break-word;
+      }
+    }
+  }
+}

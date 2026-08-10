@@ -1,4 +1,4 @@
-import { Map as MaplibreMap } from "maplibre-gl";
+import { type LayerSpecification, Map as MaplibreMap } from "maplibre-gl";
 import { useRef, useState } from "react";
 import type { MaplibreMapHook } from "../../open-map/contexts/OpenMapContext";
 import type { Feature } from "geojson";
@@ -11,6 +11,8 @@ export const useMaplibreMap = () : MaplibreMapHook => {
   const [areaForPrintClientVisible, setAreaForPrintClientVisible] = useState<boolean>(false); 
   const [maplibreMapZoom, setMaplibreMapZoom] = useState<number>(0);
   const [connectedDrawings, setConnectedDrawings] = useState<Map[]>([]);
+  const [layers, setLayers] = useState<LayerSpecification[]>([]);
+  const [layersInfo, setLayersInfo] = useState<{lng: number, lat: number, layersIds: string[]} | null>(null);
 
   const setMaplibreMap = (map: MaplibreMap) => {
     MaplibreMap.current = map;
@@ -28,6 +30,10 @@ export const useMaplibreMap = () : MaplibreMapHook => {
     maplibreMapZoom,
     setMaplibreMapZoom,
     connectedDrawings,
-    setConnectedDrawings
+    setConnectedDrawings,
+    layersInfo,
+    setLayersInfo,
+    layers,
+    setLayers
   }
 }

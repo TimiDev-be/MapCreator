@@ -20,7 +20,7 @@ export default function OpenMapPage() {
   const {id} = useParams();
   // initialize hooks to create only one instantion for all components
   const maplibreMapHook = useMaplibreMap();
-  const drawingsHook = useDrawings();
+  const drawingsHook = useDrawings(maplibreMapHook.setLayersInfo);
   const {downloadParams, handleDownloadLoad, downloadURIData} = useDownloadMap();
 
   // current map data

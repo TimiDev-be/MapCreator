@@ -29,7 +29,7 @@ export default function DownloadMapContainer({map, loaded} : Props) {
   const width = UnitToPx(printSettings, areaForPrint.width).toString() + "px";
   const height = UnitToPx(printSettings, areaForPrint.height).toString() + "px";
 
- let Initials : AttractionPoint = {
+  let Initials : AttractionPoint = {
     coords: [0, 0], 
     zoom: 0,
     minZoom: 0,
@@ -55,8 +55,18 @@ export default function DownloadMapContainer({map, loaded} : Props) {
     features: currentMap ? [...currentMap.features] : []
   }
 
+  const handleLoadDisabledLayers = (e: MapLibreMap) => {
+    if (!currentMap) return;
+    currentMap.disabledLayers.forEach((dl) => {
+      if (e.getLayer(dl.layerId)) {
+        e.setLayoutProperty(dl.layerId, 'visibility', "none");
+      }
+    });
+  } 
+
   const handleLoad = async (e: {target: MapLibreMap}) => {
     if (!ContainerRef.current) return;
+    handleLoadDisabledLayers(e.target);
 
     const instace = e.target;
     instace.resize();
