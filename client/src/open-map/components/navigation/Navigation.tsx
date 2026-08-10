@@ -8,8 +8,10 @@ import SettingsLogo from "../../../assets/lucide_settings-2.svg?react";
 import GroupsLogo from "../../../assets/material-symbols_folder-outline.svg?react";
 import DescriptionLogo from "../../../assets/fluent_text-description-24-filled.svg?react";
 import ConnectionLogo from "../../../assets/icon-park-outline_merge.svg?react";
+import LayersLogo from "../../../assets/lucide_layers.svg?react";
+import LayersPanel from "./layers-panel/LayersPanel";
 
-type Panel = "settings" | "groups" | "description" | "connect-drawings";
+type Panel = "settings" | "layers" | "groups" | "description" | "connect-drawings";
 
 export default function Navigation() {
   const [activePanel, setActivePanel] = useState<Panel | null>("settings");
@@ -35,6 +37,13 @@ export default function Navigation() {
           </button>
           <button
             type="button"
+            className={`layers nav-button ${activePanel === "layers" ? "active" : ""}`}
+            onClick={() => togglePanel("layers")}
+          >
+            <LayersLogo width={32} height={32} />
+          </button>
+          <button
+            type="button"
             className={`groups nav-button ${activePanel === "groups" ? "active" : ""}`}
             onClick={() => togglePanel("groups")}
           >
@@ -57,6 +66,7 @@ export default function Navigation() {
         </div>
       </nav>
       {activePanel === "settings" && <SettingsPanel />}
+      {activePanel === "layers" && <LayersPanel />}
       {activePanel === "groups" && <GroupsPanel />}
       {activePanel === "description" && <DescriptionPanel />}
       {activePanel === "connect-drawings" && <ConnectDrawingsPanel />}

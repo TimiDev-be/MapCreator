@@ -1,6 +1,6 @@
 import { createContext, type Dispatch, type RefObject, type SetStateAction } from "react";
 import type { Map } from "../../shared/types/Map";
-import { Map as MaplibreMap, MapMouseEvent, type StyleSpecification } from "maplibre-gl";
+import { Map as MaplibreMap, MapMouseEvent, type LayerSpecification, type StyleSpecification } from "maplibre-gl";
 import type { Feature } from "geojson";
 import type { Group } from "../../shared/types/Group";
 
@@ -15,7 +15,11 @@ export type MaplibreMapHook = {
   maplibreMapZoom: number,
   setMaplibreMapZoom: Dispatch<SetStateAction<number>>,
   connectedDrawings: Map[],
-  setConnectedDrawings: Dispatch<SetStateAction<Map[]>>
+  setConnectedDrawings: Dispatch<SetStateAction<Map[]>>,
+  layersInfo: {lng: number, lat: number, layersIds: string[]} | null,
+  setLayersInfo: Dispatch<SetStateAction<{lng: number, lat: number, layersIds: string[]} | null>>,
+  layers: LayerSpecification[],
+  setLayers: Dispatch<SetStateAction<LayerSpecification[]>>,
 }
 
 export type DrawingsHook = {
