@@ -1,4 +1,5 @@
 import "../../styles/_drawButtons.scss";
+import LayerInformationButton from "./LayerInformationButton";
 import LineButton from "./LineButton";
 import MarkerButton from "./MarkerButton";
 import PolygonButton from "./PolygonButton";
@@ -10,6 +11,7 @@ export default function DrawButtons() {
         <MarkerButton />
         <LineButton />
         <PolygonButton />
+        <LayerInformationButton />
       </div>
     </>
   );

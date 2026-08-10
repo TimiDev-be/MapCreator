@@ -1,9 +1,11 @@
 import type { Feature } from "geojson";
 import type { MapMouseEvent } from "maplibre-gl";
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useRef, useState, type Dispatch, type SetStateAction } from "react"
 import type { DrawingsHook } from "../../open-map/contexts/OpenMapContext";
 
-export const useDrawings = () : DrawingsHook => {
+type LayersInfo = Dispatch<SetStateAction<{lng: number, lat: number, layersIds: string[]} | null>>;
+
+export const useDrawings = (setLayersInfo: LayersInfo | null = null) : DrawingsHook => {
   const [activeButton, setActiveButton] = useState<HTMLButtonElement | null>(null);
   const [drawPreviewFeatures, setDrawPreviewFeatures] = useState<Feature[]>([]); 
   const pointsRef = useRef<number[][]>([]);
@@ -13,6 +15,8 @@ export const useDrawings = () : DrawingsHook => {
     pointsRef.current = [];
     cursorRef.current = [0, 0];
     setDrawPreviewFeatures([]);
+    if (setLayersInfo != null)
+      setLayersInfo(null);
   }, [drawPreviewFeatures, activeButton]);
 
   const handleClick = (e: MapMouseEvent) => {
