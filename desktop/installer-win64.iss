@@ -1,9 +1,9 @@
 ﻿[Setup]
 AppName=MapCreator
-AppVersion=0.7.1
+AppVersion=0.7.2
 DefaultDirName={autopf}\MapCreator
 DefaultGroupName=MapCreator
-OutputBaseFilename=MapCreator-Setup-winx64-0.7.1
+OutputBaseFilename=MapCreator-Setup-winx64-0.7.2
 Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin

@@ -2,6 +2,7 @@ import type { Feature } from "geojson"
 import { useMap } from "./useMap";
 import { useOpenMapPage } from "./useOpenMapPage";
 import type { Map } from "../types/Map";
+import { useCallback } from "react";
 
 export const useFeature = (feature: Feature | undefined = undefined) => {
   const {currentMap, setCurrentMap} = useOpenMapPage();
@@ -20,7 +21,7 @@ export const useFeature = (feature: Feature | undefined = undefined) => {
     setCurrentMap(NewMap);
   }
 
-  const updateFeature = async (oldFeature: Feature | undefined = undefined, featureToUpdate: Feature) => {
+  const updateFeature = useCallback(async (oldFeature: Feature | undefined = undefined, featureToUpdate: Feature) => {
     if (!currentMap || (!feature && !oldFeature)) return;
 
     const OldFeature = feature ? feature : oldFeature; 
@@ -44,7 +45,7 @@ export const useFeature = (feature: Feature | undefined = undefined) => {
       ...currentMap,
       features: NewFeatures
     });
-  }
+  }, [currentMap]);
 
   const deleteFeature = async (id: string | undefined = undefined) => {
     if (!currentMap || (!feature?.id && !id)) return;

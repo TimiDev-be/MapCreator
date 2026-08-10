@@ -5,8 +5,10 @@ import type { Marker } from "maplibre-gl";
 import type { Event } from "maplibre-react-components";
 import { useFeature } from "./useFeature";
 import { HexOpacity } from "../classes/HexOpacity";
+import { useOpenMapPage } from "./useOpenMapPage";
 
 export const useMarker = (feature: Feature) => {
+  const {maplibreMap, currentMap} = useOpenMapPage();
   const {updateFeature} = useFeature(feature);
   const {coordinates } = feature.geometry as { type: string, coordinates: [number, number] };
   const [markerCoords, setMarkerCoords] = useState<[number, number]>(coordinates);
@@ -108,7 +110,7 @@ export const useMarker = (feature: Feature) => {
         coordinates: newCoords
       }
     })
-  }, [feature])
+  }, [feature, maplibreMap, currentMap])
 
   return { 
     getProperties,
