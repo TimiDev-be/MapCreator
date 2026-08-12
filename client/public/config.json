@@ -4,6 +4,6 @@
     "port": 5550
   },
   "websockets": {
-    "link": "ws:localhost:5550"
+    "link": "ws://localhost:5550"
   } 
 }
