@@ -21,17 +21,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4022.49" />
 	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="wwwroot\**">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="wwwroot\" />
-	</ItemGroup>
-
+	
 	<ItemGroup>
 		<None Remove="Assets\About.png" />
 		<None Remove="Assets\BlueEdit.png" />
@@ -61,14 +51,11 @@
 		<Resource Include="Assets\WhitePlus.png" />
 		<Resource Include="Assets\WhiteTrash.png" />
 	</ItemGroup>
-	
-	<ItemGroup>
-	  <Compile Update="Controls\ChangeUrlControl.xaml.cs">
-	    <SubType>Code</SubType>
-	  </Compile>
-	</ItemGroup>
 
 	<Target Name="BuildFrontend" BeforeTargets="BeforeBuild">
+		<Message Importance="high" Text="Installing frontend dependencies..." />
+		<Exec Command="npm install" WorkingDirectory="$(ProjectDir)..\client" Condition="!Exists('$(ProjectDir)..\client\node_modules')" />
+
 		<Message Importance="high" Text="Building React frontend..." />
 		<Exec Command="npm run build" WorkingDirectory="$(ProjectDir)..\client" />
 
@@ -77,6 +64,10 @@
 			<FrontendFiles Include="$(ProjectDir)..\client\dist\**\*.*" />
 		</ItemGroup>
 		<Copy SourceFiles="@(FrontendFiles)" DestinationFolder="$(ProjectDir)wwwroot\dist\%(RecursiveDir)" />
+		<ItemGroup>
+			<Content Include="wwwroot\**\*.*">
+				<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			</Content>
+		</ItemGroup>
 	</Target>
-
 </Project>

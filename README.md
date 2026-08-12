@@ -66,6 +66,11 @@ git clone https://github.com/TimiDev-be/MapCreator.git
 cd desktop
 dotnet run
 ```
+> If you want to work on the React app in dev mode, you need to run desktop for the HTTP server, install npm dependencies, and then:
+```bash
+cd client
+npm run dev
+```
 
 > If you want to customize the application localhost port, edit `config.json` in `client/public`:
 ```javascript
@@ -73,7 +78,10 @@ dotnet run
   "api": {
     "link": "http://localhost:5550/api",
     "port": 5550
-  }
+  },
+  "websockets": {
+    "link": "ws://localhost:5550"
+  } 
 }
 ```
 
