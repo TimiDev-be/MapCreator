@@ -51,6 +51,10 @@
 		<Resource Include="Assets\WhitePlus.png" />
 		<Resource Include="Assets\WhiteTrash.png" />
 	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="wwwroot\" />
+	</ItemGroup>
 
 	<Target Name="BuildFrontend" BeforeTargets="BeforeBuild">
 		<Message Importance="high" Text="Installing frontend dependencies..." />
