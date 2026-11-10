@@ -57,7 +57,19 @@
   <a href="#development">Development</a>
 </p>
 
----
+<div align="center">
+
+## ⭐ Support the project
+
+If you find MapCreator useful and want to help me keep developing it:
+
+⭐ **Star this repository**, it helps others discover the project
+👤 **[Follow me on GitHub](https://github.com/TimiDev-be)** to see what I build next
+🐛 Found a bug or have an idea? **[Open an issue](https://github.com/TimiDev-be/MapCreator/issues)**
+
+Thank you! 🙌
+
+</div>
 
 ## Preview
 
